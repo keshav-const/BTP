@@ -1,298 +1,228 @@
 # E-Store Frontend
 
-A modern e-commerce frontend application built with Next.js 16, TypeScript, TailwindCSS, and Zustand for state management.
+A modern e-commerce storefront built with Next.js 16 (App Router), TypeScript, Tailwind CSS 4, Zustand for state management, and SWR for data fetching. The application consumes the Express API in `../backend` to deliver a responsive shopping experience with AI-assisted discovery.
 
-## Features
+## Table of Contents
 
-### 🎨 User Interface
-- **Responsive Design**: Mobile-first approach with responsive layouts
-- **Custom Theme**: E-commerce optimized color palette and components
-- **Dark Mode Ready**: Built-in dark mode support with CSS variables
-- **Smooth Animations**: Tailored animations for better UX
+1. [Key Features](#key-features)
+2. [Tech Stack](#tech-stack)
+3. [Project Structure](#project-structure)
+4. [Getting Started](#getting-started)
+5. [Environment Configuration](#environment-configuration)
+6. [Running the Frontend](#running-the-frontend)
+7. [Build & Deployment](#build--deployment)
+8. [Manual QA Playbook](#manual-qa-playbook)
+9. [Troubleshooting](#troubleshooting)
+10. [Available Scripts](#available-scripts)
+11. [Additional Resources](#additional-resources)
 
-### 🛍️ E-Commerce Components
-- Product cards with quick add-to-cart and wishlist functionality
-- Product filters (category, price, rating)
-- Pagination for large product lists
-- Shopping cart with quantity management
-- Wishlist management
-- Product rating system
-- Breadcrumb navigation
+---
 
-### 🔐 Authentication & Authorization
-- User login and registration
-- JWT-based authentication with automatic token refresh
-- Protected routes with AuthGuard middleware
-- Role-based access control (admin-only routes)
-- Persistent authentication with localStorage
+## Key Features
 
-### 🛒 Cart & Wishlist Management
-- Add/remove items from cart
-- Update quantities
-- Real-time cart total calculation
-- Wishlist toggle functionality
-- Persistent storage with SSR hydration
+- **Responsive UI** with tailored components, dark-mode-ready styles, and smooth animations.
+- **Authentication & Authorization** powered by JWTs with automatic token refresh, logout on 401, and role-based guards for admin routes.
+- **Cart & Wishlist** management with Zustand and persistent local storage (SSR-safe hydration).
+- **Checkout Flow** including multi-step address, review, and payment forms.
+- **AI Integration** with an "Ask AI" search modal that leverages `/api/ai/search` to suggest filters and update product listing URLs.
+- **API Layer** using Axios with interceptors and SWR for efficient data fetching and caching.
+- **Manual QA-friendly UI** with loading, error, and empty states to simplify testing.
 
-### 📡 API Integration
-- Axios-based HTTP client with interceptors
-- Automatic JWT token attachment to requests
-- Error handling and 401 response management
-- SWR-based data fetching with caching
-- Structured API endpoints for auth and products
+---
 
-### 🎯 State Management (Zustand)
-- **Auth Store**: User authentication and session management
-- **Cart Store**: Shopping cart state
-- **Wishlist Store**: Saved items management
-- **UI Store**: Toast notifications, modals, and UI state
-- localStorage persistence with SSR-safe hydration
+## Tech Stack
 
-### 🔔 Toast Notifications
-- Success, error, warning, and info notifications
-- Auto-dismissing toasts with customizable duration
-- Floating toast container with animations
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS 4, CSS variables |
+| State | Zustand (auth, cart, wishlist, UI stores) |
+| Data Fetching | Axios + SWR |
+| Icons | Lucide React |
+| Tooling | ESLint (flat config), PostCSS, Tailwind CLI |
 
-### 📱 Fully Responsive
-- Mobile navigation with hamburger menu
-- Adaptive grid layouts
-- Touch-friendly buttons and interactions
-- Optimized for all screen sizes
+---
 
 ## Project Structure
 
 ```
 frontend/
 ├── src/
-│   ├── app/                          # Next.js App Router pages
-│   │   ├── (auth)/
-│   │   │   ├── login/
-│   │   │   └── register/
-│   │   ├── products/
-│   │   │   ├── page.tsx              # Product listing with filters
-│   │   │   └── [id]/
-│   │   │       └── page.tsx          # Product detail page
-│   │   ├── cart/
-│   │   ├── wishlist/
-│   │   ├── account/
-│   │   ├── admin/
-│   │   ├── layout.tsx                # Root layout
-│   │   ├── page.tsx                  # Homepage
-│   │   └── globals.css               # Global styles
-│   ├── api/                          # API client functions
-│   │   ├── auth.ts
-│   │   ├── products.ts
-│   │   └── index.ts
-│   ├── components/                   # Reusable components
-│   │   ├── ui/                       # Base UI components
-│   │   │   ├── button.tsx
-│   │   │   ├── input.tsx
-│   │   │   ├── card.tsx
-│   │   │   ├── modal.tsx
-│   │   │   ├── skeleton.tsx
-│   │   │   ├── badge.tsx
-│   │   │   └── index.ts
-│   │   ├── layout/                   # Layout components
-│   │   │   ├── header.tsx
-│   │   │   ├── footer.tsx
-│   │   │   ├── container.tsx
-│   │   │   └── index.ts
-│   │   ├── product-card.tsx
-│   │   ├── rating.tsx
-│   │   ├── pagination.tsx
-│   │   ├── breadcrumbs.tsx
-│   │   ├── filter-controls.tsx
-│   │   ├── toast-container.tsx
-│   │   └── index.ts
-│   ├── hooks/                        # Custom React hooks
-│   │   ├── use-auth.ts
-│   │   ├── use-cart.ts
-│   │   ├── use-wishlist.ts
-│   │   ├── use-fetch.ts
-│   │   ├── use-toast.ts
-│   │   └── index.ts
-│   ├── lib/                          # Utility libraries
-│   │   ├── axios-instance.ts         # Configured Axios client
-│   │   ├── auth.ts                   # Auth utilities
-│   │   ├── error-handler.ts          # API error handling
-│   │   ├── fetcher.ts                # SWR fetcher
-│   │   └── index.ts
-│   ├── middleware/                   # Route protection
-│   │   └── auth-guard.tsx
-│   ├── providers/                    # React providers
-│   │   ├── hydration-provider.tsx
-│   │   └── index.tsx
-│   ├── store/                        # Zustand stores
-│   │   ├── auth-store.ts
-│   │   ├── cart-store.ts
-│   │   ├── wishlist-store.ts
-│   │   ├── ui-store.ts
-│   │   └── index.ts
-│   ├── types/                        # TypeScript type definitions
-│   │   └── index.ts
-│   └── utils/                        # Utility functions
-│       ├── cn.ts                     # classNames utility
-│       ├── format.ts                 # Formatters (price, date, etc)
-│       └── index.ts
-├── public/                           # Static assets
-├── tailwind.config.ts                # Tailwind configuration
-├── tsconfig.json                     # TypeScript configuration
-├── next.config.ts                    # Next.js configuration
-├── postcss.config.mjs                # PostCSS configuration
-├── .env.local.example                # Example environment variables
-├── eslint.config.mjs                 # ESLint configuration
-└── package.json                      # Dependencies and scripts
+│   ├── app/                      # App Router routes and layouts
+│   │   ├── (auth)/               # Login/Register routes
+│   │   ├── products/             # Listing + detail pages
+│   │   ├── cart/                 # Shopping cart
+│   │   ├── wishlist/             # Wishlist
+│   │   ├── checkout/             # Multi-step checkout
+│   │   ├── account/              # Account dashboard
+│   │   ├── admin/                # Admin section (guarded)
+│   │   ├── layout.tsx            # Root layout
+│   │   └── page.tsx              # Home page with AI search
+│   ├── api/                      # API client modules (auth, products, ai, orders)
+│   ├── components/               # Reusable UI & layout components
+│   ├── hooks/                    # Custom hooks (useAuth, useCart, etc.)
+│   ├── store/                    # Zustand stores
+│   ├── types/                    # Shared TypeScript types
+│   └── utils/                    # Helpers (formatting, classNames)
+├── public/                       # Static assets
+├── docs/                         # Additional documentation (API integration)
+├── tailwind.config.ts            # Tailwind configuration
+├── tsconfig.json                 # TypeScript configuration
+└── package.json                  # Web app scripts & dependencies
 ```
+
+---
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js 18+ and npm/yarn
-- Backend API running on configured URL
+- Node.js **v18.17+**
+- npm **v9+**
+- Running backend API (default `http://localhost:3001/api`) with seeds and environment variables configured (see [`../backend/README.md`](../backend/README.md)).
 
 ### Installation
 
-1. Install dependencies:
 ```bash
+cd frontend
 npm install
 ```
 
-2. Set up environment variables:
-```bash
-cp .env.local.example .env.local
-# Edit .env.local with your API URL
-```
+---
 
-Example `.env.local`:
-```
+## Environment Configuration
+
+Create `frontend/.env.local` with the following keys:
+
+```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:3001/api
-NEXT_PUBLIC_AUTH_TOKEN_KEY=auth_token
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_AUTH_TOKEN_KEY=ecommerce_auth_token
 ```
 
-### Running the Development Server
+| Variable | Purpose | Notes |
+|----------|---------|-------|
+| `NEXT_PUBLIC_API_BASE_URL` | Base URL for the backend API (must include `/api`). | Update for each environment (dev/staging/prod). |
+| `NEXT_PUBLIC_APP_URL` | Public URL of the storefront used for redirects and canonical links. | Match the domain/port you launch Next.js with. |
+| `NEXT_PUBLIC_AUTH_TOKEN_KEY` | Local storage key used by the auth store. | Changing this invalidates stored sessions. |
+
+Restart `npm run dev` after editing `.env.local`.
+
+---
+
+## Running the Frontend
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Launches Next.js in development mode on `http://localhost:3000`.
+- Automatically proxies requests to the backend using the configured `NEXT_PUBLIC_API_BASE_URL`.
+- Hot reloads pages and components on change.
+
+To run the full stack locally:
+1. Start MongoDB.
+2. Run `npm run dev` in `../backend` (with `PORT=3001`).
+3. Run `npm run dev` in `frontend/`.
+4. Seed data (`npm run seed` in backend) for demo products and accounts.
+
+---
+
+## Build & Deployment
+
+### Build for Production
+
+```bash
+npm run build
+npm start
+```
+
+- `npm run build` compiles the Next.js app.
+- `npm start` serves the production build on `PORT=3000` by default.
+
+### Deployment Options
+
+| Option | Notes |
+|--------|-------|
+| **Vercel** | Recommended for SSR; configure environment variables via Vercel dashboard. Point the backend URL to your deployed API. |
+| **Self-hosted Node** | Run `npm run build` followed by `npm start` behind a reverse proxy (NGINX/Caddy). Ensure the server has Node.js 18+ and that process manager (PM2/systemd) restarts on failure. |
+| **Docker** | Build a Node-based image that copies the repository, installs dependencies, runs `npm run build`, and starts via `npm start`. |
+
+> Always verify CORS configuration on the backend (`FRONTEND_URL`) matches the deployed frontend origin.
+
+### Static Asset Optimisation
+- Product images are served from Cloudinary; no additional configuration required.
+- Optimise fonts and icons through Next.js built-in optimisations.
+
+---
+
+## Manual QA Playbook
+
+The following checks align with the backend QA flow and validate end-to-end functionality.
+
+1. **Authentication**
+   - Login via `/login` using `admin@example.com` / `admin123` or another seeded user.
+   - Open DevTools > Application > Local Storage and confirm `NEXT_PUBLIC_AUTH_TOKEN_KEY` entry is created.
+   - Refresh the page and confirm session persistence.
+   - Attempt accessing `/admin` as a non-admin and confirm redirection or access denial.
+
+2. **Product Experiences**
+   - Visit `/products` and apply filters (category, price range) to ensure the URL updates and results refresh via SWR.
+   - Inspect a product detail page to confirm descriptions, highlights, recommendations, and wishlist toggle behave correctly.
+
+3. **Ask AI Search**
+   - Open the "Ask AI" modal on the home page.
+   - Submit a query such as “Show me gaming laptops under $2000”.
+   - Validate success toast, filter chips, and resulting navigation to `/products` with applied query params.
+   - Disable or remove `GEMINI_API_KEY` on the backend to ensure the UI surfaces fallback messaging without breaking the flow.
+
+4. **Cart & Checkout**
+   - Add multiple products to the cart, adjust quantities, and verify totals.
+   - Complete the checkout flow; confirm the success toast and redirection to `/account?tab=orders`.
+   - Check the backend `/api/orders` endpoint (or Account Orders tab) to verify the new order exists.
+
+5. **Wishlist**
+   - Toggle wishlist status on a product card and confirm persistence in `/wishlist`.
+   - Use “Clear wishlist” and ensure the UI updates instantly.
+
+6. **Image Upload Experience**
+   - (Requires admin) Navigate to an admin product creation/edit screen (or run manual Postman upload) and confirm new images appear in Cloudinary. Validate the frontend refreshes product galleries after the upload.
+
+7. **Error States**
+   - Stop the backend server and confirm the frontend shows user-friendly error toasts via the Axios interceptor.
+   - Remove required environment variables locally to ensure the app fails fast with descriptive messages in the console.
+
+Document outcomes in your QA checklist before promoting builds.
+
+---
+
+## Troubleshooting
+
+| Symptom | Likely Cause | Resolution |
+|---------|--------------|------------|
+| 404s or CORS errors on API calls | `NEXT_PUBLIC_API_BASE_URL` incorrect or backend `FRONTEND_URL` mismatch | Update both env files and restart servers. |
+| Infinite loading states | Backend unavailable or authentication failure | Check browser console, verify tokens in local storage, and ensure backend `/health` responds. |
+| AI search modal returns generic results | Gemini fallback triggered | Confirm `GEMINI_API_KEY` validity, inspect backend logs, and monitor quota usage. |
+| Orders/cart not persisting | Local storage disabled or key mismatch | Ensure `NEXT_PUBLIC_AUTH_TOKEN_KEY` and store keys are consistent, and that the browser allows storage. |
+| Styling inconsistencies | Tailwind build cache or conflicting classes | Restart `npm run dev`, clear `.next/`, and ensure global styles aren’t overridden. |
+
+---
 
 ## Available Scripts
 
 ```bash
-# Development
-npm run dev              # Start development server
-
-# Production
-npm run build            # Build for production
-npm start                # Start production server
-
-# Linting
-npm run lint             # Run ESLint
+npm run dev     # Start development server
+npm run build   # Build for production
+npm start       # Launch production build
+npm run lint    # Run ESLint (flat config)
 ```
 
-## Key Technologies
+---
 
-- **Next.js 16**: React framework with App Router
-- **TypeScript**: Type-safe JavaScript
-- **TailwindCSS 4**: Utility-first CSS framework
-- **Zustand**: Lightweight state management
-- **Axios**: HTTP client with interceptors
-- **SWR**: Data fetching with caching
-- **Lucide React**: Icon library
-- **JWT Decode**: JWT parsing
+## Additional Resources
 
-## Authentication Flow
+- Backend API reference and troubleshooting: [`../backend/README.md`](../backend/README.md)
+- Integration guide with request/response contracts: [`docs/API_INTEGRATION.md`](docs/API_INTEGRATION.md)
+- Monorepo overview and deployment considerations: [`../README.md`](../README.md)
 
-1. User logs in with email/password
-2. Backend returns JWT token and user data
-3. Token stored in localStorage
-4. Token automatically attached to API requests via Axios interceptor
-5. Invalid/expired tokens trigger automatic logout
-6. AuthGuard middleware protects authenticated/admin routes
-
-## State Management
-
-### Auth Store
-```typescript
-const { user, token, isAuthenticated, login, logout } = useAuthStore();
-```
-
-### Cart Store
-```typescript
-const { items, total, addItem, removeItem, updateQuantity } = useCartStore();
-```
-
-### Wishlist Store
-```typescript
-const { items, addItem, removeItem, isInWishlist } = useWishlistStore();
-```
-
-### UI Store
-```typescript
-const { toasts, addToast, removeToast } = useUiStore();
-```
-
-## API Integration
-
-The frontend communicates with the backend through REST APIs:
-
-- **Auth**: Login, Register, Get Current User, Refresh Token
-- **Products**: Get All, Get by ID, Search, Get by Category
-
-All requests include JWT token in Authorization header (when available).
-
-## Styling
-
-The project uses TailwindCSS with custom theme tokens:
-
-```typescript
-// Custom colors for e-commerce
-- primary: Sky blue (primary actions)
-- secondary: Slate (neutral elements)
-- success: Green
-- warning: Amber
-- error: Red
-- info: Blue
-```
-
-Global styles and animations are defined in `src/app/globals.css`.
-
-## Development Guidelines
-
-1. **Components**: Use functional components with hooks
-2. **Styling**: Use TailwindCSS classes, avoid custom CSS where possible
-3. **State**: Use Zustand stores for global state, React hooks for local state
-4. **API**: Use `useFetch` hook for data fetching
-5. **Types**: Define and use TypeScript interfaces for all data
-6. **Error Handling**: Use useToast hook for user feedback
-
-## Performance Considerations
-
-- Images lazy-loaded
-- Code splitting via Next.js dynamic imports
-- SWR for efficient data fetching with automatic revalidation
-- Zustand for lightweight state management
-- Memoization of expensive components
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## Future Enhancements
-
-- [ ] Search functionality
-- [ ] Advanced filtering
-- [ ] User reviews
-- [ ] Order tracking
-- [ ] Payment integration
-- [ ] Multi-language support
-- [ ] Analytics
-- [ ] SEO optimization
-
-## License
-
-Proprietary - E-Store
+Leverage these documents when onboarding new developers, planning deployments, or executing QA cycles.
