@@ -12,6 +12,7 @@ This monorepo contains two main workspaces:
 ### Tech Stack
 
 #### Frontend
+
 - **Framework**: Next.js 14 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
@@ -20,6 +21,7 @@ This monorepo contains two main workspaces:
 - **Linting**: ESLint + Prettier
 
 #### Backend
+
 - **Runtime**: Node.js with Express.js
 - **Language**: TypeScript
 - **Database**: MongoDB with Mongoose ODM
@@ -30,6 +32,7 @@ This monorepo contains two main workspaces:
 - **Linting**: ESLint + Prettier
 
 #### Development Tools
+
 - **Package Manager**: npm with workspaces
 - **Code Formatting**: Prettier with shared configuration
 - **Linting**: ESLint with shared base configuration
@@ -40,24 +43,27 @@ This monorepo contains two main workspaces:
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm 9+
 - MongoDB (local or cloud)
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd monorepo-app
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Set up environment variables:
+
 ```bash
 cp .env.example .env
 ```
@@ -65,6 +71,7 @@ cp .env.example .env
 4. Configure your environment variables in `.env` (see Environment Configuration below)
 
 5. Bootstrap the project:
+
 ```bash
 npm run bootstrap
 ```
@@ -72,22 +79,26 @@ npm run bootstrap
 ### Development
 
 Start both frontend and backend in development mode:
+
 ```bash
 npm run dev
 ```
 
 This will start:
+
 - Frontend: http://localhost:3000
 - Backend: http://localhost:5000
 
 #### Individual Workspace Commands
 
 Start only the frontend:
+
 ```bash
 npm run dev:frontend
 ```
 
 Start only the backend:
+
 ```bash
 npm run dev:backend
 ```
@@ -95,11 +106,13 @@ npm run dev:backend
 ### Production Build
 
 Build both applications:
+
 ```bash
 npm run build
 ```
 
 Start production servers:
+
 ```bash
 npm run start
 ```
@@ -144,18 +157,21 @@ monorepo-app/
 Create a `.env` file from `.env.example` and configure the following variables:
 
 ### Database
+
 ```env
 MONGODB_URI=mongodb://localhost:27017/monorepo-app
 MONGODB_DB_NAME=monorepo-app
 ```
 
 ### Authentication
+
 ```env
 JWT_SECRET=your-super-secret-jwt-key
 JWT_EXPIRES_IN=7d
 ```
 
 ### External APIs
+
 ```env
 GEMINI_API_KEY=your-gemini-api-key
 CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
@@ -164,6 +180,7 @@ CLOUDINARY_API_SECRET=your-cloudinary-api-secret
 ```
 
 ### Application URLs
+
 ```env
 FRONTEND_URL=http://localhost:3000
 BACKEND_URL=http://localhost:5000
@@ -171,6 +188,7 @@ NEXT_PUBLIC_API_URL=http://localhost:5000
 ```
 
 ### Server Configuration
+
 ```env
 PORT=5000
 NODE_ENV=development
@@ -180,6 +198,7 @@ CORS_ORIGIN=http://localhost:3000
 ## 🛠️ Available Scripts
 
 ### Root Commands
+
 - `npm run dev` - Start both frontend and backend in development mode
 - `npm run build` - Build both applications for production
 - `npm run start` - Start both applications in production mode
@@ -191,12 +210,14 @@ CORS_ORIGIN=http://localhost:3000
 - `npm run bootstrap` - Install dependencies and build
 
 ### Frontend Commands
+
 - `npm run dev:frontend` - Start Next.js development server
 - `npm run build:frontend` - Build Next.js for production
 - `npm run start:frontend` - Start Next.js production server
 - `npm run lint:frontend` - Lint frontend code
 
 ### Backend Commands
+
 - `npm run dev:backend` - Start Express development server with nodemon
 - `npm run build:backend` - Compile TypeScript to JavaScript
 - `npm run start:backend` - Start Express production server
@@ -224,6 +245,7 @@ This monorepo uses npm workspaces for dependency management:
 ### Adding Dependencies
 
 To add a dependency to a specific workspace:
+
 ```bash
 # Add to frontend
 npm install <package> --workspace=frontend
@@ -236,6 +258,7 @@ npm install <package> -D --workspace=frontend
 ```
 
 To add a shared dependency to the root:
+
 ```bash
 npm install <package> -D
 ```
@@ -243,36 +266,44 @@ npm install <package> -D
 ## 🚀 Deployment
 
 ### Frontend (Next.js)
+
 The frontend is ready for deployment to platforms like:
+
 - Vercel (recommended)
 - Netlify
 - AWS Amplify
 
 ### Backend (Express.js)
+
 The backend can be deployed to:
+
 - Railway
 - Heroku
 - AWS EC2/ECS
 - DigitalOcean App Platform
 
 ### Environment Variables in Production
+
 Ensure all required environment variables are configured in your production environment. Refer to `.env.example` for the complete list.
 
 ## 🔧 Development Guidelines
 
 ### Code Style
+
 - Use TypeScript for all new code
 - Follow ESLint and Prettier configurations
 - Write meaningful commit messages
 - Add type definitions for shared data structures
 
 ### File Organization
+
 - Keep components small and focused
 - Use absolute imports with `@/` prefix
 - Separate business logic from UI components
 - Maintain consistent naming conventions
 
 ### Git Workflow
+
 - Create feature branches from `main`
 - Use descriptive branch names
 - Ensure all tests pass before committing
@@ -296,21 +327,25 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ### Common Issues
 
 **Dependencies not found:**
+
 ```bash
 npm run clean
 npm install
 ```
 
 **TypeScript errors:**
+
 ```bash
 npm run type-check
 ```
 
 **Port conflicts:**
+
 - Check if ports 3000 and 5000 are available
 - Modify PORT in `.env` for backend if needed
 
 **MongoDB connection issues:**
+
 - Ensure MongoDB is running
 - Check MONGODB_URI in `.env`
 - Verify database exists and is accessible
