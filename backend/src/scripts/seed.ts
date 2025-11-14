@@ -58,6 +58,7 @@ const seedData = async () => {
           'https://example.com/headphones1.jpg',
           'https://example.com/headphones2.jpg',
         ],
+        tags: ['audio', 'wireless', 'noise-cancelling', 'bluetooth'],
         isActive: true,
       },
       {
@@ -71,6 +72,7 @@ const seedData = async () => {
           'https://example.com/watch1.jpg',
           'https://example.com/watch2.jpg',
         ],
+        tags: ['wearable', 'fitness', 'smartwatch', 'gps', 'health'],
         isActive: true,
       },
       {
@@ -84,6 +86,7 @@ const seedData = async () => {
           'https://example.com/shoes1.jpg',
           'https://example.com/shoes2.jpg',
         ],
+        tags: ['footwear', 'running', 'sports', 'athletic'],
         isActive: true,
       },
       {
@@ -97,6 +100,7 @@ const seedData = async () => {
           'https://example.com/backpack1.jpg',
           'https://example.com/backpack2.jpg',
         ],
+        tags: ['bag', 'laptop', 'travel', 'backpack'],
         isActive: true,
       },
       {
@@ -110,6 +114,7 @@ const seedData = async () => {
           'https://example.com/speaker1.jpg',
           'https://example.com/speaker2.jpg',
         ],
+        tags: ['audio', 'bluetooth', 'wireless', 'portable', 'waterproof'],
         isActive: true,
       },
       {
@@ -123,6 +128,7 @@ const seedData = async () => {
           'https://example.com/yogamat1.jpg',
           'https://example.com/yogamat2.jpg',
         ],
+        tags: ['yoga', 'fitness', 'exercise', 'mat'],
         isActive: true,
       },
       {
@@ -136,6 +142,7 @@ const seedData = async () => {
           'https://example.com/coffee1.jpg',
           'https://example.com/coffee2.jpg',
         ],
+        tags: ['kitchen', 'coffee', 'appliance', 'brewing'],
         isActive: true,
       },
       {
@@ -149,6 +156,7 @@ const seedData = async () => {
           'https://example.com/lamp1.jpg',
           'https://example.com/lamp2.jpg',
         ],
+        tags: ['lighting', 'led', 'desk', 'home-office'],
         isActive: true,
       },
     ]);
