@@ -1,3 +1,5 @@
+'use client';
+
 import { useCartStore } from '@/store';
 import { Product } from '@/types';
 

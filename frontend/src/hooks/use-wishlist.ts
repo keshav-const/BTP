@@ -1,3 +1,5 @@
+'use client';
+
 import { useWishlistStore } from '@/store';
 import { Product } from '@/types';
 

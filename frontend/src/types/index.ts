@@ -23,10 +23,14 @@ export interface Product {
   image: string;
   images: string[];
   category: string;
+  brand?: string;
   rating: number;
   reviewCount: number;
   inStock: boolean;
   quantity?: number;
+  stock?: number;
+  tags?: string[];
+  highlights?: string[];
 }
 
 export interface CartItem extends Product {
@@ -61,4 +65,13 @@ export interface PaginatedResponse<T> {
   page: number;
   limit: number;
   totalPages: number;
+}
+
+export interface UserProfile extends User {
+  phone?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  country?: string;
 }

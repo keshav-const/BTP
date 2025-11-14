@@ -2,16 +2,17 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ShoppingCart, Heart, ChevronLeft, Share2 } from 'lucide-react';
+import { ShoppingCart, Heart, ChevronLeft, ChevronRight, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Rating } from '@/components/rating';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Breadcrumbs } from '@/components/breadcrumbs';
+import { Breadcrumbs, ProductCard } from '@/components';
 import { useFetch, useCart, useWishlist, useToast } from '@/hooks';
 import { Product } from '@/types';
 import { formatPrice } from '@/utils/format';
+import { cn } from '@/utils/cn';
 
 interface ProductPageProps {
   params: {
@@ -24,16 +25,25 @@ export default function ProductPage({ params }: ProductPageProps) {
   const { data: product, isLoading, error } = useFetch<Product>(
     `/products/${params.id}`
   );
+  const { data: recommendationsData } = useFetch<Product[]>(
+    `/products/${params.id}/recommendations?limit=6`
+  );
   const { addItem } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { success: showSuccess } = useToast();
   const [quantity, setQuantity] = useState(1);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const handleAddToCart = () => {
     if (product) {
       addItem(product, quantity);
       showSuccess(`${product.name} added to cart!`);
     }
+  };
+
+  const handleAddRecommendationToCart = (product: Product) => {
+    addItem(product, 1);
+    showSuccess(`${product.name} added to cart!`);
   };
 
   if (error) {
@@ -67,8 +77,19 @@ export default function ProductPage({ params }: ProductPageProps) {
       ? Math.round(((product.price - product.salePrice) / product.price) * 100)
       : null;
 
+  const allImages = [product.image, ...(product.images || [])];
+  const currentImage = allImages[selectedImageIndex] || product.image;
+
+  const handlePrevImage = () => {
+    setSelectedImageIndex(prev => prev === 0 ? allImages.length - 1 : prev - 1);
+  };
+
+  const handleNextImage = () => {
+    setSelectedImageIndex(prev => prev === allImages.length - 1 ? 0 : prev + 1);
+  };
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       <Breadcrumbs
         items={[
           { label: 'Home', href: '/' },
@@ -79,11 +100,11 @@ export default function ProductPage({ params }: ProductPageProps) {
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Product Image */}
-        <div className="relative">
-          <div className="relative w-full aspect-square bg-secondary-100 rounded-lg overflow-hidden">
+        {/* Product Images */}
+        <div className="space-y-4">
+          <div className="relative w-full aspect-square bg-secondary-100 rounded-lg overflow-hidden group">
             <img
-              src={product.image}
+              src={currentImage}
               alt={product.name}
               className="w-full h-full object-cover"
             />
@@ -92,16 +113,42 @@ export default function ProductPage({ params }: ProductPageProps) {
                 -{discount}%
               </Badge>
             )}
+            
+            {allImages.length > 1 && (
+              <>
+                <button
+                  onClick={handlePrevImage}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-white/80 dark:bg-secondary-900/80 hover:bg-white dark:hover:bg-secondary-800 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={handleNextImage}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white/80 dark:bg-secondary-900/80 hover:bg-white dark:hover:bg-secondary-800 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                  aria-label="Next image"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </>
+            )}
           </div>
 
-          {product.images && product.images.length > 0 && (
-            <div className="flex gap-4 mt-4 overflow-x-auto">
-              {product.images.slice(0, 5).map((image, idx) => (
+          {allImages.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {allImages.map((image, idx) => (
                 <button
                   key={idx}
-                  className="flex-shrink-0 w-20 h-20 rounded-lg border-2 border-border hover:border-primary-500 transition-colors overflow-hidden"
+                  onClick={() => setSelectedImageIndex(idx)}
+                  className={cn(
+                    'flex-shrink-0 w-20 h-20 rounded-lg border-2 overflow-hidden transition-colors',
+                    selectedImageIndex === idx
+                      ? 'border-primary-500'
+                      : 'border-border hover:border-primary-300'
+                  )}
+                  aria-label={`View image ${idx + 1}`}
                 >
-                  <img src={image} alt={`View ${idx + 1}`} className="w-full h-full object-cover" />
+                  <img src={image} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
@@ -112,17 +159,24 @@ export default function ProductPage({ params }: ProductPageProps) {
         <div className="space-y-6">
           <div>
             <div className="flex items-start justify-between gap-4 mb-2">
-              <h1 className="text-3xl font-bold text-foreground">{product.name}</h1>
+              <div className="flex-1">
+                <h1 className="text-3xl font-bold text-foreground">{product.name}</h1>
+                {product.brand && (
+                  <p className="text-secondary-600 text-sm mt-1">Brand: {product.brand}</p>
+                )}
+              </div>
               <button
                 onClick={() => toggleWishlist(product)}
-                className="p-2 hover:bg-secondary-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-secondary-100 dark:hover:bg-secondary-800 rounded-lg transition-colors flex-shrink-0"
+                aria-label={isInWishlist(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
               >
                 <Heart
-                  className={`w-6 h-6 ${
+                  className={cn(
+                    'w-6 h-6',
                     isInWishlist(product.id)
                       ? 'fill-error text-error'
                       : 'text-secondary-400'
-                  }`}
+                  )}
                 />
               </button>
             </div>
@@ -138,8 +192,23 @@ export default function ProductPage({ params }: ProductPageProps) {
           {/* Description */}
           <p className="text-secondary-600 leading-relaxed">{product.description}</p>
 
+          {/* AI Highlights */}
+          {product.highlights && product.highlights.length > 0 && (
+            <div className="space-y-2">
+              <h3 className="font-semibold text-foreground">Key Highlights</h3>
+              <ul className="space-y-1">
+                {product.highlights.slice(0, 3).map((highlight, idx) => (
+                  <li key={idx} className="text-secondary-600 text-sm flex items-start gap-2">
+                    <span className="text-primary-600 font-bold">✓</span>
+                    <span>{highlight}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {/* Pricing */}
-          <div className="space-y-2">
+          <div className="space-y-2 border-t border-border pt-4">
             <div className="flex items-center gap-4">
               {product.salePrice ? (
                 <>
@@ -171,14 +240,16 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <div className="flex items-center gap-2 border-2 border-border rounded-lg w-fit">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-4 py-2 hover:bg-secondary-100 transition-colors"
+                    className="px-4 py-2 hover:bg-secondary-100 dark:hover:bg-secondary-800 transition-colors"
+                    aria-label="Decrease quantity"
                   >
                     −
                   </button>
-                  <span className="px-4 py-2 font-medium">{quantity}</span>
+                  <span className="px-4 py-2 font-medium min-w-12 text-center">{quantity}</span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="px-4 py-2 hover:bg-secondary-100 transition-colors"
+                    className="px-4 py-2 hover:bg-secondary-100 dark:hover:bg-secondary-800 transition-colors"
+                    aria-label="Increase quantity"
                   >
                     +
                   </button>
@@ -190,7 +261,12 @@ export default function ProductPage({ params }: ProductPageProps) {
                   <ShoppingCart className="w-5 h-5 mr-2" />
                   Add to Cart
                 </Button>
-                <Button variant="outline" size="lg" className="px-6">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="px-6"
+                  onClick={() => navigator.share?.({ title: product.name, url: window.location.href })}
+                >
                   <Share2 className="w-5 h-5" />
                 </Button>
               </div>
@@ -209,10 +285,32 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <span className="text-secondary-600">Category</span>
                 <span className="font-medium">{product.category}</span>
               </div>
+              {product.brand && (
+                <div className="flex justify-between">
+                  <span className="text-secondary-600">Brand</span>
+                  <span className="font-medium">{product.brand}</span>
+                </div>
+              )}
             </div>
           </Card>
         </div>
       </div>
+
+      {/* Recommendations */}
+      {recommendationsData && recommendationsData.length > 0 && (
+        <section className="space-y-6 border-t border-border pt-12">
+          <h2 className="text-2xl font-bold">You Might Also Like</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {recommendationsData.slice(0, 6).map((rec) => (
+              <ProductCard
+                key={rec.id}
+                product={rec}
+                onAddToCart={handleAddRecommendationToCart}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
