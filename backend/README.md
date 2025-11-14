@@ -8,6 +8,9 @@ A comprehensive REST API built with Express, TypeScript, and MongoDB, featuring 
 - **Product Management**: CRUD operations with filtering, sorting, and pagination
 - **Order Processing**: Complete order lifecycle with stock management
 - **Wishlist**: User wishlist management
+- **AI Integration**: Google Gemini-powered search intent parsing, description generation, and image enhancement
+- **Image Upload**: Cloudinary integration with Multer for multipart file uploads
+- **Recommendations**: Rule-based product recommendations based on category, tags, and price range
 - **Validation**: Comprehensive input validation using Joi
 - **Error Handling**: Centralized error handling with consistent API responses
 - **TypeScript**: Full type safety throughout the application
@@ -72,6 +75,23 @@ JWT_REFRESH_SECRET=your-super-secret-refresh-key
 JWT_EXPIRE=15m
 JWT_REFRESH_EXPIRE=7d
 FRONTEND_URL=http://localhost:3000
+
+# Google Gemini
+GEMINI_API_KEY=your-gemini-api-key
+GEMINI_MODEL=gemini-1.5-flash
+GEMINI_MAX_TOKENS=2048
+GEMINI_TEMPERATURE=0.7
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-cloudinary-api-key
+CLOUDINARY_API_SECRET=your-cloudinary-api-secret
+CLOUDINARY_FOLDER=products
+
+# Upload limits (optional overrides)
+MAX_FILE_SIZE=5242880
+ALLOWED_MIME_TYPES=image/jpeg,image/png,image/webp,image/gif
+MAX_FILES=5
 ```
 
 ### Database Setup
@@ -157,6 +177,98 @@ Update product (admin only)
 
 #### DELETE /api/products/:id
 Delete product (admin only)
+
+#### GET /api/products/:id/recommendations
+Get product recommendations ("You may also like")
+Query params: `limit` (default: 10), `priceTolerance` (default: 0.3)
+
+#### POST /api/products/upload-images
+Upload product images (admin only)
+Multipart form data with `images` field (max 5 files)
+
+### AI Endpoints
+
+#### POST /api/ai/search
+Parse search query intent and extract filters
+```json
+{
+  "query": "wireless headphones under $200"
+}
+```
+
+Response:
+```json
+{
+  "success": true,
+  "message": "Search intent parsed successfully",
+  "data": {
+    "category": "Electronics",
+    "maxPrice": 200,
+    "tags": ["wireless", "audio"],
+    "searchTerms": "headphones",
+    "intent": "price_range"
+  }
+}
+```
+
+#### POST /api/ai/generate-description
+Generate SEO-optimized product descriptions (admin only)
+```json
+{
+  "productName": "Wireless Noise-Cancelling Headphones",
+  "productInfo": {
+    "brand": "TechBrand",
+    "price": 199.99,
+    "features": ["Bluetooth 5.0", "20h battery", "Active noise cancellation"]
+  }
+}
+```
+
+Response:
+```json
+{
+  "success": true,
+  "message": "Description generated successfully",
+  "data": {
+    "shortDescription": "Premium wireless headphones with active noise cancellation...",
+    "longDescription": "Full detailed description...",
+    "seoKeywords": ["wireless headphones", "noise cancelling", ...],
+    "highlights": ["20-hour battery life", "Bluetooth 5.0", ...]
+  }
+}
+```
+
+#### POST /api/ai/enhance-image
+Analyze product image and get enhancement suggestions (admin only)
+```json
+{
+  "imageUrl": "https://example.com/product.jpg",
+  "imageData": {
+    "productName": "Smart Watch",
+    "category": "Electronics"
+  }
+}
+```
+
+Response:
+```json
+{
+  "success": true,
+  "message": "Image enhancement analysis completed",
+  "data": {
+    "metadata": {
+      "altText": "Smart watch with fitness tracking features",
+      "title": "Smart Watch Product Image",
+      "caption": "Premium smartwatch with health monitoring"
+    },
+    "suggestions": [
+      "Consider using better lighting",
+      "Show product from multiple angles",
+      "Add lifestyle context to the image"
+    ]
+  }
+}
+```
 
 ### Order Endpoints
 

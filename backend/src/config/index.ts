@@ -1,9 +1,10 @@
 import dotenv from 'dotenv';
+import { aiConfig, cloudinaryConfig, uploadConfig } from './ai';
 
 dotenv.config();
 
 export const config = {
-  port: process.env.PORT || 3000,
+  port: parseInt(process.env.PORT || '3000'),
   nodeEnv: process.env.NODE_ENV || 'development',
   mongodbUri: process.env.MONGODB_URI || 'mongodb://localhost:27017/ecommerce',
   jwt: {
@@ -16,4 +17,7 @@ export const config = {
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
   },
+  ai: aiConfig,
+  cloudinary: cloudinaryConfig,
+  upload: uploadConfig,
 };

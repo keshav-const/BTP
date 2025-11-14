@@ -9,6 +9,7 @@ export interface IProductDocument extends Document {
   brand: string;
   stock: number;
   images: string[];
+  tags: string[];
   isActive: boolean;
 }
 
@@ -46,6 +47,10 @@ const productSchema = new Schema<IProductDocument>({
     default: 0,
   },
   images: [{
+    type: String,
+    trim: true,
+  }],
+  tags: [{
     type: String,
     trim: true,
   }],

@@ -1,13 +1,18 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
+import type { StringValue } from 'ms';
 import { config } from '@/config';
 import { IJwtPayload } from '@/types';
 
 export const generateAccessToken = (payload: IJwtPayload): string => {
-  return jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.expire });
+  const expiresIn = config.jwt.expire as StringValue | number;
+  const options: SignOptions = { expiresIn };
+  return jwt.sign(payload, config.jwt.secret, options);
 };
 
 export const generateRefreshToken = (payload: IJwtPayload): string => {
-  return jwt.sign(payload, config.jwt.refreshSecret, { expiresIn: config.jwt.refreshExpire });
+  const expiresIn = config.jwt.refreshExpire as StringValue | number;
+  const options: SignOptions = { expiresIn };
+  return jwt.sign(payload, config.jwt.refreshSecret, options);
 };
 
 export const verifyAccessToken = (token: string): IJwtPayload => {

@@ -21,6 +21,7 @@ export interface IProduct {
   brand: string;
   stock: number;
   images: string[];
+  tags: string[];
   isActive: boolean;
   createdAt?: Date;
   updatedAt?: Date;
