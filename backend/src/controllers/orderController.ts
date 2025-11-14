@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { Types } from 'mongoose';
 import { Order, Product } from '@/models';
 import { IAuthRequest, ApiResponse, PaginationResult } from '@/types';
 
@@ -56,6 +57,79 @@ export const orderController = {
       res.json({
         success: true,
         message: 'Orders retrieved successfully',
+        data: paginationResult,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: 'Error retrieving orders',
+        error: (error as Error).message,
+      });
+    }
+  },
+
+  async getOrdersByUser(req: IAuthRequest, res: Response<ApiResponse>): Promise<void> {
+    try {
+      const { userId } = req.params;
+
+      if (!Types.ObjectId.isValid(userId)) {
+        res.status(400).json({
+          success: false,
+          message: 'Invalid user id',
+        });
+        return;
+      }
+
+      const requester = req.user!;
+      if (requester.role !== 'admin' && requester._id.toString() !== userId) {
+        res.status(403).json({
+          success: false,
+          message: 'Access denied',
+        });
+        return;
+      }
+
+      const {
+        page = '1',
+        limit = '10',
+        sort = 'createdAt',
+        order = 'desc',
+        status,
+      } = req.query;
+
+      const pageNum = parseInt(page as string, 10);
+      const limitNum = parseInt(limit as string, 10);
+
+      const filters: any = { user: userId };
+      if (status) filters.status = status;
+
+      const sortQuery: any = {};
+      sortQuery[sort as string] = order === 'asc' ? 1 : -1;
+
+      const orders = await Order.find(filters)
+        .sort(sortQuery)
+        .skip((pageNum - 1) * limitNum)
+        .limit(limitNum)
+        .populate('user', 'firstName lastName email')
+        .populate('items.product', 'name images price');
+
+      const total = await Order.countDocuments(filters);
+
+      const paginationResult: PaginationResult<typeof orders[0]> = {
+        data: orders,
+        pagination: {
+          page: pageNum,
+          limit: limitNum,
+          total,
+          pages: Math.ceil(total / limitNum),
+          hasNext: pageNum < Math.ceil(total / limitNum),
+          hasPrev: pageNum > 1,
+        },
+      };
+
+      res.json({
+        success: true,
+        message: 'User orders retrieved successfully',
         data: paginationResult,
       });
     } catch (error) {

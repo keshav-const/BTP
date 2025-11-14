@@ -1,10 +1,33 @@
+export type UserRole = 'user' | 'admin';
+
+export type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
+
+export interface Address {
+  id: string;
+  label?: string | null;
+  fullName: string;
+  phone?: string | null;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  isDefault: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface User {
   id: string;
   email: string;
-  name: string;
-  role: 'user' | 'admin';
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  role: UserRole;
   avatar?: string;
   createdAt: string;
+  phoneNumber?: string | null;
+  addresses?: Address[];
 }
 
 export interface AuthSession {
@@ -67,11 +90,31 @@ export interface PaginatedResponse<T> {
   totalPages: number;
 }
 
+export interface OrderItemProductSummary {
+  id: string;
+  name: string;
+  images?: string[];
+  price: number;
+}
+
+export interface OrderItem {
+  product: OrderItemProductSummary | string;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  id: string;
+  userId: string;
+  items: OrderItem[];
+  shippingAddress: Address;
+  paymentMethod: string;
+  totalAmount: number;
+  status: OrderStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface UserProfile extends User {
-  phone?: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  postalCode?: string;
-  country?: string;
+  updatedAt?: string;
 }

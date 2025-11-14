@@ -1,6 +1,5 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { IUser } from '@/types';
 
 export interface IUserDocument extends Document {
   firstName: string;
@@ -9,10 +8,71 @@ export interface IUserDocument extends Document {
   password: string;
   role: 'user' | 'admin';
   isActive: boolean;
+  phoneNumber?: string;
+  addresses: Types.DocumentArray<any>;
   _id: Types.ObjectId;
   comparePassword(candidatePassword: string): Promise<boolean>;
   getFullName(): string;
 }
+
+const addressSchema = new Schema({
+  _id: {
+    type: Schema.Types.ObjectId,
+    default: () => new mongoose.Types.ObjectId(),
+  },
+  label: {
+    type: String,
+    trim: true,
+    maxlength: [50, 'Label cannot exceed 50 characters'],
+  },
+  fullName: {
+    type: String,
+    required: [true, 'Full name is required'],
+    trim: true,
+    maxlength: [100, 'Full name cannot exceed 100 characters'],
+  },
+  phone: {
+    type: String,
+    trim: true,
+    maxlength: [20, 'Phone number cannot exceed 20 characters'],
+  },
+  street: {
+    type: String,
+    required: [true, 'Street address is required'],
+    trim: true,
+    maxlength: [100, 'Street address cannot exceed 100 characters'],
+  },
+  city: {
+    type: String,
+    required: [true, 'City is required'],
+    trim: true,
+    maxlength: [60, 'City cannot exceed 60 characters'],
+  },
+  state: {
+    type: String,
+    required: [true, 'State is required'],
+    trim: true,
+    maxlength: [60, 'State cannot exceed 60 characters'],
+  },
+  zipCode: {
+    type: String,
+    required: [true, 'ZIP/Postal code is required'],
+    trim: true,
+    maxlength: [20, 'ZIP/Postal code cannot exceed 20 characters'],
+  },
+  country: {
+    type: String,
+    required: [true, 'Country is required'],
+    trim: true,
+    maxlength: [60, 'Country cannot exceed 60 characters'],
+  },
+  isDefault: {
+    type: Boolean,
+    default: false,
+  },
+}, {
+  timestamps: true,
+});
 
 const userSchema = new Schema<IUserDocument>({
   firstName: {
@@ -49,6 +109,15 @@ const userSchema = new Schema<IUserDocument>({
   isActive: {
     type: Boolean,
     default: true,
+  },
+  phoneNumber: {
+    type: String,
+    trim: true,
+    maxlength: [20, 'Phone number cannot exceed 20 characters'],
+  },
+  addresses: {
+    type: [addressSchema],
+    default: [],
   },
 }, {
   timestamps: true,
