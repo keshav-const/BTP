@@ -64,4 +64,34 @@ export const productsApi = {
     });
     return response.data;
   },
+
+  create: async (formData: FormData) => {
+    const response = await axiosInstance.post<ApiResponse<Product>>('/products', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  update: async (id: string, formData: FormData) => {
+    const response = await axiosInstance.put<ApiResponse<Product>>(`/products/${id}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  delete: async (id: string) => {
+    const response = await axiosInstance.delete<ApiResponse<{ id: string }>>(`/products/${id}`);
+    return response.data;
+  },
+
+  uploadImages: async (formData: FormData) => {
+    const response = await axiosInstance.post<ApiResponse<{ images: string[]; count: number }>>(
+      '/products/upload-images',
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }
+    );
+    return response.data;
+  },
 };

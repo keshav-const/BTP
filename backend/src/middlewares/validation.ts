@@ -83,6 +83,7 @@ export const schemas = {
     limit: Joi.number().integer().min(1).max(100).optional(),
     sort: Joi.string().optional(),
     order: Joi.string().valid('asc', 'desc').optional(),
+    status: Joi.string().optional(),
   }),
 
   productFilters: Joi.object({
@@ -102,4 +103,40 @@ export const schemas = {
   wishlist: Joi.object({
     products: Joi.array().items(Joi.string()).optional(),
   }),
+
+  address: Joi.object({
+    label: Joi.string().allow('', null).optional(),
+    fullName: Joi.string().min(2).max(100).required(),
+    phone: Joi.string().allow('', null).optional(),
+    street: Joi.string().min(2).max(100).required(),
+    city: Joi.string().min(2).max(60).required(),
+    state: Joi.string().min(2).max(60).required(),
+    zipCode: Joi.string().min(2).max(20).required(),
+    country: Joi.string().min(2).max(60).required(),
+    isDefault: Joi.alternatives().try(
+      Joi.boolean(),
+      Joi.string().valid('true', 'false', '1', '0')
+    ).optional(),
+  }),
+
+  addressUpdate: Joi.object({
+    label: Joi.string().allow('', null).optional(),
+    fullName: Joi.string().min(2).max(100).optional(),
+    phone: Joi.string().allow('', null).optional(),
+    street: Joi.string().min(2).max(100).optional(),
+    city: Joi.string().min(2).max(60).optional(),
+    state: Joi.string().min(2).max(60).optional(),
+    zipCode: Joi.string().min(2).max(20).optional(),
+    country: Joi.string().min(2).max(60).optional(),
+    isDefault: Joi.alternatives().try(
+      Joi.boolean(),
+      Joi.string().valid('true', 'false', '1', '0')
+    ).optional(),
+  }).min(1),
+
+  profileUpdate: Joi.object({
+    firstName: Joi.string().trim().min(2).max(50).optional(),
+    lastName: Joi.string().trim().min(2).max(50).optional(),
+    phoneNumber: Joi.string().allow('', null).optional(),
+  }).min(1),
 };

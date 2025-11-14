@@ -1,6 +1,21 @@
 import { Request } from 'express';
 import { Types } from 'mongoose';
 
+export interface IUserAddress {
+  _id: Types.ObjectId;
+  label?: string;
+  fullName: string;
+  phone?: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  isDefault: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export interface IUser {
   _id: Types.ObjectId;
   firstName: string;
@@ -9,6 +24,8 @@ export interface IUser {
   password: string;
   role: 'user' | 'admin';
   isActive: boolean;
+  phoneNumber?: string;
+  addresses?: IUserAddress[];
   createdAt?: Date;
   updatedAt?: Date;
 }

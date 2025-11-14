@@ -9,6 +9,7 @@ router.use(authenticate);
 
 // User and Admin routes
 router.get('/', validateQuery(schemas.pagination), orderController.getOrders);
+router.get('/user/:userId', validateQuery(schemas.pagination), orderController.getOrdersByUser);
 router.get('/:id', orderController.getOrderById);
 
 // User only routes

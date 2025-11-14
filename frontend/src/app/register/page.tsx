@@ -8,12 +8,21 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useAuth, useToast } from '@/hooks';
 
+interface RegisterFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
 export default function RegisterPage() {
   const router = useRouter();
   const { register, isLoading } = useAuth();
   const { error: showError, success: showSuccess } = useToast();
-  const [formData, setFormData] = useState({
-    name: '',
+  const [formData, setFormData] = useState<RegisterFormData>({
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -35,8 +44,12 @@ export default function RegisterPage() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name) {
-      newErrors.name = 'Name is required';
+    if (!formData.firstName) {
+      newErrors.firstName = 'First name is required';
+    }
+
+    if (!formData.lastName) {
+      newErrors.lastName = 'Last name is required';
     }
 
     if (!formData.email) {
@@ -68,7 +81,7 @@ export default function RegisterPage() {
     }
 
     try {
-      await register(formData.name, formData.email, formData.password);
+      await register(formData.firstName.trim(), formData.lastName.trim(), formData.email.trim(), formData.password);
       showSuccess('Account created successfully!');
       router.push('/');
     } catch (error) {
@@ -82,15 +95,26 @@ export default function RegisterPage() {
         <h1 className="text-3xl font-bold mb-6">Create Account</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="Full Name"
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            error={errors.name}
-            placeholder="John Doe"
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Input
+              label="First Name"
+              type="text"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              error={errors.firstName}
+              placeholder="Jane"
+            />
+            <Input
+              label="Last Name"
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              error={errors.lastName}
+              placeholder="Doe"
+            />
+          </div>
 
           <Input
             label="Email"

@@ -5,6 +5,8 @@ import orderRoutes from './orders';
 import wishlistRoutes from './wishlist';
 import healthRoutes from './health';
 import aiRoutes from './ai';
+import userRoutes from './users';
+import adminRoutes from './admin';
 
 const router = Router();
 
@@ -15,5 +17,7 @@ router.use('/products', productRoutes);
 router.use('/orders', orderRoutes);
 router.use('/wishlist', wishlistRoutes);
 router.use('/ai', aiRoutes);
+router.use('/users', userRoutes);
+router.use('/admin', adminRoutes);
 
 export default router;

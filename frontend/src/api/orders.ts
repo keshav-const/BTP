@@ -1,45 +1,56 @@
 import axiosInstance from '@/lib/axios-instance';
-import { ApiResponse, PaginatedResponse } from '@/types';
+import { ApiResponse, Order, OrderStatus, PaginatedResponse } from '@/types';
 
-export interface OrderItem {
-  productId: string;
+export interface OrderListParams {
+  page?: number;
+  limit?: number;
+  status?: OrderStatus;
+  sort?: string;
+  order?: 'asc' | 'desc';
+}
+
+export interface CreateOrderItem {
+  product: string;
   quantity: number;
   price: number;
 }
 
-export interface Address {
+export interface ShippingAddressPayload {
   street: string;
   city: string;
   state: string;
-  postalCode: string;
+  zipCode: string;
   country: string;
 }
 
-export interface Order {
-  id: string;
-  userId: string;
-  items: OrderItem[];
-  shippingAddress: Address;
-  paymentMethod: string;
-  total: number;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface CreateOrderRequest {
-  items: OrderItem[];
-  shippingAddress: Address;
+  items: CreateOrderItem[];
+  shippingAddress: ShippingAddressPayload;
   paymentMethod: string;
 }
 
 export const ordersApi = {
-  getOrders: async (page = 1, limit = 10) => {
-    const response = await axiosInstance.get<
-      ApiResponse<PaginatedResponse<Order>>
-    >('/orders', {
-      params: { page, limit },
-    });
+  getOrders: async (params: OrderListParams = {}) => {
+    const response = await axiosInstance.get<ApiResponse<PaginatedResponse<Order>>>(
+      '/orders',
+      { params }
+    );
+    return response.data;
+  },
+
+  getOrdersByUser: async (userId: string, params: OrderListParams = {}) => {
+    const response = await axiosInstance.get<ApiResponse<PaginatedResponse<Order>>>(
+      `/orders/user/${userId}`,
+      { params }
+    );
+    return response.data;
+  },
+
+  getAdminOrders: async (params: OrderListParams = {}) => {
+    const response = await axiosInstance.get<ApiResponse<PaginatedResponse<Order>>>(
+      '/admin/orders',
+      { params }
+    );
     return response.data;
   },
 
@@ -49,16 +60,19 @@ export const ordersApi = {
   },
 
   createOrder: async (data: CreateOrderRequest) => {
-    const response = await axiosInstance.post<ApiResponse<Order>>(
-      '/orders',
-      data
-    );
+    const response = await axiosInstance.post<ApiResponse<Order>>('/orders', data);
     return response.data;
   },
 
   cancelOrder: async (id: string) => {
-    const response = await axiosInstance.delete<ApiResponse<Order>>(
-      `/orders/${id}/cancel`
+    const response = await axiosInstance.delete<ApiResponse<Order>>(`/orders/${id}/cancel`);
+    return response.data;
+  },
+
+  updateOrderStatus: async (id: string, status: OrderStatus) => {
+    const response = await axiosInstance.put<ApiResponse<Order>>(
+      `/admin/orders/${id}`,
+      { status }
     );
     return response.data;
   },
