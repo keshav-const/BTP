@@ -48,27 +48,27 @@ export const Modal: React.FC<ModalProps> = ({
       />
       <div
         className={cn(
-          'relative bg-white dark:bg-charcoal-800 rounded-2xl shadow-luxury-xl',
+          'relative bg-cream-50 dark:bg-charcoal-800 rounded-2xl shadow-luxury-xl',
           'w-full mx-4 max-h-[90vh] overflow-y-auto',
           'animate-scale-in',
-          'border border-taupe-200 dark:border-charcoal-700',
+          'border border-taupe-300 dark:border-charcoal-700',
           sizes[size]
         )}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
-          <div className="flex items-center justify-between p-6 border-b border-taupe-200 dark:border-charcoal-700">
+          <div className="flex items-center justify-between p-8 border-b border-taupe-300 dark:border-charcoal-700">
             <h2 className="text-2xl font-serif font-semibold text-charcoal-900 dark:text-cream-100">{title}</h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-cream-200 dark:hover:bg-charcoal-700 rounded-xl transition-all duration-300 hover:rotate-90"
+              className="p-2 hover:bg-cream-200 dark:hover:bg-charcoal-700 rounded-xl transition-all duration-200 hover:rotate-90"
               aria-label="Close modal"
             >
               <X className="w-5 h-5 text-taupe-600 dark:text-taupe-400" />
             </button>
           </div>
         )}
-        <div className="p-6">{children}</div>
+        <div className="p-8">{children}</div>
       </div>
     </div>
   );
