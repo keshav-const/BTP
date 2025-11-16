@@ -100,27 +100,27 @@ export default function Home() {
   };
 
   return (
-    <div className="space-y-24 animate-fade-in-up">
+    <div className="space-y-20 animate-fade-in-up">
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-luxury opacity-95" />
+        <div className="absolute inset-0 bg-gradient-to-br from-charcoal-900 to-charcoal-800 opacity-95" />
         <div className="absolute inset-0 bg-gradient-radial-gold" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-gold-400/10 rounded-full blur-3xl animate-float" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-bronze-400/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
         
         <div className="relative text-center space-y-8 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-serif font-bold text-white leading-tight">
+          <h1 className="text-[48px] md:text-6xl font-serif font-bold text-cream-100 leading-tight">
             Elevated Living,
             <span className="block mt-2 bg-gradient-to-r from-gold-300 to-gold-500 bg-clip-text text-transparent">
               Curated With Care
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-cream-100 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl font-sans text-taupe-200 max-w-2xl mx-auto leading-relaxed">
             Discover a handpicked collection of premium products designed for those who appreciate the finer things in life.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6">
             <Link href="/products">
-              <Button variant="luxury" size="lg" className="min-w-[200px]">
+              <Button variant="luxury" size="lg" className="min-w-[200px] bg-gradient-gold hover:shadow-luxury-gold transition-all duration-200">
                 Explore Collection
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
@@ -129,7 +129,7 @@ export default function Home() {
               onClick={() => setIsAiModalOpen(true)}
               variant="outline"
               size="lg"
-              className="min-w-[200px] bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+              className="min-w-[200px] bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm transition-all duration-200"
             >
               <Sparkles className="mr-2 w-5 h-5" />
               AI Discovery
@@ -148,20 +148,21 @@ export default function Home() {
             Thoughtfully curated categories for every aspect of modern living
           </p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {CATEGORIES.map((category) => (
-            <button
+            <Card
               key={category.slug}
+              variant="elevated"
+              className={`group cursor-pointer p-8 transition-all duration-200 hover:scale-[1.01] hover:shadow-luxury-lg bg-gradient-to-br ${category.gradient} border border-taupe-200 dark:border-charcoal-700 hover:border-gold-400`}
               onClick={() => handleCategoryClick(category.slug)}
-              className={`group relative p-8 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-luxury-lg bg-gradient-to-br ${category.gradient} border border-taupe-200 dark:border-charcoal-700 hover:border-gold-400`}
             >
-              <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
+              <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-200">
                 {category.icon}
               </div>
-              <h3 className="font-serif font-semibold text-lg text-charcoal-900 dark:text-cream-100 group-hover:text-gold-600 transition-colors">
+              <h3 className="font-serif font-semibold text-lg text-charcoal-900 dark:text-cream-100 group-hover:text-gold-600 transition-colors duration-200">
                 {category.name}
               </h3>
-            </button>
+            </Card>
           ))}
         </div>
       </section>
@@ -181,14 +182,14 @@ export default function Home() {
           </p>
         </div>
         {isFeaturedLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {Array.from({ length: 6 }).map((_, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="aspect-[3/4] rounded-2xl" />
             ))}
           </div>
         ) : featuredData?.data && featuredData.data.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredData.data.map((product) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {featuredData.data.slice(0, 4).map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
@@ -214,7 +215,7 @@ export default function Home() {
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Card key={index} variant="elevated" className="text-center group hover:scale-105 transition-all duration-300">
+                <Card key={index} variant="elevated" className="text-center group hover:scale-[1.01] transition-all duration-200">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-gold mb-6 shadow-luxury-gold">
                     <Icon className="w-8 h-8 text-white" />
                   </div>
@@ -228,6 +229,34 @@ export default function Home() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* Ask AI Section */}
+      <section className="relative py-20 rounded-3xl overflow-hidden bg-gradient-to-br from-gold-500 to-bronze-500 shadow-luxury-xl">
+        <div className="absolute inset-0 bg-gradient-radial-gold opacity-30" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-charcoal-900/20 rounded-full blur-3xl" />
+        
+        <div className="relative text-center space-y-8 max-w-3xl mx-auto px-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm mb-4">
+            <Sparkles className="w-10 h-10 text-white" />
+          </div>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-white">
+            Discover with AI Intelligence
+          </h2>
+          <p className="text-xl text-cream-100 leading-relaxed">
+            Let our intelligent assistant help you find exactly what you're looking for. Simply describe your needs in natural language.
+          </p>
+          <Button
+            onClick={() => setIsAiModalOpen(true)}
+            variant="luxury"
+            size="lg"
+            className="min-w-[240px] bg-white text-gold-700 hover:bg-cream-100 hover:shadow-luxury-xl transition-all duration-200"
+          >
+            <Sparkles className="mr-2 w-5 h-5" />
+            Try AI Search
+          </Button>
         </div>
       </section>
 
@@ -256,7 +285,7 @@ export default function Home() {
       {/* Stats Section */}
       <section className="py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-300">
+          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-200">
             <div className="text-5xl font-serif font-bold bg-gradient-gold bg-clip-text text-transparent">
               10K+
             </div>
@@ -264,7 +293,7 @@ export default function Home() {
               Premium Products
             </p>
           </div>
-          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-300">
+          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-200">
             <div className="text-5xl font-serif font-bold bg-gradient-gold bg-clip-text text-transparent">
               50K+
             </div>
@@ -272,7 +301,7 @@ export default function Home() {
               Satisfied Clients
             </p>
           </div>
-          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-300">
+          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-200">
             <div className="text-5xl font-serif font-bold bg-gradient-gold bg-clip-text text-transparent">
               24/7
             </div>
@@ -280,7 +309,7 @@ export default function Home() {
               Concierge Support
             </p>
           </div>
-          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-300">
+          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-200">
             <div className="text-5xl font-serif font-bold bg-gradient-gold bg-clip-text text-transparent">
               100%
             </div>
@@ -289,6 +318,45 @@ export default function Home() {
             </p>
           </div>
         </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="py-20">
+        <Card variant="elevated" className="max-w-3xl mx-auto p-12 text-center border border-taupe-200 dark:border-charcoal-700">
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-charcoal-900 dark:text-cream-100 mb-4">
+            Stay in the Loop
+          </h2>
+          <p className="text-lg text-taupe-600 dark:text-taupe-400 mb-8 max-w-2xl mx-auto">
+            Subscribe to our newsletter for exclusive offers, new arrivals, and insider access to premium collections.
+          </p>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const form = e.target as HTMLFormElement;
+              const emailInput = form.elements.namedItem('email') as HTMLInputElement;
+              showSuccess('Thank you for subscribing!');
+              emailInput.value = '';
+            }}
+            className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto"
+          >
+            <Input
+              type="email"
+              name="email"
+              placeholder="Enter your email address"
+              required
+              className="flex-1 focus:ring-gold-500 focus:border-gold-500 transition-all duration-200"
+              aria-label="Email address"
+            />
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              className="whitespace-nowrap transition-all duration-200"
+            >
+              Subscribe
+            </Button>
+          </form>
+        </Card>
       </section>
 
       {/* AI Search Modal */}
