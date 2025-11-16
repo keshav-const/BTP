@@ -90,11 +90,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <Card variant="elevated" className="w-full max-w-md">
-        <h1 className="text-3xl font-bold mb-6">Create Account</h1>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4">
+      <Card variant="elevated" className="w-full max-w-md p-8">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-serif font-bold text-charcoal-900 dark:text-cream-100 mb-3">Create Account</h1>
+          <p className="text-taupe-600 dark:text-taupe-400">Join our exclusive community</p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="First Name"
@@ -133,7 +136,7 @@ export default function RegisterPage() {
             value={formData.password}
             onChange={handleChange}
             error={errors.password}
-            placeholder="••••••"
+            placeholder="••••••••"
           />
 
           <Input
@@ -143,7 +146,7 @@ export default function RegisterPage() {
             value={formData.confirmPassword}
             onChange={handleChange}
             error={errors.confirmPassword}
-            placeholder="••••••"
+            placeholder="••••••••"
           />
 
           <Button type="submit" variant="primary" size="lg" className="w-full" isLoading={isLoading}>
@@ -151,10 +154,10 @@ export default function RegisterPage() {
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-secondary-600">
+        <p className="mt-6 text-center text-taupe-600 dark:text-taupe-400">
           Already have an account?{' '}
-          <Link href="/login" className="text-primary-600 hover:underline font-semibold">
-            Login
+          <Link href="/login" className="text-gold-600 dark:text-gold-400 hover:text-gold-700 dark:hover:text-gold-300 font-semibold transition-colors">
+            Sign In
           </Link>
         </p>
       </Card>

@@ -31,13 +31,15 @@ export default function WishlistPage() {
   if (items.length === 0) {
     return (
       <div className="text-center py-12 md:py-20">
-        <Heart className="w-16 h-16 mx-auto text-secondary-300 mb-4" />
-        <h1 className="text-3xl font-bold mb-4">Your Wishlist is Empty</h1>
-        <p className="text-secondary-600 mb-6">
+        <div className="inline-flex p-6 rounded-full bg-cream-100 dark:bg-charcoal-800 mb-6">
+          <Heart className="w-16 h-16 text-gold-500 dark:text-gold-400" />
+        </div>
+        <h1 className="text-4xl font-serif font-bold mb-4 text-charcoal-900 dark:text-cream-100">Your Wishlist is Empty</h1>
+        <p className="text-taupe-600 dark:text-taupe-400 mb-8 text-lg">
           Start adding items to your wishlist to save them for later!
         </p>
         <Link href="/products">
-          <Button variant="primary" size="lg">
+          <Button variant="luxury" size="lg">
             Browse Products
           </Button>
         </Link>
@@ -49,8 +51,8 @@ export default function WishlistPage() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">My Wishlist</h1>
-          <p className="text-secondary-600 mt-1">{items.length} item{items.length !== 1 ? 's' : ''} saved</p>
+          <h1 className="text-4xl font-serif font-bold text-charcoal-900 dark:text-cream-100">My Wishlist</h1>
+          <p className="text-taupe-600 dark:text-taupe-400 mt-2">{items.length} item{items.length !== 1 ? 's' : ''} saved</p>
         </div>
         <Button
           onClick={handleClearAll}
@@ -72,7 +74,7 @@ export default function WishlistPage() {
             />
             <button
               onClick={() => handleRemoveItem(product.id)}
-              className="absolute top-2 right-2 p-2 bg-white dark:bg-secondary-900 rounded-full shadow-md hover:shadow-lg transition-shadow z-10"
+              className="absolute top-4 right-4 p-2.5 bg-white dark:bg-charcoal-800 rounded-full shadow-luxury hover:shadow-luxury-lg transition-all duration-200 hover:scale-110 z-10 border border-taupe-200 dark:border-charcoal-600"
               aria-label="Remove from wishlist"
               title="Remove from wishlist"
             >
@@ -82,12 +84,12 @@ export default function WishlistPage() {
         ))}
       </div>
 
-      <Card variant="outlined" className="p-6 text-center">
-        <p className="text-secondary-600 mb-4">
+      <Card variant="elevated" className="p-8 text-center">
+        <p className="text-taupe-600 dark:text-taupe-400 mb-6 text-lg">
           Didn't find what you were looking for?
         </p>
         <Link href="/products">
-          <Button variant="primary">
+          <Button variant="primary" size="lg">
             Continue Shopping
           </Button>
         </Link>

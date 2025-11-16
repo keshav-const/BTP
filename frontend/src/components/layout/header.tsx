@@ -2,16 +2,18 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Menu, X, Heart, ShoppingCart, LogOut, LogIn, User } from 'lucide-react';
+import { Menu, X, Heart, ShoppingCart, LogOut, LogIn, User, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth, useCart, useWishlist } from '@/hooks';
 import { useUiStore } from '@/store';
+import { useTheme } from '@/providers/theme-provider';
 
 export const Header: React.FC = () => {
   const { isAuthenticated, logout } = useAuth();
   const { itemCount } = useCart();
   const { count: wishlistCount } = useWishlist();
   const { isMobileMenuOpen, setMobileMenuOpen } = useUiStore();
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogout = async () => {
     try {
@@ -54,6 +56,19 @@ export const Header: React.FC = () => {
 
           {/* Icons and Auth */}
           <div className="flex items-center gap-3">
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2.5 text-charcoal-900 dark:text-cream-100 hover:text-gold-600 dark:hover:text-gold-400 transition-all hover:scale-110 rounded-xl hover:bg-cream-200 dark:hover:bg-charcoal-800"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
+            </button>
+
             {/* Wishlist */}
             <Link
               href="/wishlist"

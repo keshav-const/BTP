@@ -1,6 +1,6 @@
 :root {
   --background: #faf8f6;
-  --foreground: #2c3e50;
+  --foreground: #1a1f36;
   --border: #e6e2de;
   --input: #ffffff;
   --ring: #d4a574;
@@ -43,39 +43,38 @@
   --accent-tertiary: #4a6b5e;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1a1f36;
-    --foreground: #faf8f6;
-    --border: #2c3142;
-    --input: #2c3142;
-    --ring: #d4a574;
-    
-    /* Semantic color variables - dark mode */
-    --bg-primary: #1a1f36;
-    --bg-secondary: #2c3142;
-    --bg-tertiary: #444958;
-    --bg-elevated: #2c3142;
-    --bg-overlay: rgba(26, 31, 54, 0.8);
-    
-    --text-primary: #faf8f6;
-    --text-secondary: #f5f1ed;
-    --text-tertiary: #9b8b7e;
-    --text-inverse: #1a1f36;
-    
-    --border-default: #2c3142;
-    --border-subtle: #1a1f36;
-    --border-strong: #677084;
-    --border-accent: #d4a574;
-    
-    --surface-default: #2c3142;
-    --surface-elevated: #444958;
-    --surface-overlay: rgba(44, 49, 66, 0.95);
-    
-    --accent-primary: #d4a574;
-    --accent-secondary: #a67c52;
-    --accent-tertiary: #73a094;
-  }
+/* Dark mode class-based (controlled by theme provider) */
+.dark {
+  --background: #0f1419;
+  --foreground: #faf8f6;
+  --border: #2c3142;
+  --input: #2c3142;
+  --ring: #d4a574;
+  
+  /* Semantic color variables - dark mode */
+  --bg-primary: #0f1419;
+  --bg-secondary: #1a1f36;
+  --bg-tertiary: #2c3142;
+  --bg-elevated: #2c3142;
+  --bg-overlay: rgba(15, 20, 25, 0.9);
+  
+  --text-primary: #faf8f6;
+  --text-secondary: #f5f1ed;
+  --text-tertiary: #9b8b7e;
+  --text-inverse: #1a1f36;
+  
+  --border-default: #2c3142;
+  --border-subtle: #1a1f36;
+  --border-strong: #677084;
+  --border-accent: #d4a574;
+  
+  --surface-default: #2c3142;
+  --surface-elevated: #444958;
+  --surface-overlay: rgba(44, 49, 66, 0.95);
+  
+  --accent-primary: #d4a574;
+  --accent-secondary: #a67c52;
+  --accent-tertiary: #73a094;
 }
 
 @tailwind base;
@@ -88,12 +87,16 @@
 
 body {
   background: linear-gradient(180deg, #faf8f6 0%, #f5f1ed 100%);
-  color: var(--foreground);
+  color: var(--text-primary);
   font-family: var(--font-sans), "Inter", system-ui, -apple-system, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
   font-feature-settings: "kern" 1, "liga" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.dark body {
+  background: linear-gradient(180deg, #0f1419 0%, #1a1f36 100%);
 }
 
 a {
@@ -181,13 +184,11 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif);
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: var(--charcoal);
+  color: var(--text-primary);
 }
 
-@media (prefers-color-scheme: dark) {
-  h1, h2, h3, h4, h5, h6 {
-    color: var(--cream-light);
-  }
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: var(--text-primary);
 }
 
 /* Premium card hover effect */

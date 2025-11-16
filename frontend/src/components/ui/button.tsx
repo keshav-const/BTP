@@ -25,17 +25,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variants = {
       primary:
-        'bg-gold-500 text-charcoal-900 hover:scale-[1.02] active:scale-[0.98] hover:bg-gold-600 shadow-luxury disabled:hover:scale-100 dark:text-charcoal-900',
+        'bg-gradient-to-r from-gold-500 to-gold-600 text-white font-bold hover:scale-[1.02] active:scale-[0.98] hover:from-gold-600 hover:to-gold-700 shadow-luxury-gold disabled:hover:scale-100 disabled:opacity-50',
       secondary:
         'bg-charcoal-800 text-cream-100 hover:bg-charcoal-700 hover:shadow-luxury disabled:hover:bg-charcoal-800 dark:bg-charcoal-700 dark:hover:bg-charcoal-600',
       outline:
-        'border-2 border-gold-400 text-charcoal-900 hover:bg-gold-50 hover:border-gold-500 hover:shadow-luxury-sm disabled:hover:bg-transparent dark:text-cream-100 dark:hover:bg-charcoal-800',
+        'border-2 border-gold-400 text-gold-600 hover:bg-gold-50 hover:border-gold-500 hover:shadow-luxury-sm disabled:hover:bg-transparent dark:text-gold-400 dark:border-gold-500 dark:hover:bg-charcoal-800/50',
       ghost:
-        'border border-taupe-300 bg-transparent text-charcoal-900 hover:bg-cream-200 hover:border-taupe-400 disabled:hover:bg-transparent dark:text-cream-100 dark:hover:bg-charcoal-800 dark:border-taupe-700',
+        'border border-transparent bg-transparent text-charcoal-900 hover:bg-cream-200 hover:border-taupe-300 disabled:hover:bg-transparent dark:text-cream-100 dark:hover:bg-charcoal-800',
       danger:
         'bg-error text-white hover:bg-red-600 hover:shadow-luxury disabled:bg-red-200',
       luxury:
-        'border-2 border-gold-400 bg-transparent text-gold-600 hover:bg-gold-50 hover:border-gold-500 hover:shadow-luxury-gold font-semibold disabled:hover:bg-transparent dark:text-gold-400 dark:hover:bg-charcoal-800',
+        'bg-gradient-to-r from-gold-500 to-bronze-500 text-white font-bold hover:scale-[1.02] hover:from-gold-600 hover:to-bronze-600 shadow-luxury-gold disabled:hover:scale-100 disabled:opacity-50',
     };
 
     const sizes = {
