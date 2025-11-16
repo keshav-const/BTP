@@ -3,6 +3,7 @@ import type { Config } from 'tailwindcss';
 const animatePlugin = require('tailwindcss-animate');
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -28,7 +29,7 @@ const config: Config = {
           700: '#444958',
           800: '#2c3142',
           900: '#1a1f36',
-          950: '#0f121f',
+          950: '#0f1419',
         },
         gold: {
           50: '#faf8f5',

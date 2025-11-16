@@ -67,11 +67,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <Card variant="elevated" className="w-full max-w-md">
-        <h1 className="text-3xl font-bold mb-6">Login</h1>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4">
+      <Card variant="elevated" className="w-full max-w-md p-8">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-serif font-bold text-charcoal-900 dark:text-cream-100 mb-3">Welcome Back</h1>
+          <p className="text-taupe-600 dark:text-taupe-400">Sign in to your account</p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <Input
             label="Email"
             type="email"
@@ -89,17 +92,17 @@ export default function LoginPage() {
             value={formData.password}
             onChange={handleChange}
             error={errors.password}
-            placeholder="••••••"
+            placeholder="••••••••"
           />
 
           <Button type="submit" variant="primary" size="lg" className="w-full" isLoading={isLoading}>
-            Login
+            Sign In
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-secondary-600">
+        <p className="mt-6 text-center text-taupe-600 dark:text-taupe-400">
           Don&apos;t have an account?{' '}
-          <Link href="/register" className="text-primary-600 hover:underline font-semibold">
+          <Link href="/register" className="text-gold-600 dark:text-gold-400 hover:text-gold-700 dark:hover:text-gold-300 font-semibold transition-colors">
             Sign up
           </Link>
         </p>
