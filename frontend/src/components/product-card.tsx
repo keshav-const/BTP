@@ -37,7 +37,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-emerald-600/30 via-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
           {discount && (
             <Badge variant="luxury" size="md" className="absolute top-3 right-3">
               -{discount}%
@@ -55,7 +55,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       <div className="flex-1 p-5 flex flex-col bg-white dark:bg-charcoal-800">
         <Link href={`/products/${product.id}`} className="flex-1 space-y-2">
-          <h3 className="font-serif font-semibold text-lg text-charcoal-900 dark:text-cream-100 hover:text-gold-500 dark:hover:text-gold-400 line-clamp-2 transition-colors duration-300">
+          <h3 className="font-serif font-semibold text-lg text-charcoal-900 dark:text-cream-100 hover:text-gold-600 dark:hover:text-gold-400 line-clamp-2 transition-colors duration-200">
             {product.name}
           </h3>
           <p className="text-sm text-taupe-600 dark:text-taupe-400 line-clamp-2">
@@ -78,7 +78,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <div className="mt-4 flex items-baseline gap-2">
           {product.salePrice ? (
             <>
-              <span className="text-2xl font-serif font-bold text-charcoal-900 dark:text-cream-100">
+              <span className="text-2xl font-serif font-bold text-gold-600 dark:text-gold-400">
                 {formatPrice(product.salePrice)}
               </span>
               <span className="text-sm text-taupe-500 line-through">
@@ -86,7 +86,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               </span>
             </>
           ) : (
-            <span className="text-2xl font-serif font-bold text-charcoal-900 dark:text-cream-100">
+            <span className="text-2xl font-serif font-bold text-gold-600 dark:text-gold-400">
               {formatPrice(product.price)}
             </span>
           )}
@@ -96,9 +96,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <Button
             onClick={() => onAddToCart?.(product)}
             disabled={!product.inStock}
-            variant="primary"
+            variant="luxury"
             size="md"
-            className="flex-1"
+            className="flex-1 transition-all duration-200"
           >
             <ShoppingCart className="w-4 h-4 mr-2" />
             Add to Cart
