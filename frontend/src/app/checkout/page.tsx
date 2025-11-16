@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useCart, useAuth, useToast } from '@/hooks';
-import { ordersApi, CreateOrderRequest, OrderItem } from '@/api/orders';
+import { ordersApi, CreateOrderRequest, CreateOrderItem } from '@/api/orders';
 import { formatPrice } from '@/utils/format';
 
 export default function CheckoutPage() {
@@ -85,15 +85,21 @@ export default function CheckoutPage() {
   const handlePlaceOrder = async () => {
     setIsLoading(true);
     try {
-      const orderItems: OrderItem[] = items.map(item => ({
-        productId: item.id,
+      const orderItems: CreateOrderItem[] = items.map(item => ({
+        product: item.id,
         quantity: item.cartQuantity,
         price: item.salePrice || item.price,
       }));
 
       const orderData: CreateOrderRequest = {
         items: orderItems,
-        shippingAddress: formData,
+        shippingAddress: {
+          street: formData.street,
+          city: formData.city,
+          state: formData.state,
+          zipCode: formData.postalCode,
+          country: formData.country,
+        },
         paymentMethod: paymentMethod === 'cod' ? 'Cash on Delivery' : 'Credit Card',
       };
 

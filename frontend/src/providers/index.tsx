@@ -8,8 +8,8 @@ export { useTheme } from './theme-provider';
 
 export const Providers: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <HydrationProvider>
-      <ThemeProvider>{children}</ThemeProvider>
-    </HydrationProvider>
+    <ThemeProvider>
+      <HydrationProvider>{children}</HydrationProvider>
+    </ThemeProvider>
   );
 };
