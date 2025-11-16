@@ -59,22 +59,28 @@ export const FilterControls: React.FC<FilterControlsProps> = ({
   return (
     <div className="space-y-4">
       {filters.map((filter) => (
-        <Card key={filter.name} variant="outlined" className="p-4">
+        <Card 
+          key={filter.name} 
+          variant="outlined" 
+          className="p-5 bg-cream-100 dark:bg-charcoal-700 border-taupe-200 dark:border-charcoal-600 rounded-xl"
+        >
           <button
             onClick={() => toggleFilter(filter.name)}
-            className="w-full flex items-center justify-between mb-3"
+            className="w-full flex items-center justify-between mb-4"
           >
-            <h3 className="font-semibold text-foreground">{filter.name}</h3>
+            <h3 className="font-sans text-xs uppercase tracking-wider font-semibold text-charcoal-900 dark:text-cream-100">
+              {filter.name}
+            </h3>
             <ChevronDown
               className={cn(
-                'w-5 h-5 text-secondary-600 transition-transform',
+                'w-4 h-4 text-taupe-600 dark:text-taupe-400 transition-transform duration-300',
                 expandedFilters.has(filter.name) && 'rotate-180'
               )}
             />
           </button>
 
           {expandedFilters.has(filter.name) && (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {filter.options.map((option) => {
                 const isSelected = filter.multiple
                   ? (selectedFilters[filter.name] as string[])?.includes(option.value)
@@ -83,19 +89,38 @@ export const FilterControls: React.FC<FilterControlsProps> = ({
                 return (
                   <label
                     key={option.value}
-                    className="flex items-center gap-3 cursor-pointer hover:opacity-70 transition-opacity"
+                    className="flex items-center gap-3 cursor-pointer group"
                   >
-                    <input
-                      type={filter.multiple ? 'checkbox' : 'radio'}
-                      checked={isSelected}
-                      onChange={() =>
-                        handleOptionChange(filter.name, option.value, filter.multiple)
-                      }
-                      className="w-4 h-4 cursor-pointer"
-                    />
-                    <span className="flex-1 text-sm text-foreground">{option.label}</span>
+                    <div className="relative">
+                      <input
+                        type={filter.multiple ? 'checkbox' : 'radio'}
+                        checked={isSelected}
+                        onChange={() =>
+                          handleOptionChange(filter.name, option.value, filter.multiple)
+                        }
+                        className="peer w-4 h-4 cursor-pointer appearance-none border-2 border-taupe-400 dark:border-taupe-500 rounded checked:border-gold-500 checked:bg-gold-500 transition-all duration-200"
+                      />
+                      <svg
+                        className="absolute top-0 left-0 w-4 h-4 pointer-events-none hidden peer-checked:block text-white"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                      >
+                        <path
+                          d="M3 8L6.5 11.5L13 4.5"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <span className="flex-1 text-sm text-charcoal-800 dark:text-cream-200 group-hover:text-gold-600 dark:group-hover:text-gold-400 transition-colors duration-200">
+                      {option.label}
+                    </span>
                     {option.count !== undefined && (
-                      <span className="text-xs text-secondary-500">({option.count})</span>
+                      <span className="text-xs text-taupe-500 dark:text-taupe-400">
+                        ({option.count})
+                      </span>
                     )}
                   </label>
                 );

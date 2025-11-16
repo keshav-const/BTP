@@ -30,14 +30,16 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="text-center py-12 md:py-20">
-        <ShoppingBag className="w-16 h-16 mx-auto text-secondary-300 mb-4" />
-        <h1 className="text-3xl font-bold mb-4">Your Cart is Empty</h1>
-        <p className="text-secondary-600 mb-6">
+      <div className="text-center py-16 md:py-24">
+        <div className="inline-flex p-6 rounded-full bg-cream-100 dark:bg-charcoal-800 mb-6">
+          <ShoppingBag className="w-16 h-16 text-gold-500 dark:text-gold-400" />
+        </div>
+        <h1 className="text-4xl font-serif font-bold mb-4 text-charcoal-900 dark:text-cream-100">Your Cart is Empty</h1>
+        <p className="text-taupe-600 dark:text-taupe-400 mb-8 text-lg">
           Start shopping and add items to your cart!
         </p>
         <Link href="/products">
-          <Button variant="primary" size="lg">
+          <Button variant="luxury" size="lg">
             Continue Shopping
           </Button>
         </Link>
@@ -47,73 +49,79 @@ export default function CartPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold">Shopping Cart</h1>
+      <h1 className="text-4xl font-serif font-bold text-charcoal-900 dark:text-cream-100">Shopping Cart</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items */}
-        <div className="lg:col-span-2">
-          <Card variant="outlined" className="overflow-hidden">
-            <div className="p-4 border-b border-border">
-              <p className="text-sm text-secondary-600">
-                {items.length} item{items.length !== 1 ? 's' : ''} in cart
-              </p>
-            </div>
-            <div className="space-y-4 p-4">
-              {items.map((item) => {
-                const itemPrice = item.salePrice || item.price;
-                const itemTotal = itemPrice * item.cartQuantity;
-                return (
-                  <div
-                    key={item.id}
-                    className="flex gap-4 pb-4 border-b border-border last:border-b-0 last:pb-0"
-                  >
-                    <Link href={`/products/${item.id}`} className="flex-shrink-0">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-24 h-24 object-cover rounded-lg hover:opacity-80 transition-opacity"
-                      />
+        <div className="lg:col-span-2 space-y-4">
+          <div className="p-5 bg-cream-100 dark:bg-charcoal-800 rounded-xl border border-taupe-200 dark:border-charcoal-600">
+            <p className="text-sm text-taupe-600 dark:text-taupe-400 font-medium">
+              {items.length} item{items.length !== 1 ? 's' : ''} in cart
+            </p>
+          </div>
+          
+          <div className="space-y-4">
+            {items.map((item) => {
+              const itemPrice = item.salePrice || item.price;
+              const itemTotal = itemPrice * item.cartQuantity;
+              return (
+                <Card
+                  key={item.id}
+                  variant="elevated"
+                  className="p-6 bg-white dark:bg-charcoal-800 rounded-xl border border-taupe-200 dark:border-charcoal-600 shadow-luxury-sm hover:shadow-luxury transition-all duration-200"
+                >
+                  <div className="flex gap-6">
+                    <Link href={`/products/${item.id}`} className="flex-shrink-0 group">
+                      <div className="w-28 h-28 rounded-xl overflow-hidden bg-cream-100 dark:bg-charcoal-700">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
                     </Link>
                     <div className="flex-1 min-w-0">
                       <Link href={`/products/${item.id}`}>
-                        <h3 className="font-semibold text-foreground hover:text-primary-600 truncate">
+                        <h3 className="font-serif text-lg font-semibold text-charcoal-900 dark:text-cream-100 hover:text-gold-600 dark:hover:text-gold-400 transition-colors duration-200 mb-1">
                           {item.name}
                         </h3>
                       </Link>
-                      <p className="text-secondary-600 text-sm">{item.category}</p>
-                      <p className="text-sm font-medium mt-2">
-                        {itemPrice !== item.price && (
+                      <p className="text-taupe-600 dark:text-taupe-400 text-sm mb-3">{item.category}</p>
+                      <div className="text-base font-semibold">
+                        {itemPrice !== item.price ? (
                           <>
-                            <span className="text-error font-bold">
+                            <span className="text-gold-600 dark:text-gold-400">
                               {formatPrice(itemPrice)}
                             </span>
-                            <span className="text-secondary-500 line-through ml-2">
+                            <span className="text-taupe-500 dark:text-taupe-400 line-through ml-2 text-sm">
                               {formatPrice(item.price)}
                             </span>
                           </>
-                        ) || formatPrice(itemPrice)}
-                      </p>
+                        ) : (
+                          <span className="text-gold-600 dark:text-gold-400">{formatPrice(itemPrice)}</span>
+                        )}
+                      </div>
                     </div>
 
-                    <div className="flex flex-col items-end justify-between gap-2">
-                      <div className="flex items-center gap-2 border border-border rounded-lg">
+                    <div className="flex flex-col items-end justify-between gap-3">
+                      <div className="flex items-center gap-0 border-2 border-gold-400 dark:border-gold-600 rounded-lg overflow-hidden bg-white dark:bg-charcoal-900 shadow-luxury-sm">
                         <button
                           onClick={() =>
                             updateQuantity(item.id, Math.max(1, item.cartQuantity - 1))
                           }
-                          className="p-1 hover:bg-secondary-100 dark:hover:bg-secondary-800 transition-colors"
+                          className="p-2 hover:bg-gold-50 dark:hover:bg-gold-900/20 text-gold-600 dark:text-gold-400 transition-all duration-200"
                           aria-label="Decrease quantity"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
-                        <span className="px-3 py-1 text-sm font-medium min-w-8 text-center">
+                        <span className="px-4 py-2 text-sm font-semibold min-w-[48px] text-center text-charcoal-900 dark:text-cream-100 border-x-2 border-gold-400 dark:border-gold-600">
                           {item.cartQuantity}
                         </span>
                         <button
                           onClick={() =>
                             updateQuantity(item.id, item.cartQuantity + 1)
                           }
-                          className="p-1 hover:bg-secondary-100 dark:hover:bg-secondary-800 transition-colors"
+                          className="p-2 hover:bg-gold-50 dark:hover:bg-gold-900/20 text-gold-600 dark:text-gold-400 transition-all duration-200"
                           aria-label="Increase quantity"
                         >
                           <Plus className="w-4 h-4" />
@@ -121,60 +129,63 @@ export default function CartPage() {
                       </div>
 
                       <div className="text-right">
-                        <p className="text-sm text-secondary-600">Subtotal</p>
-                        <p className="font-bold">{formatPrice(itemTotal)}</p>
+                        <p className="text-xs text-taupe-600 dark:text-taupe-400 mb-1">Subtotal</p>
+                        <p className="font-serif text-lg font-bold text-charcoal-900 dark:text-cream-100">{formatPrice(itemTotal)}</p>
                       </div>
 
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="p-2 text-error hover:bg-red-50 dark:hover:bg-red-950 rounded-lg transition-colors"
+                        className="p-2 text-error hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-all duration-200"
                         aria-label="Remove from cart"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          </Card>
+                </Card>
+              );
+            })}
+          </div>
         </div>
 
         {/* Order Summary */}
         <div className="lg:col-span-1">
-          <Card variant="elevated" className="sticky top-20 space-y-4">
-            <h2 className="text-xl font-semibold border-b border-border pb-4">
+          <Card 
+            variant="elevated" 
+            className="sticky top-20 space-y-6 p-6 bg-cream-100 dark:bg-charcoal-800 rounded-2xl border border-taupe-200 dark:border-charcoal-600 shadow-luxury"
+          >
+            <h2 className="text-2xl font-serif font-semibold text-charcoal-900 dark:text-cream-100 border-b border-taupe-300 dark:border-charcoal-700 pb-4">
               Order Summary
             </h2>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex justify-between text-sm">
-                <span className="text-secondary-600">Subtotal</span>
-                <span className="font-medium">{formatPrice(total)}</span>
+                <span className="text-taupe-600 dark:text-taupe-400">Subtotal</span>
+                <span className="font-semibold text-charcoal-800 dark:text-cream-200">{formatPrice(total)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-secondary-600">Shipping</span>
+                <span className="text-taupe-600 dark:text-taupe-400">Shipping</span>
                 {shippingCost === 0 ? (
                   <Badge variant="success" size="sm">Free</Badge>
                 ) : (
-                  <span className="font-medium">{formatPrice(shippingCost)}</span>
+                  <span className="font-semibold text-charcoal-800 dark:text-cream-200">{formatPrice(shippingCost)}</span>
                 )}
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-secondary-600">Tax (8%)</span>
-                <span className="font-medium">{formatPrice(tax)}</span>
+                <span className="text-taupe-600 dark:text-taupe-400">Tax (8%)</span>
+                <span className="font-semibold text-charcoal-800 dark:text-cream-200">{formatPrice(tax)}</span>
               </div>
               {shippingCost > 0 && (
-                <div className="p-2 bg-primary-50 dark:bg-primary-900 rounded text-xs text-primary-700 dark:text-primary-300">
+                <div className="p-3 bg-gold-50 dark:bg-gold-900/20 border border-gold-200 dark:border-gold-800 rounded-xl text-xs text-gold-800 dark:text-gold-200">
                   Free shipping on orders over $50!
                 </div>
               )}
             </div>
 
-            <div className="border-t border-border pt-4">
-              <div className="flex justify-between text-lg font-bold">
-                <span>Total</span>
-                <span className="text-primary-600">{formatPrice(finalTotal)}</span>
+            <div className="border-t border-taupe-300 dark:border-charcoal-700 pt-4">
+              <div className="flex justify-between items-baseline">
+                <span className="text-lg font-serif font-semibold text-charcoal-900 dark:text-cream-100">Total</span>
+                <span className="text-2xl font-serif font-bold text-gold-600 dark:text-gold-400">{formatPrice(finalTotal)}</span>
               </div>
             </div>
 
@@ -188,7 +199,7 @@ export default function CartPage() {
             </Button>
 
             <Link href="/products">
-              <Button variant="outline" size="lg" className="w-full">
+              <Button variant="outline" size="lg" className="w-full border-taupe-300 dark:border-charcoal-600 hover:border-gold-500 dark:hover:border-gold-500">
                 Continue Shopping
               </Button>
             </Link>
