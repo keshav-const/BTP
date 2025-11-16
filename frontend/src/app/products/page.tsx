@@ -146,29 +146,33 @@ export default function ProductsPage() {
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h1 className="text-4xl font-bold">Products</h1>
+        <h1 className="text-4xl font-serif font-bold text-charcoal-900 dark:text-cream-100">Products</h1>
         <div className="relative">
           <button
             onClick={() => setShowSortDropdown(!showSortDropdown)}
-            className="flex items-center gap-2 px-4 py-2 border-2 border-border rounded-lg hover:border-primary-500 transition-colors"
+            className="flex items-center gap-3 px-5 py-2.5 bg-white dark:bg-charcoal-800 border-2 border-taupe-300 dark:border-charcoal-600 rounded-xl hover:border-gold-500 dark:hover:border-gold-500 focus:border-gold-500 dark:focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20 transition-all duration-200 shadow-luxury-sm"
             aria-label="Sort products"
             aria-expanded={showSortDropdown}
           >
-            {SORT_OPTIONS.find(o => o.value === sort)?.label || 'Sort By'}
+            <span className="text-sm font-medium text-charcoal-800 dark:text-cream-200">
+              {SORT_OPTIONS.find(o => o.value === sort)?.label || 'Sort By'}
+            </span>
             <ChevronDown className={cn(
-              'w-4 h-4 transition-transform',
+              'w-4 h-4 text-gold-600 dark:text-gold-400 transition-transform duration-300',
               showSortDropdown && 'rotate-180'
             )} />
           </button>
           {showSortDropdown && (
-            <div className="absolute top-full mt-1 right-0 bg-white dark:bg-secondary-900 border border-border rounded-lg shadow-lg z-10 min-w-40">
+            <div className="absolute top-full mt-2 right-0 bg-white dark:bg-charcoal-800 border border-taupe-200 dark:border-charcoal-600 rounded-xl shadow-luxury overflow-hidden z-10 min-w-[200px] animate-fade-in-down">
               {SORT_OPTIONS.map(option => (
                 <button
                   key={option.value}
                   onClick={() => handleSortChange(option.value)}
                   className={cn(
-                    'w-full text-left px-4 py-2 hover:bg-secondary-100 dark:hover:bg-secondary-800 transition-colors',
-                    sort === option.value && 'bg-primary-50 dark:bg-primary-900 text-primary-600'
+                    'w-full text-left px-4 py-3 text-sm transition-all duration-200',
+                    sort === option.value 
+                      ? 'bg-gradient-gold text-white font-medium' 
+                      : 'text-charcoal-800 dark:text-cream-200 hover:bg-cream-100 dark:hover:bg-charcoal-700'
                   )}
                 >
                   {option.label}
@@ -193,7 +197,7 @@ export default function ProductsPage() {
                 window.history.replaceState(null, '', '/products');
                 setSelectedFilters({});
               }}
-              className="mt-4 text-primary-600 hover:text-primary-700 underline text-sm"
+              className="mt-4 text-gold-600 hover:text-gold-700 dark:text-gold-400 dark:hover:text-gold-300 underline text-sm font-medium transition-colors duration-200"
             >
               Clear all filters
             </button>
@@ -204,24 +208,24 @@ export default function ProductsPage() {
         <main className="lg:col-span-3">
           {error && (
             <div className="text-center py-12">
-              <p className="text-error text-lg">Failed to load products. Please try again.</p>
+              <p className="text-error text-lg font-serif">Failed to load products. Please try again.</p>
             </div>
           )}
 
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {Array.from({ length: 12 }).map((_, i) => (
-                <Skeleton key={i} className="aspect-square rounded-lg" />
+                <Skeleton key={i} className="aspect-square rounded-xl" />
               ))}
             </div>
           ) : !data?.data || data.data.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-secondary-600 text-lg">No products found.</p>
-              <p className="text-secondary-500 text-sm mt-2">Try adjusting your filters</p>
+            <div className="text-center py-16">
+              <p className="text-charcoal-600 dark:text-cream-300 text-lg font-serif mb-2">No products found.</p>
+              <p className="text-taupe-600 dark:text-taupe-400 text-sm">Try adjusting your filters</p>
             </div>
           ) : (
             <>
-              <div className="mb-4 text-sm text-secondary-600">
+              <div className="mb-6 text-sm text-taupe-600 dark:text-taupe-400 font-medium">
                 Showing {data.data.length} of {data.total} products
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
