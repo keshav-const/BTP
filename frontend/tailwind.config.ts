@@ -188,6 +188,14 @@ const config: Config = {
         'gradient-radial-gold': 'radial-gradient(circle at top right, rgba(212, 165, 116, 0.1) 0%, transparent 50%)',
         'gradient-radial-emerald': 'radial-gradient(circle at bottom left, rgba(74, 107, 94, 0.05) 0%, transparent 50%)',
       },
+      transitionDuration: {
+        '200': '200ms',
+        '300': '300ms',
+        '600': '600ms',
+      },
+      transitionTimingFunction: {
+        'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+      },
     },
   },
   plugins: [animatePlugin],
