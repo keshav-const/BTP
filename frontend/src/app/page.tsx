@@ -8,17 +8,16 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Modal } from '@/components/ui/modal';
 import { ProductCard, Skeleton } from '@/components';
-import { ArrowRight, Zap, Shield, Truck, Sparkles, Search } from 'lucide-react';
+import { ArrowRight, Shield, Truck, Sparkles, Search, Star, Award } from 'lucide-react';
 import { useFetch, useCart, useToast } from '@/hooks';
-import { productsApi } from '@/api/products';
 import { aiApi } from '@/api/ai';
 import { Product, PaginatedResponse } from '@/types';
 
 const CATEGORIES = [
-  { name: 'Electronics', slug: 'electronics', icon: '📱' },
-  { name: 'Fashion', slug: 'fashion', icon: '👗' },
-  { name: 'Home & Garden', slug: 'home', icon: '🏠' },
-  { name: 'Sports', slug: 'sports', icon: '⚽' },
+  { name: 'Electronics', slug: 'electronics', icon: '📱', gradient: 'from-blue-500/10 to-indigo-500/10' },
+  { name: 'Fashion', slug: 'fashion', icon: '👗', gradient: 'from-pink-500/10 to-rose-500/10' },
+  { name: 'Home & Garden', slug: 'home', icon: '🏠', gradient: 'from-green-500/10 to-emerald-500/10' },
+  { name: 'Sports', slug: 'sports', icon: '⚽', gradient: 'from-orange-500/10 to-yellow-500/10' },
 ];
 
 export default function Home() {
@@ -36,19 +35,22 @@ export default function Home() {
 
   const features = [
     {
-      icon: Zap,
-      title: 'Fast Shipping',
-      description: 'Free shipping on orders over $50',
+      icon: Truck,
+      title: 'Complimentary Delivery',
+      description: 'Free express shipping on all orders over $50',
+      color: 'emerald',
     },
     {
       icon: Shield,
-      title: 'Secure Checkout',
-      description: 'SSL-encrypted transactions for your safety',
+      title: 'Secured Transactions',
+      description: 'Premium SSL-encrypted checkout for peace of mind',
+      color: 'gold',
     },
     {
-      icon: Truck,
-      title: 'Easy Returns',
-      description: '30-day money-back guarantee',
+      icon: Award,
+      title: 'Satisfaction Guaranteed',
+      description: '30-day return policy on all premium items',
+      color: 'bronze',
     },
   ];
 
@@ -98,21 +100,28 @@ export default function Home() {
   };
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-24 animate-fade-in-up">
       {/* Hero Section */}
-      <section className="py-12 md:py-20 bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900 dark:to-primary-800 rounded-lg">
-        <div className="text-center space-y-6">
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground">
-            Welcome to E-Store
+      <section className="relative py-20 md:py-32 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-luxury opacity-95" />
+        <div className="absolute inset-0 bg-gradient-radial-gold" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gold-400/10 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-bronze-400/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
+        
+        <div className="relative text-center space-y-8 max-w-4xl mx-auto">
+          <h1 className="text-5xl md:text-7xl font-serif font-bold text-white leading-tight">
+            Elevated Living,
+            <span className="block mt-2 bg-gradient-to-r from-gold-300 to-gold-500 bg-clip-text text-transparent">
+              Curated With Care
+            </span>
           </h1>
-          <p className="text-lg md:text-xl text-secondary-600 dark:text-secondary-300 max-w-2xl mx-auto">
-            Discover amazing products at unbeatable prices. Shop from thousands of
-            quality items with fast shipping and easy returns.
+          <p className="text-lg md:text-xl text-cream-100 max-w-2xl mx-auto leading-relaxed">
+            Discover a handpicked collection of premium products designed for those who appreciate the finer things in life.
           </p>
-          <div className="flex flex-col md:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6">
             <Link href="/products">
-              <Button variant="primary" size="lg">
-                Shop Now
+              <Button variant="luxury" size="lg" className="min-w-[200px]">
+                Explore Collection
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>
@@ -120,27 +129,36 @@ export default function Home() {
               onClick={() => setIsAiModalOpen(true)}
               variant="outline"
               size="lg"
-              className="flex items-center justify-center"
+              className="min-w-[200px] bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
             >
               <Sparkles className="mr-2 w-5 h-5" />
-              Ask AI
+              AI Discovery
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Category Chips */}
-      <section className="py-8">
-        <h2 className="text-2xl font-bold text-foreground mb-6">Shop by Category</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Category Section */}
+      <section className="py-12">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-charcoal-900 dark:text-cream-100 mb-4">
+            Explore Our Collections
+          </h2>
+          <p className="text-lg text-taupe-600 dark:text-taupe-400 max-w-2xl mx-auto">
+            Thoughtfully curated categories for every aspect of modern living
+          </p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {CATEGORIES.map((category) => (
             <button
               key={category.slug}
               onClick={() => handleCategoryClick(category.slug)}
-              className="group p-4 bg-secondary-50 dark:bg-secondary-800 hover:bg-primary-100 dark:hover:bg-primary-800 rounded-lg transition-colors text-center"
+              className={`group relative p-8 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-luxury-lg bg-gradient-to-br ${category.gradient} border border-taupe-200 dark:border-charcoal-700 hover:border-gold-400`}
             >
-              <div className="text-3xl mb-2">{category.icon}</div>
-              <h3 className="font-semibold text-foreground group-hover:text-primary-600">
+              <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                {category.icon}
+              </div>
+              <h3 className="font-serif font-semibold text-lg text-charcoal-900 dark:text-cream-100 group-hover:text-gold-600 transition-colors">
                 {category.name}
               </h3>
             </button>
@@ -149,16 +167,27 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-12">
-        <h2 className="text-3xl font-bold text-foreground mb-12">Featured Products</h2>
+      <section className="py-16">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold-100 dark:bg-gold-900/20 rounded-full mb-6">
+            <Star className="w-4 h-4 text-gold-600" />
+            <span className="text-sm font-medium text-gold-800 dark:text-gold-400">Handpicked Selection</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-charcoal-900 dark:text-cream-100 mb-4">
+            Featured Products
+          </h2>
+          <p className="text-lg text-taupe-600 dark:text-taupe-400 max-w-2xl mx-auto">
+            Discover our most sought-after items, carefully selected for exceptional quality
+          </p>
+        </div>
         {isFeaturedLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="aspect-square rounded-lg" />
+              <Skeleton key={i} className="aspect-[3/4] rounded-2xl" />
             ))}
           </div>
         ) : featuredData?.data && featuredData.data.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredData.data.map((product) => (
               <ProductCard
                 key={product.id}
@@ -171,35 +200,52 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-12">
-        <h2 className="text-3xl font-bold text-foreground mb-12 text-center">
-          Why Shop With Us
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <Card key={index} variant="elevated" className="text-center">
-                <Icon className="w-12 h-12 text-primary-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-foreground mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-secondary-600">{feature.description}</p>
-              </Card>
-            );
-          })}
+      <section className="py-16 bg-gradient-subtle dark:bg-charcoal-900 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-charcoal-900 dark:text-cream-100 mb-4">
+              The Elevated Experience
+            </h2>
+            <p className="text-lg text-taupe-600 dark:text-taupe-400 max-w-2xl mx-auto">
+              We believe in providing more than just products—we deliver an experience
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <Card key={index} variant="elevated" className="text-center group hover:scale-105 transition-all duration-300">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-gold mb-6 shadow-luxury-gold">
+                    <Icon className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-serif font-semibold text-charcoal-900 dark:text-cream-100 mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-taupe-600 dark:text-taupe-400 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </Card>
+              );
+            })}
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 bg-primary-600 rounded-lg text-white">
-        <div className="text-center space-y-6">
-          <h2 className="text-3xl font-bold">Ready to Start Shopping?</h2>
-          <p className="text-lg opacity-90">
-            Browse our extensive collection of products and find what you need.
+      <section className="relative py-20 rounded-3xl overflow-hidden bg-gradient-luxury shadow-luxury-xl">
+        <div className="absolute inset-0 bg-gradient-radial-gold opacity-50" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gold-400/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-bronze-400/20 rounded-full blur-3xl" />
+        
+        <div className="relative text-center space-y-8 max-w-3xl mx-auto px-4">
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-white">
+            Ready to Elevate Your Lifestyle?
+          </h2>
+          <p className="text-xl text-cream-100 leading-relaxed">
+            Browse our extensive collection and discover products that resonate with your refined taste.
           </p>
           <Link href="/products">
-            <Button variant="primary" size="lg" className="bg-white text-primary-600 hover:bg-secondary-100">
+            <Button variant="luxury" size="lg" className="min-w-[240px] shadow-luxury-gold">
               Browse All Products
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
@@ -208,23 +254,39 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div>
-            <div className="text-4xl font-bold text-primary-600">10K+</div>
-            <p className="text-secondary-600 mt-2">Products</p>
+      <section className="py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-300">
+            <div className="text-5xl font-serif font-bold bg-gradient-gold bg-clip-text text-transparent">
+              10K+
+            </div>
+            <p className="text-sm font-medium text-taupe-600 dark:text-taupe-400 uppercase tracking-wider">
+              Premium Products
+            </p>
           </div>
-          <div>
-            <div className="text-4xl font-bold text-primary-600">50K+</div>
-            <p className="text-secondary-600 mt-2">Happy Customers</p>
+          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-300">
+            <div className="text-5xl font-serif font-bold bg-gradient-gold bg-clip-text text-transparent">
+              50K+
+            </div>
+            <p className="text-sm font-medium text-taupe-600 dark:text-taupe-400 uppercase tracking-wider">
+              Satisfied Clients
+            </p>
           </div>
-          <div>
-            <div className="text-4xl font-bold text-primary-600">24/7</div>
-            <p className="text-secondary-600 mt-2">Customer Support</p>
+          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-300">
+            <div className="text-5xl font-serif font-bold bg-gradient-gold bg-clip-text text-transparent">
+              24/7
+            </div>
+            <p className="text-sm font-medium text-taupe-600 dark:text-taupe-400 uppercase tracking-wider">
+              Concierge Support
+            </p>
           </div>
-          <div>
-            <div className="text-4xl font-bold text-primary-600">100%</div>
-            <p className="text-secondary-600 mt-2">Satisfaction</p>
+          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-300">
+            <div className="text-5xl font-serif font-bold bg-gradient-gold bg-clip-text text-transparent">
+              100%
+            </div>
+            <p className="text-sm font-medium text-taupe-600 dark:text-taupe-400 uppercase tracking-wider">
+              Quality Assured
+            </p>
           </div>
         </div>
       </section>
@@ -233,47 +295,49 @@ export default function Home() {
       <Modal
         isOpen={isAiModalOpen}
         onClose={() => setIsAiModalOpen(false)}
-        title="Ask AI - Intelligent Product Search"
+        title="AI-Powered Discovery"
         size="lg"
       >
-        <div className="space-y-4">
-          <p className="text-secondary-600">
-            Describe what you're looking for and our AI will help you find the perfect product.
+        <div className="space-y-6">
+          <p className="text-taupe-600 dark:text-taupe-400 leading-relaxed">
+            Describe what you're looking for, and our intelligent assistant will help you find the perfect product tailored to your preferences.
           </p>
-          <div className="flex gap-2">
+          <div className="space-y-4">
             <Input
               ref={searchInputRef}
               type="text"
-              placeholder="e.g., 'I need a blue wireless headphone under $100'"
+              placeholder="e.g., 'I need elegant wireless headphones under $100'"
               value={aiQuery}
               onChange={(e) => setAiQuery(e.target.value)}
               onKeyPress={handleKeyPress}
               disabled={aiLoading}
               aria-label="AI search query"
+              className="text-base"
             />
           </div>
-          <div className="flex gap-2 justify-end">
+          <div className="flex gap-3 justify-end">
             <Button
               onClick={() => setIsAiModalOpen(false)}
-              variant="outline"
+              variant="ghost"
               disabled={aiLoading}
             >
               Cancel
             </Button>
             <Button
               onClick={handleAiSearch}
-              variant="primary"
+              variant="luxury"
               disabled={aiLoading}
+              className="min-w-[140px]"
             >
               {aiLoading ? (
                 <>
-                  <Sparkles className="w-4 h-4 mr-2 animate-spin" />
+                  <Sparkles className="w-4 h-4 mr-2 animate-pulse" />
                   Searching...
                 </>
               ) : (
                 <>
                   <Search className="w-4 h-4 mr-2" />
-                  Search
+                  Discover
                 </>
               )}
             </Button>

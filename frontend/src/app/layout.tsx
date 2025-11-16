@@ -1,18 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/providers";
 import { Header, Footer, Container } from "@/components/layout";
 import { ToastContainer } from "@/components";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const playfair = Playfair_Display({
+  variable: "--font-serif",
   subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const viewport: Viewport = {
@@ -21,15 +25,16 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "E-Store | Quality Products at Great Prices",
+  title: "E-Store | Elevated Luxury Marketplace",
   description:
-    "Your one-stop shop for quality products at competitive prices. Shop electronics, fashion, home & more.",
-  keywords: ["e-commerce", "shopping", "products", "store"],
+    "Discover a curated selection of premium products crafted for modern living. Experience refined shopping with elevated service.",
+  keywords: ["luxury", "premium", "e-commerce", "shopping", "curated"],
   authors: [{ name: "E-Store" }],
   robots: "index, follow",
   openGraph: {
-    title: "E-Store | Quality Products",
-    description: "Your one-stop shop for quality products",
+    title: "E-Store | Elevated Luxury Marketplace",
+    description:
+      "Discover a curated selection of premium products crafted for modern living. Experience refined shopping with elevated service.",
     type: "website",
   },
 };
@@ -42,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${inter.variable} ${playfair.variable} font-sans antialiased bg-background text-foreground`}
       >
         <Providers>
           <div className="flex flex-col min-h-screen">

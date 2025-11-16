@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/utils/cn';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'luxury';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
 }
@@ -21,25 +21,27 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2';
+      'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gold-400 disabled:opacity-50 disabled:cursor-not-allowed';
 
     const variants = {
       primary:
-        'bg-primary-600 text-white hover:bg-primary-700 disabled:bg-primary-300 focus-visible:ring-primary-500',
+        'bg-gradient-luxury text-white hover:shadow-luxury-lg hover:scale-[1.02] active:scale-[0.98] shadow-luxury disabled:hover:scale-100',
       secondary:
-        'bg-secondary-200 text-secondary-900 hover:bg-secondary-300 disabled:bg-secondary-100 focus-visible:ring-secondary-500 dark:bg-secondary-700 dark:text-secondary-100 dark:hover:bg-secondary-600',
+        'bg-taupe-100 text-charcoal-900 hover:bg-taupe-200 hover:shadow-luxury disabled:hover:bg-taupe-100 dark:bg-taupe-800 dark:text-cream-100 dark:hover:bg-taupe-700',
       outline:
-        'border-2 border-secondary-300 text-secondary-900 hover:bg-secondary-50 disabled:opacity-50 focus-visible:ring-secondary-500 dark:border-secondary-600 dark:text-secondary-100 dark:hover:bg-secondary-900',
+        'border-2 border-gold-400 text-charcoal-900 hover:bg-gold-50 hover:border-gold-500 hover:shadow-luxury-sm disabled:hover:bg-transparent dark:text-cream-100 dark:hover:bg-charcoal-800',
       ghost:
-        'text-secondary-900 hover:bg-secondary-100 disabled:opacity-50 focus-visible:ring-secondary-500 dark:text-secondary-100 dark:hover:bg-secondary-800',
+        'text-charcoal-900 hover:bg-cream-200 hover:shadow-inner-luxury disabled:hover:bg-transparent dark:text-cream-100 dark:hover:bg-charcoal-800',
       danger:
-        'bg-error text-white hover:bg-red-600 disabled:bg-red-200 focus-visible:ring-red-500',
+        'bg-error text-white hover:bg-red-600 hover:shadow-luxury disabled:bg-red-200',
+      luxury:
+        'bg-gradient-gold text-white hover:shadow-luxury-gold hover:scale-[1.02] active:scale-[0.98] shadow-luxury-sm font-semibold disabled:hover:scale-100',
     };
 
     const sizes = {
-      sm: 'px-3 py-1.5 text-sm',
-      md: 'px-4 py-2 text-base',
-      lg: 'px-6 py-3 text-lg',
+      sm: 'px-4 py-2 text-sm',
+      md: 'px-6 py-2.5 text-base',
+      lg: 'px-8 py-3.5 text-lg',
     };
 
     return (

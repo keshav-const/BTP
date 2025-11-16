@@ -29,22 +29,23 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       : null;
 
   return (
-    <Card variant="elevated" className="flex flex-col h-full overflow-hidden p-0 hover:shadow-xl transition-shadow">
-      <Link href={`/products/${product.id}`} className="relative group overflow-hidden">
-        <div className="relative w-full aspect-square bg-secondary-100">
+    <Card variant="elevated" className="group flex flex-col h-full overflow-hidden p-0">
+      <Link href={`/products/${product.id}`} className="relative overflow-hidden">
+        <div className="relative w-full aspect-square bg-cream-200 premium-overlay">
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           {discount && (
-            <Badge variant="error" size="md" className="absolute top-2 right-2">
+            <Badge variant="luxury" size="md" className="absolute top-3 right-3">
               -{discount}%
             </Badge>
           )}
           {!product.inStock && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <Badge variant="error" size="lg">
+            <div className="absolute inset-0 bg-charcoal-900/70 backdrop-blur-sm flex items-center justify-center">
+              <Badge variant="error" size="lg" className="shadow-luxury-lg">
                 Out of Stock
               </Badge>
             </div>
@@ -52,45 +53,46 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       </Link>
 
-      <div className="flex-1 p-4 flex flex-col">
-        <Link href={`/products/${product.id}`} className="flex-1">
-          <h3 className="font-semibold text-foreground hover:text-primary-600 line-clamp-2">
+      <div className="flex-1 p-5 flex flex-col bg-white dark:bg-charcoal-800">
+        <Link href={`/products/${product.id}`} className="flex-1 space-y-2">
+          <h3 className="font-serif font-semibold text-lg text-charcoal-900 dark:text-cream-100 hover:text-gold-500 dark:hover:text-gold-400 line-clamp-2 transition-colors duration-300">
             {product.name}
           </h3>
-          <p className="text-sm text-secondary-600 mt-1 line-clamp-2">
+          <p className="text-sm text-taupe-600 dark:text-taupe-400 line-clamp-2">
             {truncate(product.description, 60)}
           </p>
         </Link>
 
-        <div className="mt-3 flex items-center gap-2">
-          {product.rating > 0 && (
-            <div className="flex items-center text-sm">
-              <span className="text-yellow-500">★</span>
-              <span className="ml-1 text-secondary-600">
-                {product.rating.toFixed(1)} ({product.reviewCount})
-              </span>
-            </div>
-          )}
-        </div>
+        {product.rating > 0 && (
+          <div className="mt-3 flex items-center gap-1 text-sm">
+            <span className="text-gold-400 text-base">★</span>
+            <span className="font-medium text-charcoal-900 dark:text-cream-100">
+              {product.rating.toFixed(1)}
+            </span>
+            <span className="text-taupe-500">
+              ({product.reviewCount})
+            </span>
+          </div>
+        )}
 
-        <div className="mt-4 flex items-center gap-2">
+        <div className="mt-4 flex items-baseline gap-2">
           {product.salePrice ? (
             <>
-              <span className="text-lg font-bold text-foreground">
+              <span className="text-2xl font-serif font-bold text-charcoal-900 dark:text-cream-100">
                 {formatPrice(product.salePrice)}
               </span>
-              <span className="text-sm text-secondary-500 line-through">
+              <span className="text-sm text-taupe-500 line-through">
                 {formatPrice(product.price)}
               </span>
             </>
           ) : (
-            <span className="text-lg font-bold text-foreground">
+            <span className="text-2xl font-serif font-bold text-charcoal-900 dark:text-cream-100">
               {formatPrice(product.price)}
             </span>
           )}
         </div>
 
-        <div className="mt-4 flex gap-2">
+        <div className="mt-5 flex gap-2">
           <Button
             onClick={() => onAddToCart?.(product)}
             disabled={!product.inStock}
@@ -99,18 +101,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             className="flex-1"
           >
             <ShoppingCart className="w-4 h-4 mr-2" />
-            Add
+            Add to Cart
           </Button>
           <Button
             onClick={() => toggleWishlist(product)}
             variant="outline"
             size="md"
-            className="px-3"
+            className="px-4"
           >
             <Heart
               className={cn(
-                'w-4 h-4',
-                isWishlisted && 'fill-current text-error'
+                'w-5 h-5 transition-all duration-300',
+                isWishlisted && 'fill-current text-gold-500'
               )}
             />
           </Button>
