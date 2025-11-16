@@ -16,6 +16,31 @@
   --emerald: #4a6b5e;
   --bronze: #a67c52;
   --font-mono: "SFMono-Regular", "Menlo", monospace;
+  
+  /* Semantic color variables */
+  --bg-primary: #faf8f6;
+  --bg-secondary: #f5f1ed;
+  --bg-tertiary: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-overlay: rgba(26, 31, 54, 0.5);
+  
+  --text-primary: #1a1f36;
+  --text-secondary: #2c3142;
+  --text-tertiary: #9b8b7e;
+  --text-inverse: #faf8f6;
+  
+  --border-default: #e6e2de;
+  --border-subtle: #f5f1ed;
+  --border-strong: #9b8b7e;
+  --border-accent: #d4a574;
+  
+  --surface-default: #ffffff;
+  --surface-elevated: #ffffff;
+  --surface-overlay: rgba(255, 255, 255, 0.95);
+  
+  --accent-primary: #d4a574;
+  --accent-secondary: #a67c52;
+  --accent-tertiary: #4a6b5e;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -25,6 +50,31 @@
     --border: #2c3142;
     --input: #2c3142;
     --ring: #d4a574;
+    
+    /* Semantic color variables - dark mode */
+    --bg-primary: #1a1f36;
+    --bg-secondary: #2c3142;
+    --bg-tertiary: #444958;
+    --bg-elevated: #2c3142;
+    --bg-overlay: rgba(26, 31, 54, 0.8);
+    
+    --text-primary: #faf8f6;
+    --text-secondary: #f5f1ed;
+    --text-tertiary: #9b8b7e;
+    --text-inverse: #1a1f36;
+    
+    --border-default: #2c3142;
+    --border-subtle: #1a1f36;
+    --border-strong: #677084;
+    --border-accent: #d4a574;
+    
+    --surface-default: #2c3142;
+    --surface-elevated: #444958;
+    --surface-overlay: rgba(44, 49, 66, 0.95);
+    
+    --accent-primary: #d4a574;
+    --accent-secondary: #a67c52;
+    --accent-tertiary: #73a094;
   }
 }
 
@@ -207,4 +257,168 @@ h1, h2, h3, h4, h5, h6 {
   outline: 2px solid var(--gold);
   outline-offset: 2px;
   border-radius: 0.25rem;
+}
+
+/* Base animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.4s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.4s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.4s ease-out;
+}
+
+/* Custom gradient utilities */
+.gradient-hero {
+  background: linear-gradient(135deg, #1a1f36 0%, #2c3142 50%, #1a1f36 100%);
+}
+
+.gradient-hero-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(26, 31, 54, 0.95) 0%,
+    rgba(44, 49, 66, 0.9) 50%,
+    rgba(26, 31, 54, 0.95) 100%
+  );
+}
+
+.gradient-gold-radial {
+  background: radial-gradient(
+    circle at center,
+    rgba(212, 165, 116, 0.2) 0%,
+    transparent 70%
+  );
+}
+
+.gradient-emerald-radial {
+  background: radial-gradient(
+    circle at center,
+    rgba(74, 107, 94, 0.1) 0%,
+    transparent 70%
+  );
+}
+
+.gradient-card {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(245, 241, 237, 0.7) 100%
+  );
+}
+
+@media (prefers-color-scheme: dark) {
+  .gradient-card {
+    background: linear-gradient(
+      145deg,
+      rgba(44, 49, 66, 0.9) 0%,
+      rgba(26, 31, 54, 0.7) 100%
+    );
+  }
+}
+
+/* Smooth transition utilities */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-smooth-fast {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-smooth-slow {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
