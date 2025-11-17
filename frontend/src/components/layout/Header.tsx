@@ -125,52 +125,52 @@ export function Header({ isDark, setIsDark }: HeaderProps) {
         </div>
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden pt-4 pb-6 space-y-4"
+         {mobileMenuOpen && (
+      <motion.div
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: 'auto' }}
+        exit={{ opacity: 0, height: 0 }}
+        className="md:hidden pt-4 pb-6 space-y-4"
+      >
+        {navLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="block py-2 text-zinc-600 hover:text-emerald-700 dark:text-zinc-300 dark:hover:text-emerald-500 transition-colors duration-200"
+            onClick={() => setMobileMenuOpen(false)}
           >
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="block py-2 text-zinc-600 hover:text-emerald-700 dark:text-zinc-300 dark:hover:text-emerald-500 transition-colors duration-200"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <div className="pt-4 space-y-2">
-              <Button
-                variant="ghost"
-                size="md"
-                type="button"
-                className="w-full !flex justify-start"
-                onClick={() => {
-                  router.push('/account')
-                  setMobileMenuOpen(false)
-                }}
-              >
-                <User size={18} />
-                <span>Account</span>
-              </Button>
-              <Button
-                size="md"
-                type="button"
-                className="w-full !flex justify-center"
-                onClick={() => {
-                  router.push('/login')
-                  setMobileMenuOpen(false)
-                }}
-              >
-                Sign In
-              </Button>
-            </div>
-          </motion.div>
-        )}
-
-    </header>
-  )
+            {link.label}
+          </Link>
+        ))}
+        <div className="pt-4 space-y-2">
+          <Button
+            variant="ghost"
+            size="md"
+            type="button"
+            className="w-full !flex justify-start"
+            onClick={() => {
+              router.push('/account')
+              setMobileMenuOpen(false)
+            }}
+          >
+            <User size={18} />
+            <span>Account</span>
+          </Button>
+          <Button
+            size="md"
+            type="button"
+            className="w-full !flex justify-center"
+            onClick={() => {
+              router.push('/login')
+              setMobileMenuOpen(false)
+            }}
+          >
+            Sign In
+          </Button>
+        </div>
+      </motion.div>
+    )}
+  </nav>   {/* <-- Add this closing tag */}
+</header>
+)
 }
