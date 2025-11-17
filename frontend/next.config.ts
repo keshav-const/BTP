@@ -1,6 +1,6 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   images: {
     remotePatterns: [
       {
@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-};
+  experimental: {
+    turbopack: {
+      root: __dirname,
+    },
+  },
+} as NextConfig
 
-export default nextConfig;
+export default nextConfig

@@ -12,7 +12,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    useAuthStore.getState().hydrate()
+    void useAuthStore.getState().hydrate()
     setMounted(true)
     const isDarkMode = document.documentElement.classList.contains('dark')
     setIsDark(isDarkMode)

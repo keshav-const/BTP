@@ -1,6 +1,7 @@
 import type { User } from '@/types/user'
 
 const DEFAULT_TOKEN_KEY = 'auth_token'
+export const AUTH_SESSION_CLEARED_EVENT = 'auth:session-cleared'
 
 const isBrowser = typeof window !== 'undefined'
 
@@ -101,6 +102,10 @@ export const clearAuthSession = (): void => {
   removeAuthToken()
   removeRefreshToken()
   removeStoredUser()
+
+  if (isBrowser) {
+    window.dispatchEvent(new Event(AUTH_SESSION_CLEARED_EVENT))
+  }
 }
 
 export const isAuthenticated = (): boolean => {
