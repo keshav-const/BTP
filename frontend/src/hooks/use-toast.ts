@@ -2,7 +2,24 @@
 
 import { useCallback } from 'react'
 
-type ToastLevel = 'success' | 'error' | 'info' | 'warning'
+export type ToastLevel = 'success' | 'error' | 'info' | 'warning'
+
+export interface ToastMessage {
+  id: string
+  level: ToastLevel
+  message: string
+  duration: number
+}
+
+export const TOAST_EVENT = 'app-toast'
+
+const createToastId = (): string => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`
+}
 
 const logToConsole = (level: ToastLevel, message: string) => {
   const prefix = level.toUpperCase()
@@ -20,16 +37,29 @@ const logToConsole = (level: ToastLevel, message: string) => {
   console.log(`[${prefix}] ${message}`)
 }
 
-const displayToast = (level: ToastLevel, message: string) => {
+const dispatchToast = (payload: ToastMessage) => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  window.dispatchEvent(new CustomEvent<ToastMessage>(TOAST_EVENT, { detail: payload }))
+}
+
+const displayToast = (level: ToastLevel, message: string, duration = 5000) => {
   if (!message) {
     return
   }
 
   logToConsole(level, message)
 
-  if (typeof window !== 'undefined') {
-    window.alert(`${level === 'success' ? 'Success' : level === 'error' ? 'Error' : level === 'warning' ? 'Warning' : 'Info'}: ${message}`)
+  const payload: ToastMessage = {
+    id: createToastId(),
+    level,
+    message,
+    duration,
   }
+
+  dispatchToast(payload)
 }
 
 export const useToast = () => {

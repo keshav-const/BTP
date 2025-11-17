@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { clearAuthSession, getAuthToken } from '@/lib/auth'
 
-const DEFAULT_API_BASE_URL = 'http://localhost:3001/api'
+const DEFAULT_API_BASE_URL = 'http://localhost:5000/api'
 
 const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL
 
