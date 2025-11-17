@@ -1,254 +1,258 @@
-'use client';
+'use client'
 
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { ProductCard, Pagination, FilterControls, Skeleton } from '@/components';
-import { useFetch, useCart, useToast } from '@/hooks';
-import { Product, PaginatedResponse } from '@/types';
-import { Card } from '@/components/ui/card';
-import { ChevronDown } from 'lucide-react';
-import { cn } from '@/utils/cn';
-
-const SORT_OPTIONS = [
-  { value: 'popularity', label: 'Popularity' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'price_asc', label: 'Price: Low to High' },
-  { value: 'price_desc', label: 'Price: High to Low' },
-];
-
-const PRICE_RANGES = [
-  { value: '0-50', label: 'Under $50', min: 0, max: 50 },
-  { value: '50-100', label: '$50 - $100', min: 50, max: 100 },
-  { value: '100-200', label: '$100 - $200', min: 100, max: 200 },
-  { value: '200-500', label: '$200 - $500', min: 200, max: 500 },
-  { value: '500', label: 'Over $500', min: 500, max: Infinity },
-];
-
-const CATEGORIES = [
-  { value: 'electronics', label: 'Electronics' },
-  { value: 'fashion', label: 'Fashion' },
-  { value: 'home', label: 'Home & Garden' },
-  { value: 'sports', label: 'Sports' },
-];
+import React, { useState } from 'react'
+import { motion } from 'framer-motion'
+import { ProductCard } from '@/components/ui/ProductCard'
+import { Button } from '@/components/ui/Button'
+import { ChevronDown, SlidersHorizontal, X } from 'lucide-react'
 
 export default function ProductsPage() {
-  const searchParams = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sort, setSort] = useState<string>('popularity');
-  const [showSortDropdown, setShowSortDropdown] = useState(false);
-  const [selectedFilters, setSelectedFilters] = useState<Record<string, string | string[]>>({});
+  const [showFilters, setShowFilters] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const [priceRange, setPriceRange] = useState<string>('all')
+  const [sortBy, setSortBy] = useState<string>('featured')
 
-  const { addItem } = useCart();
-  const { success: showSuccess } = useToast();
-
-  useEffect(() => {
-    const newFilters: Record<string, string | string[]> = {};
-    const category = searchParams.get('category');
-    const minPrice = searchParams.get('minPrice');
-    const maxPrice = searchParams.get('maxPrice');
-    const search = searchParams.get('search');
-
-    if (category) newFilters['Category'] = category;
-    if (search) newFilters['Search'] = search;
-    if (minPrice || maxPrice) {
-      newFilters['Price Range'] = `${minPrice || '0'}-${maxPrice || 'Infinity'}`;
-    }
-
-    setSelectedFilters(newFilters);
-    setCurrentPage(1);
-  }, [searchParams]);
-
-  const buildApiUrl = () => {
-    const params = new URLSearchParams();
-    params.append('page', currentPage.toString());
-    params.append('limit', '12');
-
-    const category = searchParams.get('category');
-    if (category) params.append('category', category);
-
-    const minPrice = searchParams.get('minPrice');
-    if (minPrice) params.append('minPrice', minPrice);
-
-    const maxPrice = searchParams.get('maxPrice');
-    if (maxPrice) params.append('maxPrice', maxPrice);
-
-    const search = searchParams.get('search');
-    if (search) params.append('search', search);
-
-    if (sort.startsWith('price')) {
-      params.append('sort', 'price');
-      params.append('order', sort === 'price_asc' ? 'asc' : 'desc');
-    } else if (sort !== 'popularity') {
-      params.append('sort', sort);
-    }
-
-    return `/products?${params.toString()}`;
-  };
-
-  const { data, isLoading, error } = useFetch<PaginatedResponse<Product>>(
-    buildApiUrl()
-  );
-
-  const filters = [
+  // Sample products
+  const products = [
     {
-      name: 'Category',
-      options: CATEGORIES,
-      multiple: false,
+      id: '1',
+      name: 'Premium Wireless Headphones',
+      price: 299.99,
+      category: 'Audio',
+      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80',
+      rating: 4.8,
+      reviewCount: 124,
     },
     {
-      name: 'Price Range',
-      options: PRICE_RANGES.map(({ value, label }) => ({ value, label })),
-      multiple: false,
+      id: '2',
+      name: 'Luxury Leather Wallet',
+      price: 149.99,
+      category: 'Accessories',
+      image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&q=80',
+      rating: 4.9,
+      reviewCount: 89,
     },
-  ];
+    {
+      id: '3',
+      name: 'Designer Watch Collection',
+      price: 599.99,
+      category: 'Watches',
+      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
+      rating: 4.7,
+      reviewCount: 156,
+    },
+    {
+      id: '4',
+      name: 'Premium Smart Speaker',
+      price: 199.99,
+      category: 'Tech',
+      image: 'https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=800&q=80',
+      rating: 4.6,
+      reviewCount: 203,
+    },
+    {
+      id: '5',
+      name: 'Minimalist Desk Lamp',
+      price: 89.99,
+      category: 'Home',
+      image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80',
+      rating: 4.5,
+      reviewCount: 67,
+    },
+    {
+      id: '6',
+      name: 'Premium Backpack',
+      price: 179.99,
+      category: 'Accessories',
+      image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80',
+      rating: 4.7,
+      reviewCount: 142,
+    },
+  ]
 
-  const handleAddToCart = (product: Product) => {
-    addItem(product, 1);
-    showSuccess(`${product.name} added to cart!`);
-  };
+  const categories = ['All', 'Audio', 'Accessories', 'Watches', 'Tech', 'Home']
+  const priceRanges = ['All', 'Under $100', '$100 - $300', '$300 - $500', 'Over $500']
+  const sortOptions = ['Featured', 'Price: Low to High', 'Price: High to Low', 'Newest', 'Best Rating']
 
-  const handleFilterChange = (filterName: string, value: string | string[]) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (filterName === 'Category') {
-      if (value) {
-        params.set('category', value as string);
-      } else {
-        params.delete('category');
-      }
-    } else if (filterName === 'Price Range') {
-      if (value && value !== '') {
-        const [min, max] = (value as string).split('-');
-        params.set('minPrice', min);
-        if (max !== 'Infinity') params.set('maxPrice', max);
-        else params.delete('maxPrice');
-      } else {
-        params.delete('minPrice');
-        params.delete('maxPrice');
-      }
-    }
-
-    window.history.replaceState(null, '', `?${params.toString()}`);
-    setCurrentPage(1);
-  };
-
-  const handleSortChange = (newSort: string) => {
-    setSort(newSort);
-    setShowSortDropdown(false);
-    setCurrentPage(1);
-  };
-
-  const hasActiveFilters = searchParams.get('category') ||
-    searchParams.get('minPrice') ||
-    searchParams.get('maxPrice') ||
-    searchParams.get('search');
+  const clearFilters = () => {
+    setSelectedCategory('all')
+    setPriceRange('all')
+    setSortBy('featured')
+  }
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h1 className="text-4xl font-serif font-bold text-charcoal-900 dark:text-cream-100">Products</h1>
-        <div className="relative">
-          <button
-            onClick={() => setShowSortDropdown(!showSortDropdown)}
-            className="flex items-center gap-3 px-5 py-2.5 bg-white dark:bg-charcoal-800 border-2 border-taupe-300 dark:border-charcoal-600 rounded-xl hover:border-gold-500 dark:hover:border-gold-500 focus:border-gold-500 dark:focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20 transition-all duration-200 shadow-luxury-sm"
-            aria-label="Sort products"
-            aria-expanded={showSortDropdown}
+    <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+      {/* Header */}
+      <section className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
+        <div className="container py-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            <span className="text-sm font-medium text-charcoal-800 dark:text-cream-200">
-              {SORT_OPTIONS.find(o => o.value === sort)?.label || 'Sort By'}
-            </span>
-            <ChevronDown className={cn(
-              'w-4 h-4 text-gold-600 dark:text-gold-400 transition-transform duration-300',
-              showSortDropdown && 'rotate-180'
-            )} />
-          </button>
-          {showSortDropdown && (
-            <div className="absolute top-full mt-2 right-0 bg-white dark:bg-charcoal-800 border border-taupe-200 dark:border-charcoal-600 rounded-xl shadow-luxury overflow-hidden z-10 min-w-[200px] animate-fade-in-down">
-              {SORT_OPTIONS.map(option => (
-                <button
-                  key={option.value}
-                  onClick={() => handleSortChange(option.value)}
-                  className={cn(
-                    'w-full text-left px-4 py-3 text-sm transition-all duration-200',
-                    sort === option.value 
-                      ? 'bg-gradient-gold text-white font-medium' 
-                      : 'text-charcoal-800 dark:text-cream-200 hover:bg-cream-100 dark:hover:bg-charcoal-700'
-                  )}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          )}
+            <h1 className="font-serif text-4xl md:text-5xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
+              Shop
+            </h1>
+            <p className="text-lg text-zinc-600 dark:text-zinc-400">
+              Browse our curated selection of premium products
+            </p>
+          </motion.div>
         </div>
-      </div>
+      </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Filters */}
-        <aside className="lg:col-span-1">
-          <FilterControls
-            filters={filters}
-            selectedFilters={selectedFilters}
-            onFilterChange={handleFilterChange}
-          />
-          {hasActiveFilters && (
-            <button
-              onClick={() => {
-                window.history.replaceState(null, '', '/products');
-                setSelectedFilters({});
-              }}
-              className="mt-4 text-gold-600 hover:text-gold-700 dark:text-gold-400 dark:hover:text-gold-300 underline text-sm font-medium transition-colors duration-200"
-            >
-              Clear all filters
-            </button>
-          )}
-        </aside>
+      {/* Main Content */}
+      <section className="section">
+        <div className="container">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Sidebar - Filters */}
+            <aside className={`lg:w-1/4 ${showFilters ? 'block' : 'hidden lg:block'}`}>
+              <div className="premium-card p-6 sticky top-24">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="font-serif text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+                    Filters
+                  </h3>
+                  <button
+                    onClick={() => setShowFilters(false)}
+                    className="lg:hidden p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
 
-        {/* Products Grid */}
-        <main className="lg:col-span-3">
-          {error && (
-            <div className="text-center py-12">
-              <p className="text-error text-lg font-serif">Failed to load products. Please try again.</p>
-            </div>
-          )}
+                {/* Category Filter */}
+                <div className="mb-8">
+                  <h4 className="font-serif font-semibold text-zinc-900 dark:text-zinc-50 mb-4">
+                    Category
+                  </h4>
+                  <div className="space-y-2">
+                    {categories.map((category) => (
+                      <label
+                        key={category}
+                        className="flex items-center gap-3 cursor-pointer group"
+                      >
+                        <input
+                          type="radio"
+                          name="category"
+                          checked={selectedCategory === category.toLowerCase()}
+                          onChange={() => setSelectedCategory(category.toLowerCase())}
+                          className="w-4 h-4 accent-emerald-700"
+                        />
+                        <span className="text-sm text-zinc-600 dark:text-zinc-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-500 transition-colors duration-200">
+                          {category}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
 
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <Skeleton key={i} className="aspect-square rounded-xl" />
-              ))}
-            </div>
-          ) : !data?.data || data.data.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="text-charcoal-600 dark:text-cream-300 text-lg font-serif mb-2">No products found.</p>
-              <p className="text-taupe-600 dark:text-taupe-400 text-sm">Try adjusting your filters</p>
-            </div>
-          ) : (
-            <>
-              <div className="mb-6 text-sm text-taupe-600 dark:text-taupe-400 font-medium">
-                Showing {data.data.length} of {data.total} products
+                {/* Price Range Filter */}
+                <div className="mb-8">
+                  <h4 className="font-serif font-semibold text-zinc-900 dark:text-zinc-50 mb-4">
+                    Price Range
+                  </h4>
+                  <div className="space-y-2">
+                    {priceRanges.map((range) => (
+                      <label
+                        key={range}
+                        className="flex items-center gap-3 cursor-pointer group"
+                      >
+                        <input
+                          type="radio"
+                          name="price"
+                          checked={priceRange === range.toLowerCase()}
+                          onChange={() => setPriceRange(range.toLowerCase())}
+                          className="w-4 h-4 accent-emerald-700"
+                        />
+                        <span className="text-sm text-zinc-600 dark:text-zinc-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-500 transition-colors duration-200">
+                          {range}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Clear Filters */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="w-full"
+                >
+                  Clear Filters
+                </Button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {data.data.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                  />
+            </aside>
+
+            {/* Main Content Area */}
+            <div className="flex-1">
+              {/* Top Controls */}
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                  Showing {products.length} products
+                </p>
+
+                <div className="flex gap-3 w-full sm:w-auto">
+                  {/* Mobile Filter Toggle */}
+                  <Button
+                    variant="outline"
+                    size="md"
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="lg:hidden flex-1 sm:flex-none"
+                  >
+                    <SlidersHorizontal size={18} />
+                    <span>Filters</span>
+                  </Button>
+
+                  {/* Sort Dropdown */}
+                  <div className="relative flex-1 sm:flex-none">
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="w-full sm:w-auto px-4 py-2.5 pr-10 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 text-sm font-medium appearance-none cursor-pointer hover:border-emerald-700 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/20 transition-all duration-200"
+                    >
+                      {sortOptions.map((option) => (
+                        <option key={option} value={option.toLowerCase()}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      size={16}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 dark:text-zinc-400 pointer-events-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Products Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {products.map((product) => (
+                  <ProductCard key={product.id} {...product} />
                 ))}
               </div>
 
-              {data.totalPages > 1 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={data.totalPages}
-                  onPageChange={setCurrentPage}
-                />
-              )}
-            </>
-          )}
-        </main>
-      </div>
+              {/* Pagination */}
+              <div className="flex justify-center gap-2">
+                <Button variant="outline" size="md" disabled>
+                  Previous
+                </Button>
+                <Button variant="primary" size="md">
+                  1
+                </Button>
+                <Button variant="outline" size="md">
+                  2
+                </Button>
+                <Button variant="outline" size="md">
+                  3
+                </Button>
+                <Button variant="outline" size="md">
+                  Next
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
-  );
+  )
 }
