@@ -1,417 +1,258 @@
-'use client';
+'use client'
 
-import React, { useState, useRef } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Modal } from '@/components/ui/modal';
-import { ProductCard, Skeleton } from '@/components';
-import { ArrowRight, Shield, Truck, Sparkles, Search, Star, Award } from 'lucide-react';
-import { useFetch, useCart, useToast } from '@/hooks';
-import { aiApi } from '@/api/ai';
-import { Product, PaginatedResponse } from '@/types';
+import React from 'react'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/Button'
+import { ProductCard } from '@/components/ui/ProductCard'
+import { ArrowRight, Sparkles, Shield, Truck, Star } from 'lucide-react'
 
-const CATEGORIES = [
-  { name: 'Electronics', slug: 'electronics', icon: '📱', gradient: 'from-blue-500/10 to-indigo-500/10' },
-  { name: 'Fashion', slug: 'fashion', icon: '👗', gradient: 'from-pink-500/10 to-rose-500/10' },
-  { name: 'Home & Garden', slug: 'home', icon: '🏠', gradient: 'from-green-500/10 to-emerald-500/10' },
-  { name: 'Sports', slug: 'sports', icon: '⚽', gradient: 'from-orange-500/10 to-yellow-500/10' },
-];
-
-export default function Home() {
-  const router = useRouter();
-  const { addItem } = useCart();
-  const { success: showSuccess, error: showError } = useToast();
-  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
-  const [aiQuery, setAiQuery] = useState('');
-  const [aiLoading, setAiLoading] = useState(false);
-  const searchInputRef = useRef<HTMLInputElement>(null);
-
-  const { data: featuredData, isLoading: isFeaturedLoading } = useFetch<
-    PaginatedResponse<Product>
-  >('/products?limit=6');
-
-  const features = [
+export default function HomePage() {
+  // Sample featured products
+  const featuredProducts = [
     {
-      icon: Truck,
-      title: 'Complimentary Delivery',
-      description: 'Free express shipping on all orders over $50',
-      color: 'emerald',
+      id: '1',
+      name: 'Premium Wireless Headphones',
+      price: 299.99,
+      category: 'Audio',
+      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80',
+      rating: 4.8,
+      reviewCount: 124,
     },
     {
-      icon: Shield,
-      title: 'Secured Transactions',
-      description: 'Premium SSL-encrypted checkout for peace of mind',
-      color: 'gold',
+      id: '2',
+      name: 'Luxury Leather Wallet',
+      price: 149.99,
+      category: 'Accessories',
+      image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&q=80',
+      rating: 4.9,
+      reviewCount: 89,
     },
     {
-      icon: Award,
-      title: 'Satisfaction Guaranteed',
-      description: '30-day return policy on all premium items',
-      color: 'bronze',
+      id: '3',
+      name: 'Designer Watch Collection',
+      price: 599.99,
+      category: 'Watches',
+      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
+      rating: 4.7,
+      reviewCount: 156,
     },
-  ];
-
-  const handleAddToCart = (product: Product) => {
-    addItem(product, 1);
-    showSuccess(`${product.name} added to cart!`);
-  };
-
-  const handleCategoryClick = (slug: string) => {
-    router.push(`/products?category=${slug}`);
-  };
-
-  const handleAiSearch = async () => {
-    if (!aiQuery.trim()) {
-      showError('Please enter a search query');
-      return;
-    }
-
-    setAiLoading(true);
-    try {
-      const response = await aiApi.search(aiQuery);
-      if (response.success && response.data) {
-        const filters = response.data.filters;
-        const queryParams = new URLSearchParams();
-
-        if (filters.category) queryParams.append('category', filters.category);
-        if (filters.brand) queryParams.append('brand', filters.brand);
-        if (filters.minPrice !== undefined) queryParams.append('minPrice', filters.minPrice.toString());
-        if (filters.maxPrice !== undefined) queryParams.append('maxPrice', filters.maxPrice.toString());
-        queryParams.append('search', aiQuery);
-
-        setIsAiModalOpen(false);
-        setAiQuery('');
-        router.push(`/products?${queryParams.toString()}`);
-      }
-    } catch (err) {
-      showError('Failed to process AI search. Please try again.');
-    } finally {
-      setAiLoading(false);
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleAiSearch();
-    }
-  };
+    {
+      id: '4',
+      name: 'Premium Smart Speaker',
+      price: 199.99,
+      category: 'Tech',
+      image: 'https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=800&q=80',
+      rating: 4.6,
+      reviewCount: 203,
+    },
+  ]
 
   return (
-    <div className="space-y-20 animate-fade-in-up">
-      {/* Hero Section */}
-      <section className="relative py-20 md:py-32 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-charcoal-900 to-charcoal-800 opacity-95" />
-        <div className="absolute inset-0 bg-gradient-radial-gold" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gold-400/10 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-bronze-400/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
-        
-        <div className="relative text-center space-y-8 max-w-4xl mx-auto">
-          <h1 className="text-[48px] md:text-6xl font-serif font-bold text-cream-100 leading-tight">
-            Elevated Living,
-            <span className="block mt-2 bg-gradient-to-r from-gold-300 to-gold-500 bg-clip-text text-transparent">
-              Curated With Care
-            </span>
-          </h1>
-          <p className="text-lg md:text-xl font-sans text-taupe-200 max-w-2xl mx-auto leading-relaxed">
-            Discover a handpicked collection of premium products designed for those who appreciate the finer things in life.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6">
-            <Link href="/products">
-              <Button variant="luxury" size="lg" className="min-w-[200px] bg-gradient-gold hover:shadow-luxury-gold transition-all duration-200">
-                Explore Collection
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
-            <Button
-              onClick={() => setIsAiModalOpen(true)}
-              variant="outline"
-              size="lg"
-              className="min-w-[200px] bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm transition-all duration-200"
-            >
-              <Sparkles className="mr-2 w-5 h-5" />
-              AI Discovery
-            </Button>
-          </div>
+    <div className="w-full">
+      {/* Hero Section - Cinematic */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-dark">
+        {/* Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-emerald-700/10 rounded-full blur-3xl animate-float" />
+          <div className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-emerald-700/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
         </div>
-      </section>
 
-      {/* Category Section */}
-      <section className="py-12">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-charcoal-900 dark:text-cream-100 mb-4">
-            Explore Our Collections
-          </h2>
-          <p className="text-lg text-taupe-600 dark:text-taupe-400 max-w-2xl mx-auto">
-            Thoughtfully curated categories for every aspect of modern living
-          </p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {CATEGORIES.map((category) => (
-            <Card
-              key={category.slug}
-              variant="elevated"
-              className={`group cursor-pointer p-8 transition-all duration-200 hover:scale-[1.01] hover:shadow-luxury-lg bg-gradient-to-br ${category.gradient} border border-taupe-200 dark:border-charcoal-700 hover:border-gold-400`}
-              onClick={() => handleCategoryClick(category.slug)}
+        {/* Hero Content */}
+        <div className="container relative z-10 text-center px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-700/10 border border-emerald-700/20 mb-8"
             >
-              <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-200">
-                {category.icon}
-              </div>
-              <h3 className="font-serif font-semibold text-lg text-charcoal-900 dark:text-cream-100 group-hover:text-gold-600 transition-colors duration-200">
-                {category.name}
-              </h3>
-            </Card>
-          ))}
-        </div>
-      </section>
+              <Sparkles size={16} className="text-emerald-400" />
+              <span className="text-sm text-emerald-400 font-medium">Handcrafted Excellence</span>
+            </motion.div>
 
-      {/* Featured Products */}
-      <section className="py-16">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold-100 dark:bg-gold-900/20 rounded-full mb-6">
-            <Star className="w-4 h-4 text-gold-600" />
-            <span className="text-sm font-medium text-gold-800 dark:text-gold-400">Handpicked Selection</span>
-          </div>
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-charcoal-900 dark:text-cream-100 mb-4">
-            Featured Products
-          </h2>
-          <p className="text-lg text-taupe-600 dark:text-taupe-400 max-w-2xl mx-auto">
-            Discover our most sought-after items, carefully selected for exceptional quality
-          </p>
+            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-zinc-50 mb-6 leading-tight">
+              Welcome to{' '}
+              <span className="gradient-text bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
+                Premium
+              </span>
+            </h1>
+
+            <p className="text-xl md:text-2xl text-zinc-300 mb-12 max-w-2xl mx-auto leading-relaxed">
+              Curating exceptional products for elevated living. Experience the perfect blend of luxury and functionality.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/products">
+                <Button size="lg" className="group">
+                  <span>Shop Now</span>
+                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform duration-200" />
+                </Button>
+              </Link>
+              <Link href="/about">
+                <Button variant="outline" size="lg" className="text-zinc-300 border-zinc-700 hover:border-emerald-700">
+                  Learn More
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
         </div>
-        {isFeaturedLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="aspect-[3/4] rounded-2xl" />
-            ))}
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        >
+          <div className="w-6 h-10 rounded-full border-2 border-zinc-700 flex items-start justify-center p-2">
+            <motion.div
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="w-1.5 h-1.5 bg-emerald-500 rounded-full"
+            />
           </div>
-        ) : featuredData?.data && featuredData.data.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {featuredData.data.slice(0, 4).map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onAddToCart={handleAddToCart}
-              />
-            ))}
-          </div>
-        ) : null}
+        </motion.div>
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-gradient-subtle dark:bg-charcoal-900 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-charcoal-900 dark:text-cream-100 mb-4">
+      <section className="section bg-zinc-50 dark:bg-zinc-950">
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-zinc-900 dark:text-zinc-50 mb-4">
               The Elevated Experience
             </h2>
-            <p className="text-lg text-taupe-600 dark:text-taupe-400 max-w-2xl mx-auto">
-              We believe in providing more than just products—we deliver an experience
+            <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
+              Every detail matters when it comes to exceptional service and quality.
             </p>
-          </div>
+          </motion.div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <Card key={index} variant="elevated" className="text-center group hover:scale-[1.01] transition-all duration-200">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-gold mb-6 shadow-luxury-gold">
-                    <Icon className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-serif font-semibold text-charcoal-900 dark:text-cream-100 mb-3">
-                    {feature.title}
-                  </h3>
-                  <p className="text-taupe-600 dark:text-taupe-400 leading-relaxed">
-                    {feature.description}
-                  </p>
-                </Card>
-              );
-            })}
+            {[
+              {
+                icon: Shield,
+                title: 'Quality Guaranteed',
+                description: 'Every product is carefully curated and verified for authenticity and excellence.',
+              },
+              {
+                icon: Truck,
+                title: 'Fast Shipping',
+                description: 'Express delivery to your doorstep. Track your order every step of the way.',
+              },
+              {
+                icon: Star,
+                title: 'Premium Support',
+                description: 'Dedicated customer service team ready to assist you 24/7.',
+              },
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="premium-card-hover p-8 text-center"
+              >
+                <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-emerald-subtle flex items-center justify-center">
+                  <feature.icon size={32} className="text-emerald-700" />
+                </div>
+                <h3 className="font-serif text-xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3">
+                  {feature.title}
+                </h3>
+                <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                  {feature.description}
+                </p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Ask AI Section */}
-      <section className="relative py-20 rounded-3xl overflow-hidden bg-gradient-to-br from-gold-500 to-bronze-500 shadow-luxury-xl">
-        <div className="absolute inset-0 bg-gradient-radial-gold opacity-30" />
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-charcoal-900/20 rounded-full blur-3xl" />
-        
-        <div className="relative text-center space-y-8 max-w-3xl mx-auto px-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm mb-4">
-            <Sparkles className="w-10 h-10 text-white" />
-          </div>
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-white">
-            Discover with AI Intelligence
-          </h2>
-          <p className="text-xl text-cream-100 leading-relaxed">
-            Let our intelligent assistant help you find exactly what you're looking for. Simply describe your needs in natural language.
-          </p>
-          <Button
-            onClick={() => setIsAiModalOpen(true)}
-            variant="luxury"
-            size="lg"
-            className="min-w-[240px] bg-white text-gold-700 hover:bg-cream-100 hover:shadow-luxury-xl transition-all duration-200"
+      {/* Featured Products Section */}
+      <section className="section bg-white dark:bg-zinc-900">
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
           >
-            <Sparkles className="mr-2 w-5 h-5" />
-            Try AI Search
-          </Button>
-        </div>
-      </section>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 mb-6">
+              <span className="text-sm text-emerald-700 dark:text-emerald-400 font-medium uppercase tracking-wider">
+                Curated Collections
+              </span>
+            </div>
+            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-zinc-900 dark:text-zinc-50 mb-4">
+              Handpicked Selection
+            </h2>
+            <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
+              Discover our carefully curated collection of premium products, selected for their exceptional quality and design.
+            </p>
+          </motion.div>
 
-      {/* CTA Section */}
-      <section className="relative py-20 rounded-3xl overflow-hidden bg-gradient-luxury shadow-luxury-xl">
-        <div className="absolute inset-0 bg-gradient-radial-gold opacity-50" />
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gold-400/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-bronze-400/20 rounded-full blur-3xl" />
-        
-        <div className="relative text-center space-y-8 max-w-3xl mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-white">
-            Ready to Elevate Your Lifestyle?
-          </h2>
-          <p className="text-xl text-cream-100 leading-relaxed">
-            Browse our extensive collection and discover products that resonate with your refined taste.
-          </p>
-          <Link href="/products">
-            <Button variant="luxury" size="lg" className="min-w-[240px] shadow-luxury-gold">
-              Browse All Products
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </Link>
-        </div>
-      </section>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            {featuredProducts.map((product, index) => (
+              <ProductCard key={product.id} {...product} />
+            ))}
+          </div>
 
-      {/* Stats Section */}
-      <section className="py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-200">
-            <div className="text-5xl font-serif font-bold bg-gradient-gold bg-clip-text text-transparent">
-              10K+
-            </div>
-            <p className="text-sm font-medium text-taupe-600 dark:text-taupe-400 uppercase tracking-wider">
-              Premium Products
-            </p>
-          </div>
-          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-200">
-            <div className="text-5xl font-serif font-bold bg-gradient-gold bg-clip-text text-transparent">
-              50K+
-            </div>
-            <p className="text-sm font-medium text-taupe-600 dark:text-taupe-400 uppercase tracking-wider">
-              Satisfied Clients
-            </p>
-          </div>
-          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-200">
-            <div className="text-5xl font-serif font-bold bg-gradient-gold bg-clip-text text-transparent">
-              24/7
-            </div>
-            <p className="text-sm font-medium text-taupe-600 dark:text-taupe-400 uppercase tracking-wider">
-              Concierge Support
-            </p>
-          </div>
-          <div className="text-center space-y-3 p-6 rounded-2xl hover:bg-cream-100 dark:hover:bg-charcoal-800 transition-all duration-200">
-            <div className="text-5xl font-serif font-bold bg-gradient-gold bg-clip-text text-transparent">
-              100%
-            </div>
-            <p className="text-sm font-medium text-taupe-600 dark:text-taupe-400 uppercase tracking-wider">
-              Quality Assured
-            </p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center"
+          >
+            <Link href="/products">
+              <Button variant="outline" size="lg" className="group">
+                <span>View All Products</span>
+                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform duration-200" />
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-20">
-        <Card variant="elevated" className="max-w-3xl mx-auto p-12 text-center border border-taupe-200 dark:border-charcoal-700">
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-charcoal-900 dark:text-cream-100 mb-4">
-            Stay in the Loop
-          </h2>
-          <p className="text-lg text-taupe-600 dark:text-taupe-400 mb-8 max-w-2xl mx-auto">
-            Subscribe to our newsletter for exclusive offers, new arrivals, and insider access to premium collections.
-          </p>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const form = e.target as HTMLFormElement;
-              const emailInput = form.elements.namedItem('email') as HTMLInputElement;
-              showSuccess('Thank you for subscribing!');
-              emailInput.value = '';
-            }}
-            className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto"
+      <section className="section bg-gradient-dark">
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mx-auto text-center"
           >
-            <Input
-              type="email"
-              name="email"
-              placeholder="Enter your email address"
-              required
-              className="flex-1 focus:ring-gold-500 focus:border-gold-500 transition-all duration-200"
-              aria-label="Email address"
-            />
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              className="whitespace-nowrap transition-all duration-200"
-            >
-              Subscribe
-            </Button>
-          </form>
-        </Card>
-      </section>
-
-      {/* AI Search Modal */}
-      <Modal
-        isOpen={isAiModalOpen}
-        onClose={() => setIsAiModalOpen(false)}
-        title="AI-Powered Discovery"
-        size="lg"
-      >
-        <div className="space-y-6">
-          <p className="text-taupe-600 dark:text-taupe-400 leading-relaxed">
-            Describe what you're looking for, and our intelligent assistant will help you find the perfect product tailored to your preferences.
-          </p>
-          <div className="space-y-4">
-            <Input
-              ref={searchInputRef}
-              type="text"
-              placeholder="e.g., 'I need elegant wireless headphones under $100'"
-              value={aiQuery}
-              onChange={(e) => setAiQuery(e.target.value)}
-              onKeyPress={handleKeyPress}
-              disabled={aiLoading}
-              aria-label="AI search query"
-              className="text-base"
-            />
-          </div>
-          <div className="flex gap-3 justify-end">
-            <Button
-              onClick={() => setIsAiModalOpen(false)}
-              variant="ghost"
-              disabled={aiLoading}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleAiSearch}
-              variant="luxury"
-              disabled={aiLoading}
-              className="min-w-[140px]"
-            >
-              {aiLoading ? (
-                <>
-                  <Sparkles className="w-4 h-4 mr-2 animate-pulse" />
-                  Searching...
-                </>
-              ) : (
-                <>
-                  <Search className="w-4 h-4 mr-2" />
-                  Discover
-                </>
-              )}
-            </Button>
-          </div>
+            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-zinc-50 mb-6">
+              Stay Connected
+            </h2>
+            <p className="text-lg text-zinc-300 mb-8">
+              Subscribe to our newsletter for exclusive offers, new arrivals, and curated inspiration.
+            </p>
+            <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-6 py-4 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-50 placeholder:text-zinc-500 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/20 outline-none transition-all duration-200"
+              />
+              <Button size="lg" type="submit">
+                Subscribe
+              </Button>
+            </form>
+          </motion.div>
         </div>
-      </Modal>
+      </section>
     </div>
-  );
+  )
 }
