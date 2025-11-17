@@ -17,7 +17,7 @@ export const authApi = {
   },
 
   async register(payload: RegisterPayload): Promise<AuthPayload> {
-    const { data } = await axiosInstance.post<ApiResponse<AuthPayload>>('/auth/signup', payload)
+    const { data } = await axiosInstance.post<ApiResponse<AuthPayload>>('/auth/register', payload)
     return handleResponse(data, 'Unable to complete registration request')
   },
 }

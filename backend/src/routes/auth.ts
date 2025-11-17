@@ -5,6 +5,7 @@ import { validateRequest, schemas, authenticate } from '@/middlewares';
 const router = Router();
 
 // Public routes
+router.post('/register', validateRequest(schemas.signup), authController.signup);
 router.post('/signup', validateRequest(schemas.signup), authController.signup);
 router.post('/login', validateRequest(schemas.login), authController.login);
 router.post('/refresh', authController.refreshToken);
