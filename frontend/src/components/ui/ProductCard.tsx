@@ -1,11 +1,16 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Heart, Star } from 'lucide-react'
+import { useShallow } from 'zustand/react/shallow'
+
 import { cn, formatPrice } from '@/lib/utils'
-import { Star } from 'lucide-react'
+import { useCartStore } from '@/store/cart'
+import { useWishlistStore } from '@/store/wishlist'
+import type { Product } from '@/types/product'
 
 interface ProductCardProps {
   id: string
@@ -27,6 +32,69 @@ export function ProductCard({
   reviewCount = 0,
 }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const [isUpdatingWishlist, setIsUpdatingWishlist] = useState(false)
+
+  const addToCart = useCartStore((state) => state.add)
+  const { items: wishlistItems, add: addToWishlist, remove: removeFromWishlist } = useWishlistStore(
+    useShallow((state) => ({
+      items: state.items,
+      add: state.add,
+      remove: state.remove,
+    }))
+  )
+
+  const productSummary = useMemo<Product>(() => ({
+    id,
+    name,
+    price,
+    category,
+    images: image ? [image] : [],
+    description: null,
+    brand: null,
+    stock: null,
+  }), [id, name, price, category, image])
+
+  const wishlistItem = useMemo(() => wishlistItems.find((item) => item.productId === id), [wishlistItems, id])
+  const isWishlisted = Boolean(wishlistItem)
+
+  const handleAddToCart = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    if (isAddingToCart) {
+      return
+    }
+
+    setIsAddingToCart(true)
+
+    try {
+      await addToCart(id, 1, { product: productSummary })
+    } finally {
+      setIsAddingToCart(false)
+    }
+  }
+
+  const handleToggleWishlist = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    if (isUpdatingWishlist) {
+      return
+    }
+
+    setIsUpdatingWishlist(true)
+
+    try {
+      if (isWishlisted && wishlistItem) {
+        await removeFromWishlist(wishlistItem.id)
+      } else {
+        await addToWishlist(id, { product: productSummary })
+      }
+    } finally {
+      setIsUpdatingWishlist(false)
+    }
+  }
 
   return (
     <motion.div
@@ -51,6 +119,27 @@ export function ProductCard({
                 isHovered && 'scale-105'
               )}
             />
+            <button
+              type="button"
+              onClick={handleToggleWishlist}
+              disabled={isUpdatingWishlist}
+              aria-pressed={isWishlisted}
+              aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+              className={cn(
+                'absolute top-4 right-4 rounded-full border border-white/40 bg-white/80 px-3 py-2 text-zinc-700 shadow-sm backdrop-blur transition-all duration-200',
+                'hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/60',
+                isWishlisted && 'border-emerald-600 bg-emerald-600 text-white',
+                isUpdatingWishlist && 'cursor-not-allowed opacity-70'
+              )}
+            >
+              <Heart
+                size={16}
+                className={cn(
+                  'transition-colors',
+                  isWishlisted ? 'fill-white text-white' : 'text-zinc-600 dark:text-zinc-300'
+                )}
+              />
+            </button>
             {/* Overlay on hover */}
             <div
               className={cn(
@@ -67,13 +156,16 @@ export function ProductCard({
               className="absolute inset-x-4 bottom-4"
             >
               <button
-                onClick={(e) => {
-                  e.preventDefault()
-                  // Add to cart logic
-                }}
-                className="w-full bg-emerald-700 text-white py-3 px-6 rounded-lg font-medium hover:bg-emerald-800 transition-colors duration-200 shadow-premium"
+                type="button"
+                onClick={handleAddToCart}
+                disabled={isAddingToCart}
+                className={cn(
+                  'w-full bg-emerald-700 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-200 shadow-premium',
+                  'hover:bg-emerald-800',
+                  isAddingToCart && 'cursor-not-allowed opacity-75'
+                )}
               >
-                Add to Cart
+                {isAddingToCart ? 'Adding…' : 'Add to Cart'}
               </button>
             </motion.div>
           </div>

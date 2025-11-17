@@ -100,8 +100,17 @@ export const schemas = {
     order: Joi.string().valid('asc', 'desc').optional(),
   })),
 
-  wishlist: Joi.object({
-    products: Joi.array().items(Joi.string()).optional(),
+  wishlistAdd: Joi.object({
+    productId: Joi.string().required(),
+  }),
+
+  cartAdd: Joi.object({
+    productId: Joi.string().required(),
+    qty: Joi.number().integer().min(1).default(1),
+  }),
+
+  cartUpdate: Joi.object({
+    qty: Joi.number().integer().min(1).required(),
   }),
 
   address: Joi.object({

@@ -1,78 +1,244 @@
 'use client'
 
-import React, { useState } from 'react'
+import axios from 'axios'
+import React, { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Button } from '@/components/ui/Button'
+import { Button, buttonVariants } from '@/components/ui/Button'
 import { ProductCard } from '@/components/ui/ProductCard'
 import { Star, Heart, ShoppingCart, Truck, Shield, RefreshCw, Minus, Plus } from 'lucide-react'
-import { formatPrice } from '@/lib/utils'
+import { cn, formatPrice } from '@/lib/utils'
+import productsApi from '@/api/products'
+import type { Product } from '@/types/product'
+import { useCartStore } from '@/store/cart'
+import { useWishlistStore } from '@/store/wishlist'
+import { useShallow } from 'zustand/react/shallow'
 
-export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const [quantity, setQuantity] = useState(1)
-  const [selectedImage, setSelectedImage] = useState(0)
+const parseErrorMessage = (error: unknown): string => {
+  if (axios.isAxiosError(error)) {
+    const responseMessage = error.response?.data?.message
+    const responseError = error.response?.data?.error
 
-  // Sample product data
-  const product = {
-    id: params.id,
-    name: 'Premium Wireless Headphones',
-    price: 299.99,
-    category: 'Audio',
-    brand: 'Premium Audio',
-    rating: 4.8,
-    reviewCount: 124,
-    description:
-      'Experience audio excellence with our premium wireless headphones. Featuring advanced noise cancellation, crystal-clear sound quality, and luxurious comfort for all-day wear. Crafted with premium materials and engineered for perfection.',
-    features: [
-      'Active Noise Cancellation',
-      '40-hour battery life',
-      'Premium leather ear cups',
-      'Bluetooth 5.0 connectivity',
-      'Lightweight aluminum construction',
-      'Foldable design with carrying case',
-    ],
-    images: [
-      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80',
-      'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800&q=80',
-      'https://images.unsplash.com/photo-1545127398-14699f92334b?w=800&q=80',
-    ],
-    stock: 24,
+    if (typeof responseMessage === 'string' && responseMessage.trim().length > 0) {
+      return responseMessage
+    }
+
+    if (typeof responseError === 'string' && responseError.trim().length > 0) {
+      return responseError
+    }
   }
 
-  // Related products
-  const relatedProducts = [
-    {
-      id: '2',
-      name: 'Luxury Leather Wallet',
-      price: 149.99,
-      category: 'Accessories',
-      image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&q=80',
-      rating: 4.9,
-      reviewCount: 89,
-    },
-    {
-      id: '3',
-      name: 'Designer Watch Collection',
-      price: 599.99,
-      category: 'Watches',
-      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
-      rating: 4.7,
-      reviewCount: 156,
-    },
-    {
-      id: '4',
-      name: 'Premium Smart Speaker',
-      price: 199.99,
-      category: 'Tech',
-      image: 'https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=800&q=80',
-      rating: 4.6,
-      reviewCount: 203,
-    },
-  ]
+  if (error instanceof Error) {
+    return error.message
+  }
 
-  const incrementQuantity = () => setQuantity((prev) => Math.min(prev + 1, product.stock))
-  const decrementQuantity = () => setQuantity((prev) => Math.max(prev - 1, 1))
+  return 'Something went wrong while loading this product. Please try again.'
+}
+
+export default function ProductDetailPage({ params }: { params: { id: string } }) {
+  const [product, setProduct] = useState<Product | null>(null)
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
+  const [quantity, setQuantity] = useState(1)
+  const [selectedImage, setSelectedImage] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const [isUpdatingWishlist, setIsUpdatingWishlist] = useState(false)
+
+  const addToCart = useCartStore((state) => state.add)
+  const { items: wishlistItems, add: addToWishlist, remove: removeFromWishlist } = useWishlistStore(
+    useShallow((state) => ({
+      items: state.items,
+      add: state.add,
+      remove: state.remove,
+    }))
+  )
+
+  useEffect(() => {
+    let isMounted = true
+
+    const loadProduct = async () => {
+      setIsLoading(true)
+      setError(null)
+
+      try {
+        const fetchedProduct = await productsApi.getById(params.id)
+
+        if (!isMounted) {
+          return
+        }
+
+        setProduct(fetchedProduct)
+
+        try {
+          const { items } = await productsApi.list({ limit: 6 })
+
+          if (!isMounted) {
+            return
+          }
+
+          const suggestions = items
+            .filter((item) => item.id !== fetchedProduct.id)
+            .slice(0, 4)
+
+          setRelatedProducts(suggestions)
+        } catch (relatedError) {
+          console.warn('Failed to fetch related products', relatedError)
+          if (isMounted) {
+            setRelatedProducts([])
+          }
+        }
+      } catch (fetchError) {
+        if (!isMounted) {
+          return
+        }
+
+        setError(parseErrorMessage(fetchError))
+        setProduct(null)
+        setRelatedProducts([])
+      } finally {
+        if (isMounted) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    void loadProduct()
+
+    return () => {
+      isMounted = false
+    }
+  }, [params.id])
+
+  useEffect(() => {
+    setSelectedImage(0)
+  }, [product?.id])
+
+  const wishlistItem = useMemo(
+    () => (product ? wishlistItems.find((item) => item.productId === product.id) : undefined),
+    [wishlistItems, product?.id]
+  )
+
+  const isWishlisted = Boolean(wishlistItem)
+  const maxQuantity = product?.stock && product.stock > 0 ? product.stock : 10
+  const isOutOfStock = product?.stock !== undefined && product.stock <= 0
+
+  useEffect(() => {
+    setQuantity((previous) => {
+      if (maxQuantity <= 0) {
+        return 1
+      }
+
+      return Math.min(previous, maxQuantity)
+    })
+  }, [maxQuantity])
+
+  const displayedImage = product?.images?.[selectedImage] ?? product?.images?.[0] ?? '/placeholder.jpg'
+  const thumbnails = product?.images && product.images.length > 0 ? product.images : [displayedImage]
+
+  const rating = 4.8
+  const reviewCount = 124
+
+  const incrementQuantity = () => {
+    if (isOutOfStock) {
+      return
+    }
+
+    setQuantity((prev) => Math.min(prev + 1, maxQuantity))
+  }
+
+  const decrementQuantity = () => {
+    setQuantity((prev) => Math.max(prev - 1, 1))
+  }
+
+  const handleAddToCart = async () => {
+    if (!product || isOutOfStock || isAddingToCart) {
+      return
+    }
+
+    setIsAddingToCart(true)
+
+    try {
+      await addToCart(product.id, quantity, { product })
+    } finally {
+      setIsAddingToCart(false)
+    }
+  }
+
+  const handleToggleWishlist = async () => {
+    if (!product || isUpdatingWishlist) {
+      return
+    }
+
+    setIsUpdatingWishlist(true)
+
+    try {
+      if (isWishlisted && wishlistItem) {
+        await removeFromWishlist(wishlistItem.id)
+      } else {
+        await addToWishlist(product.id, { product })
+      }
+    } finally {
+      setIsUpdatingWishlist(false)
+    }
+  }
+
+  const stockLabel = product?.stock !== undefined ? (
+    product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'
+  ) : 'Available'
+
+  if (isLoading) {
+    return (
+      <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+        <section className="section">
+          <div className="container">
+            <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+              <div className="aspect-square rounded-2xl bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+              <div className="space-y-4">
+                <div className="h-6 w-24 rounded bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+                <div className="h-10 w-3/4 rounded bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+                <div className="h-4 w-full rounded bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+                <div className="h-4 w-2/3 rounded bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+                <div className="h-12 w-48 rounded bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+                <div className="flex gap-3 pt-4">
+                  <div className="h-14 w-1/2 rounded bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+                  <div className="h-14 w-14 rounded bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+        <section className="section">
+          <div className="container max-w-3xl text-center space-y-6">
+            <h1 className="font-serif text-4xl font-bold text-zinc-900 dark:text-zinc-50">
+              Unable to load product
+            </h1>
+            <p className="text-lg text-zinc-600 dark:text-zinc-400">
+              {error}
+            </p>
+            <Link
+              href="/products"
+              className={buttonVariants({ size: 'lg' })}
+            >
+              Browse products
+            </Link>
+          </div>
+        </section>
+      </div>
+    )
+  }
+
+  if (!product) {
+    return null
+  }
 
   return (
     <div className="w-full bg-zinc-50 dark:bg-zinc-950">
@@ -107,7 +273,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                 {/* Main Image */}
                 <div className="relative aspect-square rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                   <Image
-                    src={product.images[selectedImage]}
+                    src={displayedImage}
                     alt={product.name}
                     fill
                     className="object-cover"
@@ -116,17 +282,19 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
                 {/* Thumbnail Images */}
                 <div className="grid grid-cols-3 gap-4">
-                  {product.images.map((image, index) => (
+                  {thumbnails.map((imageUrl, index) => (
                     <button
-                      key={index}
+                      key={`${imageUrl}-${index}`}
+                      type="button"
                       onClick={() => setSelectedImage(index)}
-                      className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                      className={cn(
+                        'relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200',
                         selectedImage === index
                           ? 'border-emerald-700'
                           : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700'
-                      }`}
+                      )}
                     >
-                      <Image src={image} alt={`${product.name} ${index + 1}`} fill className="object-cover" />
+                      <Image src={imageUrl} alt={`${product.name} ${index + 1}`} fill className="object-cover" />
                     </button>
                   ))}
                 </div>
@@ -142,7 +310,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             >
               <div>
                 <p className="text-sm uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
-                  {product.category}
+                  {product.category ?? 'Premium Selection'}
                 </p>
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-zinc-900 dark:text-zinc-50 mb-4">
                   {product.name}
@@ -156,7 +324,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                         key={i}
                         size={18}
                         className={
-                          i < Math.floor(product.rating)
+                          i < Math.floor(rating)
                             ? 'fill-emerald-700 text-emerald-700'
                             : 'fill-zinc-200 text-zinc-200 dark:fill-zinc-700 dark:text-zinc-700'
                         }
@@ -164,7 +332,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                     ))}
                   </div>
                   <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                    {product.rating} ({product.reviewCount} reviews)
+                    {rating.toFixed(1)} ({reviewCount} reviews)
                   </span>
                 </div>
 
@@ -172,7 +340,9 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                 <p className="text-4xl font-bold text-emerald-700 mb-6">{formatPrice(product.price)}</p>
 
                 {/* Description */}
-                <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed mb-6">{product.description}</p>
+                <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed mb-6">
+                  {product.description ?? 'Discover elevated craftsmanship and exceptional performance with this premium selection.'}
+                </p>
 
                 {/* Features */}
                 <div className="mb-6">
@@ -180,7 +350,14 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                     Key Features
                   </h3>
                   <ul className="space-y-2">
-                    {product.features.map((feature, index) => (
+                    {[
+                      'Crafted with premium materials for lasting quality',
+                      'Thoughtfully designed for daily comfort and performance',
+                      'Backed by our satisfaction guarantee',
+                      'Expertly curated by the Premium team',
+                      'Seamless integration with your lifestyle',
+                      'Fast, free shipping on all orders',
+                    ].map((feature, index) => (
                       <li key={index} className="flex items-start gap-2 text-zinc-600 dark:text-zinc-400">
                         <span className="text-emerald-700 mt-1">✓</span>
                         <span>{feature}</span>
@@ -199,32 +376,66 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                   <div className="flex items-center gap-3">
                     <div className="flex items-center border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
                       <button
+                        type="button"
                         onClick={decrementQuantity}
-                        className="px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors duration-200"
+                        disabled={quantity === 1 || isOutOfStock}
+                        className={cn(
+                          'px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors duration-200',
+                          (quantity === 1 || isOutOfStock) && 'cursor-not-allowed opacity-60'
+                        )}
                       >
                         <Minus size={16} />
                       </button>
                       <span className="px-6 py-3 font-medium">{quantity}</span>
                       <button
+                        type="button"
                         onClick={incrementQuantity}
-                        className="px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors duration-200"
+                        disabled={isOutOfStock || quantity >= maxQuantity}
+                        className={cn(
+                          'px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors duration-200',
+                          (isOutOfStock || quantity >= maxQuantity) && 'cursor-not-allowed opacity-60'
+                        )}
                       >
                         <Plus size={16} />
                       </button>
                     </div>
                     <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                      {product.stock} in stock
+                      {stockLabel}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex gap-3">
-                  <Button size="lg" className="flex-1">
+                  <Button
+                    size="lg"
+                    type="button"
+                    onClick={handleAddToCart}
+                    disabled={isOutOfStock || isAddingToCart}
+                    className="flex-1 flex items-center justify-center gap-2"
+                  >
                     <ShoppingCart size={20} />
-                    <span>Add to Cart</span>
+                    <span>{isOutOfStock ? 'Out of Stock' : isAddingToCart ? 'Adding…' : 'Add to Cart'}</span>
                   </Button>
-                  <Button variant="outline" size="lg">
-                    <Heart size={20} />
+                  <Button
+                    variant={isWishlisted ? 'secondary' : 'outline'}
+                    size="lg"
+                    type="button"
+                    onClick={handleToggleWishlist}
+                    disabled={isUpdatingWishlist}
+                    aria-pressed={isWishlisted}
+                    className={cn(
+                      'flex items-center justify-center gap-2',
+                      isWishlisted && 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300'
+                    )}
+                  >
+                    <Heart
+                      size={20}
+                      className={cn(
+                        'transition-colors',
+                        isWishlisted ? 'fill-current text-emerald-700 dark:text-emerald-300' : 'text-emerald-700'
+                      )}
+                    />
+                    <span>{isWishlisted ? 'Saved' : 'Wishlist'}</span>
                   </Button>
                 </div>
               </div>
@@ -246,16 +457,27 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           </div>
 
           {/* Related Products */}
-          <div>
-            <h2 className="font-serif text-3xl font-semibold text-zinc-900 dark:text-zinc-50 mb-8">
-              You May Also Like
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {relatedProducts.map((product) => (
-                <ProductCard key={product.id} {...product} />
-              ))}
+          {relatedProducts.length > 0 && (
+            <div>
+              <h2 className="font-serif text-3xl font-semibold text-zinc-900 dark:text-zinc-50 mb-8">
+                You May Also Like
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {relatedProducts.map((relatedProduct) => (
+                  <ProductCard
+                    key={relatedProduct.id}
+                    id={relatedProduct.id}
+                    name={relatedProduct.name}
+                    price={relatedProduct.price}
+                    category={relatedProduct.category ?? 'Premium'}
+                    image={relatedProduct.images?.[0] ?? '/placeholder.jpg'}
+                    rating={4.6}
+                    reviewCount={0}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
     </div>
