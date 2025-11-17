@@ -7,6 +7,8 @@ import { motion } from 'framer-motion'
 import { Moon, Sun, ShoppingCart, User, Heart, Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { useAuth } from '@/hooks/use-auth'
+import { useCartStore } from '@/store/cart'
+import { useWishlistStore } from '@/store/wishlist'
 
 interface HeaderProps {
   isDark: boolean
@@ -17,6 +19,8 @@ export function Header({ isDark, setIsDark }: HeaderProps) {
   const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { user, isAuthenticated, signOut } = useAuth()
+  const cartQuantity = useCartStore((state) => state.items.reduce((total, item) => total + item.qty, 0))
+  const wishlistCount = useWishlistStore((state) => state.items.length)
 
   const toggleDarkMode = () => {
     const newMode = !isDark
@@ -102,6 +106,9 @@ export function Header({ isDark, setIsDark }: HeaderProps) {
               className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors duration-200 relative"
             >
               <Heart size={20} className="text-zinc-600 dark:text-zinc-300" />
+              <span className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 px-1 bg-emerald-700 text-white text-xs rounded-full flex items-center justify-center">
+                {wishlistCount}
+              </span>
             </Link>
 
             <Link
@@ -109,8 +116,8 @@ export function Header({ isDark, setIsDark }: HeaderProps) {
               className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors duration-200 relative"
             >
               <ShoppingCart size={20} className="text-zinc-600 dark:text-zinc-300" />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-700 text-white text-xs rounded-full flex items-center justify-center">
-                0
+              <span className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 px-1 bg-emerald-700 text-white text-xs rounded-full flex items-center justify-center">
+                {cartQuantity}
               </span>
             </Link>
 
@@ -185,6 +192,34 @@ export function Header({ isDark, setIsDark }: HeaderProps) {
                 {link.label}
               </Link>
             ))}
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <Link
+                href="/cart"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-between rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm font-medium text-zinc-700 dark:text-zinc-200 transition-colors duration-200 hover:border-emerald-700 dark:hover:border-emerald-600"
+              >
+                <span className="flex items-center gap-2">
+                  <ShoppingCart size={18} />
+                  Cart
+                </span>
+                <span className="inline-flex min-w-[1.75rem] justify-center rounded-full bg-emerald-700 px-2 py-0.5 text-xs font-semibold text-white">
+                  {cartQuantity}
+                </span>
+              </Link>
+              <Link
+                href="/wishlist"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-between rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm font-medium text-zinc-700 dark:text-zinc-200 transition-colors duration-200 hover:border-emerald-700 dark:hover:border-emerald-600"
+              >
+                <span className="flex items-center gap-2">
+                  <Heart size={18} />
+                  Wishlist
+                </span>
+                <span className="inline-flex min-w-[1.75rem] justify-center rounded-full bg-emerald-700 px-2 py-0.5 text-xs font-semibold text-white">
+                  {wishlistCount}
+                </span>
+              </Link>
+            </div>
             <div className="pt-4 space-y-2">
               {isAuthenticated ? (
                 <>

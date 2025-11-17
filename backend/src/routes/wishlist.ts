@@ -8,8 +8,8 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/', wishlistController.getWishlist);
-router.post('/add', validateRequest(schemas.wishlist), wishlistController.addToWishlist);
-router.delete('/:productId', wishlistController.removeFromWishlist);
-router.delete('/clear', wishlistController.clearWishlist);
+router.post('/', validateRequest(schemas.wishlistAdd), wishlistController.addToWishlist);
+router.delete('/:itemId', wishlistController.removeFromWishlist);
+router.delete('/', wishlistController.clearWishlist);
 
 export default router;

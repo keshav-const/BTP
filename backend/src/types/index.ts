@@ -69,9 +69,31 @@ export interface IOrderItem {
   price: number;
 }
 
+export interface IWishlistItem {
+  _id: Types.ObjectId;
+  product: Types.ObjectId | IProduct;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export interface IWishlist {
   user: Types.ObjectId | IUser;
-  products: Types.ObjectId[] | IProduct[];
+  items: IWishlistItem[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ICartItem {
+  _id: Types.ObjectId;
+  product: Types.ObjectId | IProduct;
+  quantity: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ICart {
+  user: Types.ObjectId | IUser;
+  items: ICartItem[];
   createdAt?: Date;
   updatedAt?: Date;
 }

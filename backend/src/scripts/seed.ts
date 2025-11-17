@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { connectDB, disconnectDB } from '@/config/database';
-import { User, Product, Order, Wishlist } from '@/models';
+import { User, Product, Order, Cart, Wishlist } from '@/models';
 
 dotenv.config();
 
@@ -13,6 +13,7 @@ const seedData = async () => {
     await User.deleteMany({});
     await Product.deleteMany({});
     await Order.deleteMany({});
+    await Cart.deleteMany({});
     await Wishlist.deleteMany({});
 
     // Create admin user
@@ -215,16 +216,50 @@ const seedData = async () => {
       },
     ]);
 
+    // Create carts
+    console.log('Creating carts...');
+    await Cart.create([
+      {
+        user: users[0]._id,
+        items: [
+          {
+            product: products[0]._id,
+            quantity: 1,
+          },
+          {
+            product: products[2]._id,
+            quantity: 2,
+          },
+        ],
+      },
+      {
+        user: users[1]._id,
+        items: [
+          {
+            product: products[1]._id,
+            quantity: 1,
+          },
+        ],
+      },
+    ]);
+
     // Create wishlists
     console.log('Creating wishlists...');
     await Wishlist.create([
       {
         user: users[0]._id,
-        products: [products[3]._id, products[4]._id, products[6]._id],
+        items: [
+          { product: products[3]._id },
+          { product: products[4]._id },
+          { product: products[6]._id },
+        ],
       },
       {
         user: users[1]._id,
-        products: [products[5]._id, products[7]._id],
+        items: [
+          { product: products[5]._id },
+          { product: products[7]._id },
+        ],
       },
     ]);
 
@@ -235,6 +270,7 @@ const seedData = async () => {
     console.log('User: jane@example.com / password123');
     console.log(`\nCreated ${products.length} products`);
     console.log('Created 2 sample orders');
+    console.log('Created 2 carts');
     console.log('Created 2 wishlists');
 
   } catch (error) {

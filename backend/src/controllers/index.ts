@@ -1,6 +1,7 @@
 export * from './authController';
 export * from './productController';
 export * from './orderController';
+export * from './cartController';
 export * from './wishlistController';
 export * from './healthController';
 export * from './aiController';

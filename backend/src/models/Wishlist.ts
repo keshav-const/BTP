@@ -1,28 +1,47 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { IWishlist } from '@/types';
+
+export interface IWishlistItemDocument extends Document {
+  product: mongoose.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export interface IWishlistDocument extends Document {
   user: mongoose.Types.ObjectId;
-  products: mongoose.Types.ObjectId[];
+  items: IWishlistItemDocument[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const wishlistSchema = new Schema<IWishlistDocument>({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-    unique: true,
+const wishlistItemSchema = new Schema<IWishlistItemDocument>(
+  {
+    product: {
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
+      required: true,
+    },
   },
-  products: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Product',
-  }],
-}, {
-  timestamps: true,
-});
+  {
+    timestamps: true,
+  }
+);
 
-// Indexes for better query performance
-wishlistSchema.index({ user: 1 });
-wishlistSchema.index({ products: 1 });
+const wishlistSchema = new Schema<IWishlistDocument>(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      unique: true,
+    },
+    items: [wishlistItemSchema],
+  },
+  {
+    timestamps: true,
+  }
+);
+
+wishlistSchema.index({ user: 1 }, { unique: true });
+wishlistSchema.index({ 'items.product': 1 });
 
 export const Wishlist = mongoose.model<IWishlistDocument>('Wishlist', wishlistSchema);
