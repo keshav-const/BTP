@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { useAuthStore } from '@/store/auth'
 
 export function ClientLayout({ children }: { children: React.ReactNode }) {
   const [isDark, setIsDark] = useState(false)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    useAuthStore.getState().hydrate()
     setMounted(true)
     const isDarkMode = document.documentElement.classList.contains('dark')
     setIsDark(isDarkMode)

@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/Button'
+import { buttonVariants } from '@/components/ui/Button'
 import { Heart } from 'lucide-react'
 import Link from 'next/link'
 
@@ -26,8 +26,11 @@ export default function WishlistPage() {
             <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-8">
               Save your favorite items for later
             </p>
-            <Link href="/products">
-              <Button size="lg">Browse Products</Button>
+            <Link
+              href="/products"
+              className={buttonVariants({ size: 'lg' })}
+            >
+              Browse Products
             </Link>
           </motion.div>
         </div>

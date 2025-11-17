@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Moon, Sun, ShoppingCart, User, Heart, Menu, X } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
 
 interface HeaderProps {
@@ -13,6 +13,7 @@ interface HeaderProps {
 }
 
 export function Header({ isDark, setIsDark }: HeaderProps) {
+  const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const toggleDarkMode = () => {
@@ -88,17 +89,26 @@ export function Header({ isDark, setIsDark }: HeaderProps) {
             </Link>
 
             {/* User Menu */}
-            <Link href="/account" className="hidden md:block">
-              <Button variant="ghost" size="sm">
-                <User size={18} />
-                <span>Account</span>
-              </Button>
-            </Link>
+            <Button
+              variant="ghost"
+              size="sm"
+              type="button"
+              onClick={() => router.push('/account')}
+              className="hidden md:inline-flex"
+            >
+              <User size={18} />
+              <span>Account</span>
+            </Button>
 
             {/* Sign In Button */}
-            <Link href="/login" className="hidden md:block">
-              <Button size="sm">Sign In</Button>
-            </Link>
+            <Button
+              size="sm"
+              type="button"
+              onClick={() => router.push('/login')}
+              className="hidden md:inline-flex"
+            >
+              Sign In
+            </Button>
 
             {/* Mobile Menu Button */}
             <button
@@ -133,19 +143,34 @@ export function Header({ isDark, setIsDark }: HeaderProps) {
               </Link>
             ))}
             <div className="pt-4 space-y-2">
-              <Link href="/account" className="block">
-                <Button variant="ghost" size="md" className="w-full justify-start">
-                  <User size={18} />
-                  <span>Account</span>
-                </Button>
-              </Link>
-              <Link href="/login" className="block">
-                <Button size="md" className="w-full">Sign In</Button>
-              </Link>
+              <Button
+                variant="ghost"
+                size="md"
+                type="button"
+                className="w-full !flex justify-start"
+                onClick={() => {
+                  router.push('/account')
+                  setMobileMenuOpen(false)
+                }}
+              >
+                <User size={18} />
+                <span>Account</span>
+              </Button>
+              <Button
+                size="md"
+                type="button"
+                className="w-full !flex justify-center"
+                onClick={() => {
+                  router.push('/login')
+                  setMobileMenuOpen(false)
+                }}
+              >
+                Sign In
+              </Button>
             </div>
           </motion.div>
         )}
-      </nav>
+
     </header>
   )
 }
