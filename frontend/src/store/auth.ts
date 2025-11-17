@@ -4,7 +4,9 @@ import axios from 'axios'
 import { create } from 'zustand'
 
 import authApi from '@/api/auth'
+import axiosInstance from '@/lib/axios-instance'
 import {
+  AUTH_SESSION_CLEARED_EVENT,
   clearAuthSession,
   getAuthToken,
   getRefreshToken,
@@ -21,7 +23,8 @@ interface AuthState {
   accessToken: string | null
   refreshToken: string | null
   isAuthenticated: boolean
-  hydrate: () => void
+  isLoading: boolean
+  hydrate: () => Promise<void>
   login: (payload: LoginPayload) => Promise<AuthPayload>
   register: (payload: RegisterPayload) => Promise<AuthPayload>
   logout: () => void
@@ -32,6 +35,7 @@ const initialState = {
   accessToken: null,
   refreshToken: null,
   isAuthenticated: false,
+  isLoading: false,
 }
 
 const parseErrorMessage = (error: unknown): string => {
@@ -57,29 +61,69 @@ const parseErrorMessage = (error: unknown): string => {
 
 export const useAuthStore = create<AuthState>((set) => ({
   ...initialState,
-  hydrate: () => {
+  hydrate: async () => {
     const token = getAuthToken()
     const refreshToken = getRefreshToken()
-    const user = getStoredUser()
+    const storedUser = getStoredUser()
 
-    if (token && user) {
+    if (!token) {
+      set({ ...initialState })
+      return
+    }
+
+    axiosInstance.defaults.headers.common.Authorization = `Bearer ${token}`
+
+    set({
+      accessToken: token,
+      refreshToken: refreshToken ?? null,
+      user: storedUser,
+      isAuthenticated: Boolean(storedUser),
+      isLoading: true,
+    })
+
+    try {
+      const currentUser = await authApi.getCurrentUser()
+      setStoredUser(currentUser)
+
       set({
-        user,
-        accessToken: token,
-        refreshToken: refreshToken ?? null,
+        user: currentUser,
         isAuthenticated: true,
       })
+    } catch (error) {
+      clearAuthSession()
+      set({ ...initialState })
+    } finally {
+      set({ isLoading: false })
     }
   },
   login: async (payload) => {
+    set({ isLoading: true })
+
     try {
       const data = await authApi.login(payload)
+
       setAuthToken(data.accessToken)
       setRefreshToken(data.refreshToken)
-      setStoredUser(data.user)
+      axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`
+
+      let resolvedUser = data.user
+
+      try {
+        resolvedUser = await authApi.getCurrentUser()
+      } catch (fetchError) {
+        if (axios.isAxiosError(fetchError) && fetchError.response?.status === 401) {
+          clearAuthSession()
+          delete axiosInstance.defaults.headers.common.Authorization
+          throw new Error(parseErrorMessage(fetchError))
+        }
+
+        console.warn('Failed to refresh user profile after login', fetchError)
+      }
+
+      setStoredUser(resolvedUser)
 
       set({
-        user: data.user,
+        user: resolvedUser,
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
         isAuthenticated: true,
@@ -88,17 +132,38 @@ export const useAuthStore = create<AuthState>((set) => ({
       return data
     } catch (error) {
       throw new Error(parseErrorMessage(error))
+    } finally {
+      set({ isLoading: false })
     }
   },
   register: async (payload) => {
+    set({ isLoading: true })
+
     try {
       const data = await authApi.register(payload)
+
       setAuthToken(data.accessToken)
       setRefreshToken(data.refreshToken)
-      setStoredUser(data.user)
+      axiosInstance.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`
+
+      let resolvedUser = data.user
+
+      try {
+        resolvedUser = await authApi.getCurrentUser()
+      } catch (fetchError) {
+        if (axios.isAxiosError(fetchError) && fetchError.response?.status === 401) {
+          clearAuthSession()
+          delete axiosInstance.defaults.headers.common.Authorization
+          throw new Error(parseErrorMessage(fetchError))
+        }
+
+        console.warn('Failed to refresh user profile after registration', fetchError)
+      }
+
+      setStoredUser(resolvedUser)
 
       set({
-        user: data.user,
+        user: resolvedUser,
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
         isAuthenticated: true,
@@ -107,10 +172,19 @@ export const useAuthStore = create<AuthState>((set) => ({
       return data
     } catch (error) {
       throw new Error(parseErrorMessage(error))
+    } finally {
+      set({ isLoading: false })
     }
   },
   logout: () => {
     clearAuthSession()
+    delete axiosInstance.defaults.headers.common.Authorization
     set({ ...initialState })
   },
 }))
+
+if (typeof window !== 'undefined') {
+  window.addEventListener(AUTH_SESSION_CLEARED_EVENT, () => {
+    useAuthStore.setState({ ...initialState })
+  })
+}

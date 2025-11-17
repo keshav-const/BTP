@@ -11,6 +11,12 @@ const axiosInstance = axios.create({
   withCredentials: true,
 })
 
+const existingToken = getAuthToken()
+
+if (existingToken) {
+  axiosInstance.defaults.headers.common.Authorization = `Bearer ${existingToken}`
+}
+
 axiosInstance.interceptors.request.use((config) => {
   const token = getAuthToken()
 
@@ -27,6 +33,7 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       clearAuthSession()
+      delete axiosInstance.defaults.headers.common.Authorization
     }
 
     return Promise.reject(error)
