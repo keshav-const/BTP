@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/Button'
+import { buttonVariants } from '@/components/ui/Button'
 import { User } from 'lucide-react'
 import Link from 'next/link'
 
@@ -26,8 +26,11 @@ export default function AccountPage() {
             <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-8">
               Sign in to view your account details
             </p>
-            <Link href="/login">
-              <Button size="lg">Sign In</Button>
+            <Link
+              href="/login"
+              className={buttonVariants({ size: 'lg' })}
+            >
+              Sign In
             </Link>
           </motion.div>
         </div>

@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Button } from '@/components/ui/Button'
+import { Button, buttonVariants } from '@/components/ui/Button'
 import { ProductCard } from '@/components/ui/ProductCard'
 import { ArrowRight, Sparkles, Shield, Truck, Star } from 'lucide-react'
 
@@ -48,6 +48,48 @@ export default function HomePage() {
     },
   ]
 
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const HeroContainer: React.ElementType = mounted ? motion.div : 'div'
+  const HeroBadge: React.ElementType = mounted ? motion.div : 'div'
+  const ScrollIndicator: React.ElementType = mounted ? motion.div : 'div'
+  const ScrollDot: React.ElementType = mounted ? motion.div : 'div'
+
+  const heroMotionProps = mounted
+    ? {
+        initial: { opacity: 0, y: 30 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 0.8, ease: 'easeOut' },
+      }
+    : {}
+
+  const badgeMotionProps = mounted
+    ? {
+        initial: { opacity: 0, scale: 0.9 },
+        animate: { opacity: 1, scale: 1 },
+        transition: { duration: 0.5, delay: 0.2 },
+      }
+    : {}
+
+  const scrollContainerMotionProps = mounted
+    ? {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        transition: { delay: 1.5 },
+      }
+    : {}
+
+  const scrollDotMotionProps = mounted
+    ? {
+        animate: { y: [0, 12, 0] },
+        transition: { duration: 1.5, repeat: Infinity },
+      }
+    : {}
+
   return (
     <div className="w-full">
       {/* Hero Section - Cinematic */}
@@ -60,20 +102,14 @@ export default function HomePage() {
 
         {/* Hero Content */}
         <div className="container relative z-10 text-center px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+          <HeroContainer {...heroMotionProps}>
+            <HeroBadge
+              {...badgeMotionProps}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-700/10 border border-emerald-700/20 mb-8"
             >
               <Sparkles size={16} className="text-emerald-400" />
               <span className="text-sm text-emerald-400 font-medium">Handcrafted Excellence</span>
-            </motion.div>
+            </HeroBadge>
 
             <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-zinc-50 mb-6 leading-tight">
               Welcome to{' '}
@@ -87,43 +123,42 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/products">
-                <Button size="lg" className="group">
-                  <span>Shop Now</span>
-                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform duration-200" />
-                </Button>
+              <Link
+                href="/products"
+                className={buttonVariants({ size: 'lg', className: 'group' })}
+              >
+                <span>Shop Now</span>
+                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
-              <Link href="/about">
-                <Button variant="outline" size="lg" className="text-zinc-300 border-zinc-700 hover:border-emerald-700">
-                  Learn More
-                </Button>
+              <Link
+                href="/about"
+                className={buttonVariants({ variant: 'outline', size: 'lg', className: 'text-zinc-300 border-zinc-700 hover:border-emerald-700' })}
+              >
+                Learn More
               </Link>
             </div>
-          </motion.div>
+          </HeroContainer>
         </div>
 
         {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
+        <ScrollIndicator
+          {...scrollContainerMotionProps}
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
         >
           <div className="w-6 h-10 rounded-full border-2 border-zinc-700 flex items-start justify-center p-2">
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
+            <ScrollDot
+              {...scrollDotMotionProps}
               className="w-1.5 h-1.5 bg-emerald-500 rounded-full"
             />
           </div>
-        </motion.div>
+        </ScrollIndicator>
       </section>
 
       {/* Features Section */}
       <section className="section bg-zinc-50 dark:bg-zinc-950">
         <div className="container">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={mounted ? { opacity: 0, y: 20 } : false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
@@ -157,7 +192,7 @@ export default function HomePage() {
             ].map((feature, index) => (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={mounted ? { opacity: 0, y: 20 } : false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -182,7 +217,7 @@ export default function HomePage() {
       <section className="section bg-white dark:bg-zinc-900">
         <div className="container">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={mounted ? { opacity: 0, y: 20 } : false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
@@ -208,17 +243,18 @@ export default function HomePage() {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={mounted ? { opacity: 0, y: 20 } : false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
             className="text-center"
           >
-            <Link href="/products">
-              <Button variant="outline" size="lg" className="group">
-                <span>View All Products</span>
-                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform duration-200" />
-              </Button>
+            <Link
+              href="/products"
+              className={buttonVariants({ variant: 'outline', size: 'lg', className: 'group' })}
+            >
+              <span>View All Products</span>
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform duration-200" />
             </Link>
           </motion.div>
         </div>
@@ -228,7 +264,7 @@ export default function HomePage() {
       <section className="section bg-gradient-dark">
         <div className="container">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={mounted ? { opacity: 0, y: 20 } : false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
