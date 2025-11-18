@@ -1,74 +1,40 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ProductCard } from '@/components/ui/ProductCard'
 import { Button } from '@/components/ui/Button'
 import { ChevronDown, SlidersHorizontal, X } from 'lucide-react'
+import productsApi from '@/api/products'
+import type { Product } from '@/types/product'
 
 export default function ProductsPage() {
   const [showFilters, setShowFilters] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [priceRange, setPriceRange] = useState<string>('all')
   const [sortBy, setSortBy] = useState<string>('featured')
+  const [products, setProducts] = useState<Product[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  // Sample products
-  const products = [
-    {
-      id: '1',
-      name: 'Premium Wireless Headphones',
-      price: 299.99,
-      category: 'Audio',
-      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80',
-      rating: 4.8,
-      reviewCount: 124,
-    },
-    {
-      id: '2',
-      name: 'Luxury Leather Wallet',
-      price: 149.99,
-      category: 'Accessories',
-      image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&q=80',
-      rating: 4.9,
-      reviewCount: 89,
-    },
-    {
-      id: '3',
-      name: 'Designer Watch Collection',
-      price: 599.99,
-      category: 'Watches',
-      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
-      rating: 4.7,
-      reviewCount: 156,
-    },
-    {
-      id: '4',
-      name: 'Premium Smart Speaker',
-      price: 199.99,
-      category: 'Tech',
-      image: 'https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=800&q=80',
-      rating: 4.6,
-      reviewCount: 203,
-    },
-    {
-      id: '5',
-      name: 'Minimalist Desk Lamp',
-      price: 89.99,
-      category: 'Home',
-      image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80',
-      rating: 4.5,
-      reviewCount: 67,
-    },
-    {
-      id: '6',
-      name: 'Premium Backpack',
-      price: 179.99,
-      category: 'Accessories',
-      image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80',
-      rating: 4.7,
-      reviewCount: 142,
-    },
-  ]
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setIsLoading(true)
+      setError(null)
+      
+      try {
+        const result = await productsApi.list({ limit: 50 })
+        setProducts(result.items)
+      } catch (err) {
+        console.error('Failed to fetch products:', err)
+        setError('Failed to load products. Please try again later.')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    void fetchProducts()
+  }, [])
 
   const categories = ['All', 'Audio', 'Accessories', 'Watches', 'Tech', 'Home']
   const priceRanges = ['All', 'Under $100', '$100 - $300', '$300 - $500', 'Over $500']
@@ -225,11 +191,45 @@ export default function ProductsPage() {
               </div>
 
               {/* Products Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                {products.map((product) => (
-                  <ProductCard key={product.id} {...product} />
-                ))}
-              </div>
+              {isLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="premium-card overflow-hidden">
+                      <div className="aspect-[4/3] bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+                      <div className="p-6 space-y-3">
+                        <div className="h-4 w-20 bg-zinc-200 dark:bg-zinc-800 animate-pulse rounded" />
+                        <div className="h-6 w-full bg-zinc-200 dark:bg-zinc-800 animate-pulse rounded" />
+                        <div className="h-4 w-24 bg-zinc-200 dark:bg-zinc-800 animate-pulse rounded" />
+                        <div className="h-6 w-32 bg-zinc-200 dark:bg-zinc-800 animate-pulse rounded" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : error ? (
+                <div className="text-center py-12">
+                  <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-4">{error}</p>
+                  <Button onClick={() => window.location.reload()}>Retry</Button>
+                </div>
+              ) : products.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-lg text-zinc-600 dark:text-zinc-400">No products found.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                  {products.map((product) => (
+                    <ProductCard 
+                      key={product.id} 
+                      id={product.id}
+                      name={product.name}
+                      price={product.price}
+                      category={product.category ?? 'Uncategorized'}
+                      image={product.images?.[0] ?? '/placeholder.jpg'}
+                      rating={4.5}
+                      reviewCount={0}
+                    />
+                  ))}
+                </div>
+              )}
 
               {/* Pagination */}
               <div className="flex justify-center gap-2">

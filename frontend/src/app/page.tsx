@@ -6,52 +6,26 @@ import { motion } from 'framer-motion'
 import { Button, buttonVariants } from '@/components/ui/Button'
 import { ProductCard } from '@/components/ui/ProductCard'
 import { ArrowRight, Sparkles, Shield, Truck, Star } from 'lucide-react'
+import productsApi from '@/api/products'
+import type { Product } from '@/types/product'
 
 export default function HomePage() {
-  // Sample featured products
-  const featuredProducts = [
-    {
-      id: '1',
-      name: 'Premium Wireless Headphones',
-      price: 299.99,
-      category: 'Audio',
-      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80',
-      rating: 4.8,
-      reviewCount: 124,
-    },
-    {
-      id: '2',
-      name: 'Luxury Leather Wallet',
-      price: 149.99,
-      category: 'Accessories',
-      image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&q=80',
-      rating: 4.9,
-      reviewCount: 89,
-    },
-    {
-      id: '3',
-      name: 'Designer Watch Collection',
-      price: 599.99,
-      category: 'Watches',
-      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
-      rating: 4.7,
-      reviewCount: 156,
-    },
-    {
-      id: '4',
-      name: 'Premium Smart Speaker',
-      price: 199.99,
-      category: 'Tech',
-      image: 'https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=800&q=80',
-      rating: 4.6,
-      reviewCount: 203,
-    },
-  ]
-
   const [mounted, setMounted] = React.useState(false)
+  const [featuredProducts, setFeaturedProducts] = React.useState<Product[]>([])
 
   React.useEffect(() => {
     setMounted(true)
+    
+    const fetchProducts = async () => {
+      try {
+        const result = await productsApi.list({ limit: 4 })
+        setFeaturedProducts(result.items)
+      } catch (err) {
+        console.error('Failed to fetch featured products:', err)
+      }
+    }
+
+    void fetchProducts()
   }, [])
 
   const HeroContainer: React.ElementType = mounted ? motion.div : 'div'
@@ -238,7 +212,16 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {featuredProducts.map((product, index) => (
-              <ProductCard key={product.id} {...product} />
+              <ProductCard 
+                key={product.id} 
+                id={product.id}
+                name={product.name}
+                price={product.price}
+                category={product.category ?? 'Uncategorized'}
+                image={product.images?.[0] ?? '/placeholder.jpg'}
+                rating={4.5}
+                reviewCount={0}
+              />
             ))}
           </div>
 
