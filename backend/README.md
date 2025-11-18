@@ -162,7 +162,9 @@ npm start
 
 ## Database Seeding & Admin Accounts
 
-Seed the database with demo data:
+Seed the database with demo data via command line or API endpoint:
+
+### Option 1: Command Line Script
 
 ```bash
 npm run seed
@@ -171,7 +173,22 @@ npm run seed
 Creates:
 - **Admin**: `admin@example.com` / `admin123`
 - **Shoppers**: `john@example.com`, `jane@example.com` (password: `password123`)
-- Sample products (with tags), orders, and wishlists.
+- 12 luxury products (watches, fashion, electronics, beauty, accessories, home goods)
+- Sample orders, carts, and wishlists.
+
+### Option 2: Admin API Endpoint
+
+For production/deployed environments, use the admin seed endpoint:
+
+```bash
+# Seed products (requires admin authentication)
+POST /api/admin/seed/products
+
+# Clear all products
+DELETE /api/admin/seed/products
+```
+
+See [SEEDING.md](SEEDING.md) for detailed documentation on both seeding methods.
 
 ### Managing Admin Users
 
@@ -228,6 +245,8 @@ Authentication is via bearer tokens in the `Authorization` header unless otherwi
 | POST | `/ai/search` | Parse natural language query | Public |
 | POST | `/ai/generate-description` | Generate SEO copy | Admin |
 | POST | `/ai/enhance-image` | Get image enhancement tips | Admin |
+| POST | `/admin/seed/products` | Seed database with products | Admin |
+| DELETE | `/admin/seed/products` | Clear all products | Admin |
 | GET  | `/health` | Server health check | Public |
 
 > Full request/response contracts use the standard success/error envelope:
