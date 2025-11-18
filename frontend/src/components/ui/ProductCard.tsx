@@ -7,9 +7,10 @@ import Link from 'next/link'
 import { Heart, Star } from 'lucide-react'
 import { useShallow } from 'zustand/react/shallow'
 
-import { cn, formatPrice } from '@/lib/utils'
+import { cn, formatPrice, isValidObjectId } from '@/lib/utils'
 import { useCartStore } from '@/store/cart'
 import { useWishlistStore } from '@/store/wishlist'
+import { toastError } from '@/lib/toast'
 import type { Product } from '@/types/product'
 
 interface ProductCardProps {
@@ -63,6 +64,11 @@ export function ProductCard({
     event.stopPropagation()
 
     if (isAddingToCart) {
+      return
+    }
+
+    if (!isValidObjectId(id)) {
+      toastError('Invalid product ID')
       return
     }
 

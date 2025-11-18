@@ -9,9 +9,9 @@ import { useParams, useRouter } from 'next/navigation'
 import { Button, buttonVariants } from '@/components/ui/Button'
 import { ProductCard } from '@/components/ui/ProductCard'
 import { Star, Heart, ShoppingCart, Truck, Shield, RefreshCw, Minus, Plus } from 'lucide-react'
-import { cn, formatPrice } from '@/lib/utils'
+import { cn, formatPrice, isValidObjectId } from '@/lib/utils'
 import { getAuthToken } from '@/lib/auth'
-import { toastInfo } from '@/lib/toast'
+import { toastInfo, toastError } from '@/lib/toast'
 import productsApi from '@/api/products'
 import type { Product } from '@/types/product'
 import { useCartStore } from '@/store/cart'
@@ -78,6 +78,17 @@ export default function ProductDetailPage() {
     }
 
     const productId = id as string
+
+    if (!isValidObjectId(productId)) {
+      setProduct(null)
+      setRelatedProducts([])
+      setError('Invalid product ID format.')
+      setIsLoading(false)
+
+      return () => {
+        isMounted = false
+      }
+    }
 
     const loadProduct = async () => {
       setIsLoading(true)
@@ -180,6 +191,11 @@ export default function ProductDetailPage() {
 
     if (!product || !product.id) {
       toastInfo('Product not loaded yet')
+      return
+    }
+
+    if (!isValidObjectId(product.id)) {
+      toastError('Invalid product ID')
       return
     }
 

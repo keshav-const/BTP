@@ -5,6 +5,7 @@ import { create } from 'zustand'
 
 import cartApi from '@/api/cart'
 import { getAuthToken } from '@/lib/auth'
+import { isValidObjectId } from '@/lib/utils'
 import { toastError, toastInfo, toastSuccess } from '@/lib/toast'
 import type { CartItem, CartSummary } from '@/types/cart'
 import type { Product } from '@/types/product'
@@ -109,6 +110,11 @@ export const useCartStore = create<CartState>((set, get) => ({
     const previousItems = get().items
     let optimisticItems = previousItems
     let createdTemporaryItemId: string | null = null
+
+    if (!isValidObjectId(productId)) {
+      toastError('Invalid product ID format.')
+      return
+    }
 
     if (qty < 1) {
       toastInfo('Quantity must be at least 1.')
