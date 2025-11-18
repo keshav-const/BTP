@@ -132,19 +132,18 @@ export function ProductCard({
               aria-pressed={isWishlisted}
               aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
               className={cn(
-                'absolute top-4 right-4 rounded-full border bg-white/80 px-3 py-2 shadow-sm backdrop-blur transition-all duration-200',
-                'hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/60',
-                isWishlisted 
-                  ? 'border-emerald-600 bg-emerald-600' 
-                  : 'border-zinc-800 dark:border-zinc-400',
+                'absolute top-4 right-4 rounded-full bg-white/80 px-3 py-2 shadow-sm backdrop-blur transition-all duration-200',
+                'hover:bg-white hover:shadow-md hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/60',
                 isUpdatingWishlist && 'cursor-not-allowed opacity-70'
               )}
             >
               <Heart
-                size={16}
+                size={20}
                 className={cn(
                   'transition-colors',
-                  isWishlisted ? 'fill-white text-white' : 'text-zinc-800 dark:text-zinc-400'
+                  isWishlisted 
+                    ? 'fill-red-500 text-red-500' 
+                    : 'text-zinc-400 dark:text-zinc-500'
                 )}
               />
             </button>
