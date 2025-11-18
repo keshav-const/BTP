@@ -5,10 +5,13 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
 import { Button, buttonVariants } from '@/components/ui/Button'
 import { ProductCard } from '@/components/ui/ProductCard'
 import { Star, Heart, ShoppingCart, Truck, Shield, RefreshCw, Minus, Plus } from 'lucide-react'
 import { cn, formatPrice } from '@/lib/utils'
+import { getAuthToken } from '@/lib/auth'
+import { toastInfo } from '@/lib/toast'
 import productsApi from '@/api/products'
 import type { Product } from '@/types/product'
 import { useCartStore } from '@/store/cart'
@@ -36,7 +39,12 @@ const parseErrorMessage = (error: unknown): string => {
   return 'Something went wrong while loading this product. Please try again.'
 }
 
-export default function ProductDetailPage({ params }: { params: { id: string } }) {
+export default function ProductDetailPage() {
+  const params = useParams<{ id?: string | string[] }>()
+  const router = useRouter()
+  const rawId = params?.id
+  const id = Array.isArray(rawId) ? rawId[0] : rawId
+
   const [product, setProduct] = useState<Product | null>(null)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
   const [quantity, setQuantity] = useState(1)
@@ -58,12 +66,25 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   useEffect(() => {
     let isMounted = true
 
+    if (!id) {
+      setProduct(null)
+      setRelatedProducts([])
+      setError('Product not found.')
+      setIsLoading(false)
+
+      return () => {
+        isMounted = false
+      }
+    }
+
+    const productId = id as string
+
     const loadProduct = async () => {
       setIsLoading(true)
       setError(null)
 
       try {
-        const fetchedProduct = await productsApi.getById(params.id)
+        const fetchedProduct = await productsApi.getById(productId)
 
         if (!isMounted) {
           return
@@ -109,7 +130,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     return () => {
       isMounted = false
     }
-  }, [params.id])
+  }, [id])
 
   useEffect(() => {
     setSelectedImage(0)
@@ -153,14 +174,29 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   }
 
   const handleAddToCart = async () => {
-    if (!product || isOutOfStock || isAddingToCart) {
+    if (isOutOfStock || isAddingToCart) {
       return
     }
+
+    if (!product || !product.id) {
+      toastInfo('Product not loaded yet')
+      return
+    }
+
+    const token = getAuthToken()
+
+    if (!token) {
+      toastInfo('Please sign in')
+      router.push('/login')
+      return
+    }
+
+    const qty = Math.max(1, quantity)
 
     setIsAddingToCart(true)
 
     try {
-      await addToCart(product.id, quantity, { product })
+      await addToCart(product.id, qty, { product })
     } finally {
       setIsAddingToCart(false)
     }
