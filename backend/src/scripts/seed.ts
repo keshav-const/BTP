@@ -1,12 +1,17 @@
 import dotenv from 'dotenv';
 import { connectDB, disconnectDB } from '@/config/database';
 import { User, Product, Order, Cart, Wishlist } from '@/models';
+import { productSeedData } from '@/seeds/products.seed';
 
 dotenv.config();
 
 const seedData = async () => {
   try {
     console.log('Starting database seeding...');
+
+    // Connect to database
+    await connectDB();
+    console.log('Database connected successfully');
 
     // Clear existing data
     console.log('Clearing existing data...');
@@ -47,120 +52,7 @@ const seedData = async () => {
 
     // Create products
     console.log('Creating products...');
-    const products = await Product.create([
-      {
-        name: 'Wireless Headphones',
-        description: 'High-quality wireless headphones with noise cancellation and 20-hour battery life.',
-        price: 199.99,
-        category: 'Electronics',
-        brand: 'TechBrand',
-        stock: 50,
-        images: [
-          'https://example.com/headphones1.jpg',
-          'https://example.com/headphones2.jpg',
-        ],
-        tags: ['audio', 'wireless', 'noise-cancelling', 'bluetooth'],
-        isActive: true,
-      },
-      {
-        name: 'Smart Watch',
-        description: 'Feature-rich smartwatch with health tracking, GPS, and smartphone integration.',
-        price: 299.99,
-        category: 'Electronics',
-        brand: 'SmartTech',
-        stock: 30,
-        images: [
-          'https://example.com/watch1.jpg',
-          'https://example.com/watch2.jpg',
-        ],
-        tags: ['wearable', 'fitness', 'smartwatch', 'gps', 'health'],
-        isActive: true,
-      },
-      {
-        name: 'Running Shoes',
-        description: 'Comfortable and durable running shoes with advanced cushioning technology.',
-        price: 129.99,
-        category: 'Sports',
-        brand: 'SportMax',
-        stock: 75,
-        images: [
-          'https://example.com/shoes1.jpg',
-          'https://example.com/shoes2.jpg',
-        ],
-        tags: ['footwear', 'running', 'sports', 'athletic'],
-        isActive: true,
-      },
-      {
-        name: 'Laptop Backpack',
-        description: 'Spacious and durable backpack with laptop compartment and multiple pockets.',
-        price: 49.99,
-        category: 'Accessories',
-        brand: 'TravelPro',
-        stock: 100,
-        images: [
-          'https://example.com/backpack1.jpg',
-          'https://example.com/backpack2.jpg',
-        ],
-        tags: ['bag', 'laptop', 'travel', 'backpack'],
-        isActive: true,
-      },
-      {
-        name: 'Bluetooth Speaker',
-        description: 'Portable Bluetooth speaker with excellent sound quality and waterproof design.',
-        price: 79.99,
-        category: 'Electronics',
-        brand: 'SoundWave',
-        stock: 60,
-        images: [
-          'https://example.com/speaker1.jpg',
-          'https://example.com/speaker2.jpg',
-        ],
-        tags: ['audio', 'bluetooth', 'wireless', 'portable', 'waterproof'],
-        isActive: true,
-      },
-      {
-        name: 'Yoga Mat',
-        description: 'Non-slip yoga mat with extra cushioning for comfortable practice.',
-        price: 34.99,
-        category: 'Sports',
-        brand: 'FitGear',
-        stock: 40,
-        images: [
-          'https://example.com/yogamat1.jpg',
-          'https://example.com/yogamat2.jpg',
-        ],
-        tags: ['yoga', 'fitness', 'exercise', 'mat'],
-        isActive: true,
-      },
-      {
-        name: 'Coffee Maker',
-        description: 'Automatic coffee maker with programmable features and thermal carafe.',
-        price: 89.99,
-        category: 'Home',
-        brand: 'BrewMaster',
-        stock: 25,
-        images: [
-          'https://example.com/coffee1.jpg',
-          'https://example.com/coffee2.jpg',
-        ],
-        tags: ['kitchen', 'coffee', 'appliance', 'brewing'],
-        isActive: true,
-      },
-      {
-        name: 'Desk Lamp',
-        description: 'LED desk lamp with adjustable brightness and color temperature.',
-        price: 39.99,
-        category: 'Home',
-        brand: 'LightPro',
-        stock: 45,
-        images: [
-          'https://example.com/lamp1.jpg',
-          'https://example.com/lamp2.jpg',
-        ],
-        tags: ['lighting', 'led', 'desk', 'home-office'],
-        isActive: true,
-      },
-    ]);
+    const products = await Product.create(productSeedData);
 
     // Create sample orders
     console.log('Creating sample orders...');

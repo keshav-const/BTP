@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { Order, Product } from '@/models';
 import { ApiResponse, IAuthRequest } from '@/types';
+import { productSeedData } from '@/seeds/products.seed';
 
 export const adminController = {
   async getDashboardSummary(req: IAuthRequest, res: Response<ApiResponse>): Promise<void> {
@@ -116,6 +117,62 @@ export const adminController = {
       res.status(500).json({
         success: false,
         message: 'Failed to retrieve admin analytics summary',
+        error: (error as Error).message,
+      });
+    }
+  },
+
+  async seedProducts(req: IAuthRequest, res: Response<ApiResponse>): Promise<void> {
+    try {
+      const existingCount = await Product.countDocuments();
+
+      if (existingCount > 0) {
+        res.status(400).json({
+          success: false,
+          message: `Database already contains ${existingCount} product(s). Clear products first or use force=true query parameter.`,
+        });
+        return;
+      }
+
+      const products = await Product.insertMany(productSeedData);
+
+      res.status(201).json({
+        success: true,
+        message: `Successfully seeded ${products.length} products`,
+        data: {
+          count: products.length,
+          products: products.map((p) => ({
+            id: p._id,
+            name: p.name,
+            price: p.price,
+            category: p.category,
+          })),
+        },
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: 'Failed to seed products',
+        error: (error as Error).message,
+      });
+    }
+  },
+
+  async clearProducts(req: IAuthRequest, res: Response<ApiResponse>): Promise<void> {
+    try {
+      const result = await Product.deleteMany({});
+
+      res.json({
+        success: true,
+        message: `Successfully deleted ${result.deletedCount} product(s)`,
+        data: {
+          deletedCount: result.deletedCount,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: 'Failed to clear products',
         error: (error as Error).message,
       });
     }

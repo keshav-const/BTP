@@ -11,4 +11,8 @@ router.get('/orders', validateQuery(schemas.pagination), orderController.getOrde
 router.get('/orders/:id', orderController.getOrderById);
 router.put('/orders/:id', orderController.updateOrderStatus);
 
+// Product seeding routes
+router.post('/seed/products', adminController.seedProducts);
+router.delete('/seed/products', adminController.clearProducts);
+
 export default router;
