@@ -29,9 +29,14 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
 
     void hydrateStores()
 
-    setMounted(true)
-    const isDarkMode = document.documentElement.classList.contains('dark')
+    // Initialize theme from localStorage or system preference
+    const savedTheme = localStorage.getItem('theme')
+    const isDarkMode = savedTheme === 'dark' || (!savedTheme && document.documentElement.classList.contains('dark'))
     setIsDark(isDarkMode)
+    // Ensure the class is applied correctly
+    document.documentElement.classList.toggle('dark', isDarkMode)
+    
+    setMounted(true)
 
     const unsubscribe = useAuthStore.subscribe((state, previousState) => {
       const wasAuthenticated = previousState?.isAuthenticated ?? false

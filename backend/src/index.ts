@@ -17,11 +17,12 @@ const app = express();
 // Connect to database and seed products if needed
 connectDB().then(async () => {
   try {
-    const count = await Product.countDocuments();
-    if (count === 0) {
-      await Product.insertMany(productSeedData);
-      console.log('Products seeded successfully');
-    }
+    // Force delete all products and re-seed with fresh data (includes Unsplash URLs)
+    const deleteResult = await Product.deleteMany({});
+    console.log(`Deleted ${deleteResult.deletedCount} existing products`);
+    
+    await Product.insertMany(productSeedData);
+    console.log('Products seeded successfully with new Unsplash image URLs');
   } catch (error) {
     console.error('Error seeding products:', error);
   }
