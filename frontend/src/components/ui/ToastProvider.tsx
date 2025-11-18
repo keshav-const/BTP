@@ -80,7 +80,7 @@ export function ToastProvider() {
   }
 
   return createPortal(
-    <div className="pointer-events-none fixed top-6 right-6 z-50 flex w-full max-w-sm flex-col gap-3">
+    <div className="pointer-events-none fixed bottom-4 right-4 z-50 flex w-full max-w-sm flex-col gap-3">
       <AnimatePresence initial={false}>
         {toasts.map((toast) => {
           const label = labelMap[toast.level]
@@ -93,9 +93,9 @@ export function ToastProvider() {
           return (
             <motion.div
               key={toast.id}
-              initial={{ opacity: 0, y: -12, scale: 0.95 }}
+              initial={{ opacity: 0, y: 12, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -12, scale: 0.95 }}
+              exit={{ opacity: 0, y: 12, scale: 0.95 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
               className={cn(
                 'pointer-events-auto overflow-hidden rounded-2xl border border-white/10 backdrop-blur-md',
