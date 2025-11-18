@@ -64,7 +64,7 @@ const mapCart = (cart: any): CartResponse => {
     totalQuantity += quantity;
 
     items.push({
-      id: item._id.toString(),
+      id: (item._id as mongoose.Types.ObjectId).toString(),
       productId: product.id,
       qty: quantity,
       product,
@@ -97,7 +97,7 @@ export const cartController = {
       const user = req.user!;
 
       const cart = await findOrCreateCart(user._id);
-      const populatedCart = await getPopulatedCart(cart._id);
+      const populatedCart = await getPopulatedCart(cart._id as mongoose.Types.ObjectId);
 
       res.json({
         success: true,
@@ -105,6 +105,7 @@ export const cartController = {
         data: mapCart(populatedCart),
       });
     } catch (error) {
+      console.error('Error in getCart:', error);
       res.status(500).json({
         success: false,
         message: 'Error retrieving cart',
@@ -117,6 +118,14 @@ export const cartController = {
     try {
       const user = req.user!;
       const { productId, qty = 1 } = req.body as { productId: string; qty?: number };
+
+      if (!mongoose.Types.ObjectId.isValid(productId)) {
+        res.status(400).json({
+          success: false,
+          message: 'Invalid product ID format',
+        });
+        return;
+      }
 
       const quantity = Number(qty);
       if (!Number.isInteger(quantity) || quantity < 1) {
@@ -148,7 +157,7 @@ export const cartController = {
 
       await cart.save();
 
-      const populatedCart = await getPopulatedCart(cart._id);
+      const populatedCart = await getPopulatedCart(cart._id as mongoose.Types.ObjectId);
 
       res.status(201).json({
         success: true,
@@ -156,6 +165,7 @@ export const cartController = {
         data: mapCart(populatedCart),
       });
     } catch (error) {
+      console.error('Error in addToCart:', error);
       res.status(500).json({
         success: false,
         message: 'Error adding product to cart',
@@ -169,6 +179,14 @@ export const cartController = {
       const user = req.user!;
       const { itemId } = req.params as { itemId: string };
       const { qty } = req.body as { qty: number };
+
+      if (!mongoose.Types.ObjectId.isValid(itemId)) {
+        res.status(400).json({
+          success: false,
+          message: 'Invalid cart item ID format',
+        });
+        return;
+      }
 
       const quantity = Number(qty);
       if (!Number.isInteger(quantity) || quantity < 1) {
@@ -189,7 +207,7 @@ export const cartController = {
         return;
       }
 
-      const targetItem = cart.items.find((item) => item._id.toString() === itemId);
+      const targetItem = cart.items.find((item) => (item._id as mongoose.Types.ObjectId).toString() === itemId);
 
       if (!targetItem) {
         res.status(404).json({
@@ -202,7 +220,7 @@ export const cartController = {
       targetItem.quantity = quantity;
       await cart.save();
 
-      const populatedCart = await getPopulatedCart(cart._id);
+      const populatedCart = await getPopulatedCart(cart._id as mongoose.Types.ObjectId);
 
       res.json({
         success: true,
@@ -210,6 +228,7 @@ export const cartController = {
         data: mapCart(populatedCart),
       });
     } catch (error) {
+      console.error('Error in updateCartItem:', error);
       res.status(500).json({
         success: false,
         message: 'Error updating cart',
@@ -223,6 +242,14 @@ export const cartController = {
       const user = req.user!;
       const { itemId } = req.params as { itemId: string };
 
+      if (!mongoose.Types.ObjectId.isValid(itemId)) {
+        res.status(400).json({
+          success: false,
+          message: 'Invalid cart item ID format',
+        });
+        return;
+      }
+
       const cart = await Cart.findOne({ user: user._id });
 
       if (!cart) {
@@ -234,7 +261,7 @@ export const cartController = {
       }
 
       const initialLength = cart.items.length;
-      cart.items = cart.items.filter((item) => item._id.toString() !== itemId);
+      cart.items = cart.items.filter((item) => (item._id as mongoose.Types.ObjectId).toString() !== itemId);
 
       if (cart.items.length === initialLength) {
         res.status(404).json({
@@ -246,7 +273,7 @@ export const cartController = {
 
       await cart.save();
 
-      const populatedCart = await getPopulatedCart(cart._id);
+      const populatedCart = await getPopulatedCart(cart._id as mongoose.Types.ObjectId);
 
       res.json({
         success: true,
@@ -254,6 +281,7 @@ export const cartController = {
         data: mapCart(populatedCart),
       });
     } catch (error) {
+      console.error('Error in removeCartItem:', error);
       res.status(500).json({
         success: false,
         message: 'Error removing product from cart',
@@ -276,6 +304,7 @@ export const cartController = {
         data: { items: [], subtotal: 0, totalQuantity: 0 },
       });
     } catch (error) {
+      console.error('Error in clearCart:', error);
       res.status(500).json({
         success: false,
         message: 'Error clearing cart',

@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import mongoose from 'mongoose';
 import { Product } from '@/models';
 import { IAuthRequest, ApiResponse, PaginationResult } from '@/types';
 import { uploadImage, getRecommendations } from '@/utils';
@@ -100,6 +101,7 @@ export const productController = {
         data: paginationResult,
       });
     } catch (error) {
+      console.error('Error in getProducts:', error);
       res.status(500).json({
         success: false,
         message: 'Error retrieving products',
@@ -111,6 +113,14 @@ export const productController = {
   async getProductById(req: IAuthRequest, res: Response<ApiResponse>): Promise<void> {
     try {
       const { id } = req.params;
+
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        res.status(400).json({
+          success: false,
+          message: 'Invalid product ID format',
+        });
+        return;
+      }
 
       const product = await Product.findById(id);
 
@@ -128,6 +138,7 @@ export const productController = {
         data: product,
       });
     } catch (error) {
+      console.error('Error in getProductById:', error);
       res.status(500).json({
         success: false,
         message: 'Error retrieving product',
@@ -174,6 +185,7 @@ export const productController = {
         data: product,
       });
     } catch (error) {
+      console.error('Error in createProduct:', error);
       res.status(500).json({
         success: false,
         message: 'Error creating product',
@@ -191,6 +203,15 @@ export const productController = {
 
     try {
       const { id } = req.params;
+
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        res.status(400).json({
+          success: false,
+          message: 'Invalid product ID format',
+        });
+        return;
+      }
+
       const updateData: any = { ...req.body };
 
       if (updateData.price !== undefined) {
@@ -236,6 +257,7 @@ export const productController = {
         data: product,
       });
     } catch (error) {
+      console.error('Error in updateProduct:', error);
       res.status(500).json({
         success: false,
         message: 'Error updating product',
@@ -251,6 +273,14 @@ export const productController = {
   async deleteProduct(req: IAuthRequest, res: Response<ApiResponse>): Promise<void> {
     try {
       const { id } = req.params;
+
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        res.status(400).json({
+          success: false,
+          message: 'Invalid product ID format',
+        });
+        return;
+      }
 
       const product = await Product.findByIdAndDelete(id);
 
@@ -268,6 +298,7 @@ export const productController = {
         data: product,
       });
     } catch (error) {
+      console.error('Error in deleteProduct:', error);
       res.status(500).json({
         success: false,
         message: 'Error deleting product',
@@ -279,6 +310,15 @@ export const productController = {
   async getRecommendations(req: IAuthRequest, res: Response<ApiResponse>): Promise<void> {
     try {
       const { id } = req.params;
+
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        res.status(400).json({
+          success: false,
+          message: 'Invalid product ID format',
+        });
+        return;
+      }
+
       const limit = parseInt(req.query.limit as string) || 10;
       const priceTolerance = parseFloat(req.query.priceTolerance as string) || 0.3;
 
@@ -299,6 +339,7 @@ export const productController = {
         data: recommendations,
       });
     } catch (error) {
+      console.error('Error in getRecommendations:', error);
       res.status(500).json({
         success: false,
         message: 'Error getting recommendations',
@@ -340,6 +381,7 @@ export const productController = {
         cleanupFiles(files);
       }
 
+      console.error('Error in uploadProductImages:', error);
       res.status(500).json({
         success: false,
         message: 'Error uploading images',
