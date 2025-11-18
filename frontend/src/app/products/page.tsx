@@ -46,6 +46,41 @@ export default function ProductsPage() {
     setSortBy('featured')
   }
 
+  const filteredAndSortedProducts = React.useMemo(() => {
+    let filtered = [...products]
+
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter((product) => {
+        const productCategory = product.category?.toLowerCase() || ''
+        return productCategory === selectedCategory
+      })
+    }
+
+    if (priceRange !== 'all') {
+      filtered = filtered.filter((product) => {
+        const price = product.price
+        if (priceRange === 'under $100') {
+          return price < 100
+        } else if (priceRange === '$100 - $300') {
+          return price >= 100 && price <= 300
+        } else if (priceRange === '$300 - $500') {
+          return price >= 300 && price <= 500
+        } else if (priceRange === 'over $500') {
+          return price > 500
+        }
+        return true
+      })
+    }
+
+    if (sortBy === 'price: low to high') {
+      filtered.sort((a, b) => a.price - b.price)
+    } else if (sortBy === 'price: high to low') {
+      filtered.sort((a, b) => b.price - a.price)
+    }
+
+    return filtered
+  }, [products, selectedCategory, priceRange, sortBy])
+
   return (
     <div className="w-full bg-zinc-50 dark:bg-zinc-950">
       {/* Header */}
@@ -154,7 +189,7 @@ export default function ProductsPage() {
               {/* Top Controls */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Showing {products.length} products
+                  Showing {filteredAndSortedProducts.length} products
                 </p>
 
                 <div className="flex gap-3 w-full sm:w-auto">
@@ -210,13 +245,14 @@ export default function ProductsPage() {
                   <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-4">{error}</p>
                   <Button onClick={() => window.location.reload()}>Retry</Button>
                 </div>
-              ) : products.length === 0 ? (
+              ) : filteredAndSortedProducts.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-lg text-zinc-600 dark:text-zinc-400">No products found.</p>
+                  <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-4">No products found.</p>
+                  <Button variant="outline" onClick={clearFilters}>Clear Filters</Button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                  {products.map((product) => (
+                  {filteredAndSortedProducts.map((product) => (
                     <ProductCard 
                       key={product.id} 
                       id={product.id}
