@@ -12,5 +12,6 @@ router.post('/refresh', authController.refreshToken);
 
 // Protected routes
 router.get('/profile', authenticate, authController.getProfile);
+router.get('/me', authenticate, authController.getCurrentUser);
 
 export default router;

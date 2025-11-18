@@ -192,4 +192,37 @@ export const authController = {
       });
     }
   },
+
+  async getCurrentUser(req: IAuthRequest, res: Response<ApiResponse>): Promise<void> {
+    try {
+      const user = req.user;
+
+      if (!user) {
+        res.status(404).json({
+          success: false,
+          message: 'User not found',
+        });
+        return;
+      }
+
+      res.json({
+        success: true,
+        data: {
+          id: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          role: user.role,
+          isActive: user.isActive,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: (error as Error).message,
+      });
+    }
+  },
 };

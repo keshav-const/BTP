@@ -23,7 +23,7 @@ export const authApi = {
   },
 
   async getCurrentUser(): Promise<User> {
-    const { data } = await axiosInstance.get<ApiResponse<User>>('auth/profile')
+    const { data } = await axiosInstance.get<ApiResponse<User>>('auth/me')
     return handleResponse(data, 'Unable to retrieve account details')
   },
 }
