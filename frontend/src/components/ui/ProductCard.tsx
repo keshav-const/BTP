@@ -117,7 +117,7 @@ export function ProductCard({
           {/* Image Section */}
           <div className="relative aspect-[4/3] overflow-hidden bg-zinc-100 dark:bg-zinc-800">
             <Image
-              src={image || '/placeholder.jpg'}
+              src={image || '/placeholder.svg'}
               alt={name}
               fill
               className={cn(
