@@ -1,41 +1,43 @@
 import axios from 'axios'
-
 import { clearAuthSession, getAuthToken } from '@/lib/auth'
 
 const DEFAULT_API_BASE_URL = 'http://localhost:5000/api'
 
-const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL?.trim() || DEFAULT_API_BASE_URL
+// Normalize baseURL to always end with a single slash
+const rawBase = (process.env.NEXT_PUBLIC_API_BASE_URL || DEFAULT_API_BASE_URL).trim()
+const baseURL = rawBase.replace(/\/+$/, '') + '/'
 
 const axiosInstance = axios.create({
   baseURL,
-  withCredentials: true,
+  timeout: 15000,
+  headers: { 'Content-Type': 'application/json' },
+  withCredentials: false,
 })
 
-const existingToken = getAuthToken()
-
-if (existingToken) {
-  axiosInstance.defaults.headers.common.Authorization = `Bearer ${existingToken}`
-}
-
+// Only attach token at request time (avoids SSR pitfalls)
 axiosInstance.interceptors.request.use((config) => {
-  const token = getAuthToken()
-
+  const token = getAuthToken?.()
   if (token) {
     config.headers = config.headers ?? {}
     config.headers.Authorization = `Bearer ${token}`
   }
-
   return config
 })
 
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      clearAuthSession()
-      delete axiosInstance.defaults.headers.common.Authorization
-    }
+    console.error('Axios error:', {
+      url: (error?.config?.baseURL || '') + (error?.config?.url || ''),
+      message: error?.message,
+      code: error?.code,
+      status: error?.response?.status,
+      data: error?.response?.data,
+    })
 
+    if (error.response?.status === 401) {
+      clearAuthSession?.()
+    }
     return Promise.reject(error)
   }
 )
