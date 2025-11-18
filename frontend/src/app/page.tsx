@@ -67,7 +67,7 @@ export default function HomePage() {
   return (
     <div className="w-full">
       {/* Hero Section - Cinematic */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-dark">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-950">
         {/* Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-emerald-700/10 rounded-full blur-3xl animate-float" />
@@ -81,18 +81,18 @@ export default function HomePage() {
               {...badgeMotionProps}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-700/10 border border-emerald-700/20 mb-8"
             >
-              <Sparkles size={16} className="text-emerald-400" />
-              <span className="text-sm text-emerald-400 font-medium">Handcrafted Excellence</span>
+              <Sparkles size={16} className="text-emerald-600 dark:text-emerald-400" />
+              <span className="text-sm text-emerald-700 dark:text-emerald-400 font-medium">Handcrafted Excellence</span>
             </HeroBadge>
 
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-zinc-50 mb-6 leading-tight">
+            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-zinc-950 dark:text-zinc-50 mb-6 leading-tight">
               Welcome to{' '}
-              <span className="gradient-text bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
+              <span className="gradient-text bg-gradient-to-r from-emerald-600 to-emerald-700 dark:from-emerald-400 dark:to-emerald-600 bg-clip-text text-transparent">
                 Premium
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-zinc-300 mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-zinc-700 dark:text-zinc-300 mb-12 max-w-2xl mx-auto leading-relaxed">
               Curating exceptional products for elevated living. Experience the perfect blend of luxury and functionality.
             </p>
 
@@ -106,7 +106,7 @@ export default function HomePage() {
               </Link>
               <Link
                 href="/about"
-                className={buttonVariants({ variant: 'outline', size: 'lg', className: 'text-zinc-300 border-zinc-700 hover:border-emerald-700' })}
+                className={buttonVariants({ variant: 'outline', size: 'lg', className: 'text-zinc-700 border-zinc-300 hover:border-emerald-700 dark:text-zinc-300 dark:border-zinc-700 dark:hover:border-emerald-700' })}
               >
                 Learn More
               </Link>
@@ -119,10 +119,10 @@ export default function HomePage() {
           {...scrollContainerMotionProps}
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
         >
-          <div className="w-6 h-10 rounded-full border-2 border-zinc-700 flex items-start justify-center p-2">
+          <div className="w-6 h-10 rounded-full border-2 border-zinc-400 dark:border-zinc-700 flex items-start justify-center p-2">
             <ScrollDot
               {...scrollDotMotionProps}
-              className="w-1.5 h-1.5 bg-emerald-500 rounded-full"
+              className="w-1.5 h-1.5 bg-emerald-600 dark:bg-emerald-500 rounded-full"
             />
           </div>
         </ScrollIndicator>
@@ -244,7 +244,7 @@ export default function HomePage() {
       </section>
 
       {/* Newsletter Section */}
-      <section className="section bg-gradient-dark">
+      <section className="section bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-950">
         <div className="container">
           <motion.div
             initial={mounted ? { opacity: 0, y: 20 } : false}
@@ -253,17 +253,17 @@ export default function HomePage() {
             transition={{ duration: 0.6 }}
             className="max-w-3xl mx-auto text-center"
           >
-            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-zinc-50 mb-6">
+            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-zinc-950 dark:text-zinc-50 mb-6">
               Stay Connected
             </h2>
-            <p className="text-lg text-zinc-300 mb-8">
+            <p className="text-lg text-zinc-700 dark:text-zinc-300 mb-8">
               Subscribe to our newsletter for exclusive offers, new arrivals, and curated inspiration.
             </p>
             <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-6 py-4 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-50 placeholder:text-zinc-500 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/20 outline-none transition-all duration-200"
+                className="flex-1 px-6 py-4 rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-50 placeholder:text-zinc-500 focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/20 outline-none transition-all duration-200"
               />
               <Button size="lg" type="submit">
                 Subscribe

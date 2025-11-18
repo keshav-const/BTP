@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 export default function AboutPage() {
   return (
     <div className="w-full bg-zinc-50 dark:bg-zinc-950">
-      <section className="bg-gradient-dark py-20">
+      <section className="bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-950 py-20">
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -14,10 +14,10 @@ export default function AboutPage() {
             transition={{ duration: 0.5 }}
             className="max-w-3xl mx-auto text-center"
           >
-            <h1 className="font-serif text-5xl md:text-6xl font-bold text-zinc-50 mb-6">
+            <h1 className="font-serif text-5xl md:text-6xl font-bold text-zinc-950 dark:text-zinc-50 mb-6">
               About Premium
             </h1>
-            <p className="text-xl text-zinc-300 leading-relaxed">
+            <p className="text-xl text-zinc-700 dark:text-zinc-300 leading-relaxed">
               We curate exceptional products for elevated living. Our mission is to bring you the finest selection of premium items that combine luxury with functionality.
             </p>
           </motion.div>
