@@ -6,14 +6,26 @@ import { connectDB } from '@/config/database';
 import { config } from '@/config';
 import { errorHandler, notFound } from '@/middlewares';
 import routes from '@/routes';
+import { Product } from '@/models';
+import { productSeedData } from '@/seeds/products.seed';
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 
-// Connect to database
-connectDB();
+// Connect to database and seed products if needed
+connectDB().then(async () => {
+  try {
+    const count = await Product.countDocuments();
+    if (count === 0) {
+      await Product.insertMany(productSeedData);
+      console.log('Products seeded successfully');
+    }
+  } catch (error) {
+    console.error('Error seeding products:', error);
+  }
+});
 
 // Middleware
 app.use(cors(config.cors));
