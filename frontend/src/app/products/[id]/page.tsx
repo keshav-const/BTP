@@ -166,7 +166,7 @@ export default function ProductDetailPage() {
     })
   }, [maxQuantity])
 
-  const displayedImage = product?.images?.[selectedImage] ?? product?.images?.[0] ?? '/placeholder.jpg'
+  const displayedImage = product?.images?.[selectedImage] ?? product?.images?.[0] ?? '/placeholder.svg'
   const thumbnails = product?.images && product.images.length > 0 ? product.images : [displayedImage]
 
   const rating = 4.8
@@ -522,7 +522,7 @@ export default function ProductDetailPage() {
                     name={relatedProduct.name}
                     price={relatedProduct.price}
                     category={relatedProduct.category ?? 'Premium'}
-                    image={relatedProduct.images?.[0] ?? '/placeholder.jpg'}
+                    image={relatedProduct.images?.[0] ?? '/placeholder.svg'}
                     rating={4.6}
                     reviewCount={0}
                   />

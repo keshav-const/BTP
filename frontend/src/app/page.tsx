@@ -218,7 +218,7 @@ export default function HomePage() {
                 name={product.name}
                 price={product.price}
                 category={product.category ?? 'Uncategorized'}
-                image={product.images?.[0] ?? '/placeholder.jpg'}
+                image={product.images?.[0] ?? '/placeholder.svg'}
                 rating={4.5}
                 reviewCount={0}
               />
