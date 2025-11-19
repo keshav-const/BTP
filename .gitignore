@@ -37,8 +37,13 @@ Thumbs.db
 # Logs
 logs/
 *.log
+backend.log
+frontend.log
 
 # Dependencies lock files (can be committed or not depending on preference)
 # Uncomment if using workspace/monorepo setup
 # frontend/package-lock.json
 # backend/package-lock.json
+
+# Test files
+test-images.js
