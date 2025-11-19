@@ -1,0 +1,20 @@
+[33m9b3a293[m[33m ([m[1;34mgrafted[m[33m, [m[1;36mHEAD[m[33m -> [m[1;32mfix-image-proxy-404-new-15-products[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m Merge pull request #44 from keshav-const/feat-chatbot-gemini-product-recs-support-shopping-assistant
+[33m9b2161f[m[33m ([m[1;31morigin/feat-chatbot-gemini-product-recs-support-shopping-assistant[m[33m)[m feat(chatbot): integrate Gemini-powered AI assistant for product recommendations, customer support, and shopping
+[33m668abbf[m[33m ([m[1;31morigin/critical-debug-product-images-db-urls[m[33m)[m chore(infra): enable local MongoDB and env setup for image seeds
+[33mb298bd7[m Merge pull request #42 from keshav-const/fix/product-images-and-price-filter-inr-e01
+[33m7b2eb58[m[33m ([m[1;31morigin/fix/product-images-and-price-filter-inr-e01[m[33m)[m feat(frontend): convert price filter to INR and update ranges
+[33m987e36d[m Merge pull request #41 from keshav-const/fix-productcard-wishlist-pagination-9pp-login-redirect-home
+[33m4109b83[m[33m ([m[1;31morigin/fix-productcard-wishlist-pagination-9pp-login-redirect-home[m[33m)[m feat(shop): enable wishlist on ProductCard, add pagination (9 per page), and redirect login to home
+[33m521a3f4[m feat(seed): update product prices to reflect new pricing strategy
+[33mffb0f01[m Merge pull request #40 from keshav-const/feat/seed-15-products-inr-update-currency-ui
+[33mbf1eba4[m[33m ([m[1;31morigin/feat/seed-15-products-inr-update-currency-ui[m[33m)[m feat(seed): seed 27 INR-priced products with auto-generated ObjectIds; migrate prices to INR and update frontend currency formatting
+[33m9bf3e84[m Merge pull request #39 from keshav-const/feat/productcard-wishlist-toggle
+[33m73ca8ca[m[33m ([m[1;31morigin/feat/productcard-wishlist-toggle[m[33m)[m feat(ui-product-card): make wishlist heart functional with filled red state and persistence
+[33mca39232[m Merge pull request #38 from keshav-const/fix-light-mode-layout-filters-wishlist-heart
+[33m22690ad[m[33m ([m[1;31morigin/fix-light-mode-layout-filters-wishlist-heart[m[33m)[m feat(frontend): implement product filtering, wishlist heart interactivity, and light mode visuals
+[33m16a8437[m Merge pull request #37 from keshav-const/fix-theme-toggle-images-seeding
+[33m62c5440[m[33m ([m[1;31morigin/fix-theme-toggle-images-seeding[m[33m)[m fix(frontend/backend): restore theme toggle functionality and reseed product images
+[33mebfc942[m Merge pull request #36 from keshav-const/critical-fix-light-mode-and-unsplash-images
+[33m101a208[m[33m ([m[1;31morigin/critical-fix-light-mode-and-unsplash-images[m[33m)[m fix(frontend): fix light mode text colors and gradient backgrounds; switch home/about hero sections from gradient-dark to responsive gradients; update newsletter gradient and ensure real image URLs
+[33m6971829[m Merge pull request #35 from keshav-const/fix/theme-toggle-light-dark-and-product-images
+[33m538c1fe[m[33m ([m[1;31morigin/fix/theme-toggle-light-dark-and-product-images[m[33m)[m fix(theme+images): fix light/dark mode rendering, persist theme, and update product image seeds and fallbacks
