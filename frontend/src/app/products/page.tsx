@@ -16,6 +16,8 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const PRODUCTS_PER_PAGE = 9
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -36,7 +38,12 @@ export default function ProductsPage() {
     void fetchProducts()
   }, [])
 
-  const categories = ['All', 'Audio', 'Accessories', 'Watches', 'Tech', 'Home']
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedCategory, priceRange, sortBy])
+
+  const categories = ['All', 'Fashion', 'Accessories', 'Watches', 'Jewelry', 'Home', 'Electronics', 'Beauty']
   const priceRanges = ['All', 'Under $100', '$100 - $300', '$300 - $500', 'Over $500']
   const sortOptions = ['Featured', 'Price: Low to High', 'Price: High to Low', 'Newest', 'Best Rating']
 
@@ -80,6 +87,12 @@ export default function ProductsPage() {
 
     return filtered
   }, [products, selectedCategory, priceRange, sortBy])
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredAndSortedProducts.length / PRODUCTS_PER_PAGE)
+  const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE
+  const endIndex = startIndex + PRODUCTS_PER_PAGE
+  const paginatedProducts = filteredAndSortedProducts.slice(startIndex, endIndex)
 
   return (
     <div className="w-full bg-zinc-50 dark:bg-zinc-950">
@@ -252,7 +265,7 @@ export default function ProductsPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                  {filteredAndSortedProducts.map((product) => (
+                  {paginatedProducts.map((product) => (
                     <ProductCard 
                       key={product.id} 
                       id={product.id}
@@ -268,23 +281,41 @@ export default function ProductsPage() {
               )}
 
               {/* Pagination */}
-              <div className="flex justify-center gap-2">
-                <Button variant="outline" size="md" disabled>
-                  Previous
-                </Button>
-                <Button variant="primary" size="md">
-                  1
-                </Button>
-                <Button variant="outline" size="md">
-                  2
-                </Button>
-                <Button variant="outline" size="md">
-                  3
-                </Button>
-                <Button variant="outline" size="md">
-                  Next
-                </Button>
-              </div>
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-4 mt-8 pb-8">
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 bg-emerald-700 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-800 transition-colors duration-200"
+                  >
+                    Previous
+                  </button>
+                  
+                  <div className="flex gap-2">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-3 py-2 rounded transition-colors duration-200 ${
+                          currentPage === page
+                            ? 'bg-emerald-700 text-white'
+                            : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white hover:bg-zinc-300 dark:hover:bg-zinc-600'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 bg-emerald-700 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-800 transition-colors duration-200"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
