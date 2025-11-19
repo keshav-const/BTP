@@ -44,7 +44,7 @@ export default function ProductsPage() {
   }, [selectedCategory, priceRange, sortBy])
 
   const categories = ['All', 'Fashion', 'Accessories', 'Watches', 'Jewelry', 'Home', 'Electronics', 'Beauty']
-  const priceRanges = ['All', 'Under $100', '$100 - $300', '$300 - $500', 'Over $500']
+  const priceRanges = ['All', 'Under ₹3,000', '₹3,000 - ₹6,000', '₹6,000 - ₹10,000', 'Over ₹10,000']
   const sortOptions = ['Featured', 'Price: Low to High', 'Price: High to Low', 'Newest', 'Best Rating']
 
   const clearFilters = () => {
@@ -66,14 +66,14 @@ export default function ProductsPage() {
     if (priceRange !== 'all') {
       filtered = filtered.filter((product) => {
         const price = product.price
-        if (priceRange === 'under $100') {
-          return price < 100
-        } else if (priceRange === '$100 - $300') {
-          return price >= 100 && price <= 300
-        } else if (priceRange === '$300 - $500') {
-          return price >= 300 && price <= 500
-        } else if (priceRange === 'over $500') {
-          return price > 500
+        if (priceRange === 'under ₹3,000') {
+          return price < 3000
+        } else if (priceRange === '₹3,000 - ₹6,000') {
+          return price >= 3000 && price <= 6000
+        } else if (priceRange === '₹6,000 - ₹10,000') {
+          return price >= 6000 && price <= 10000
+        } else if (priceRange === 'over ₹10,000') {
+          return price > 10000
         }
         return true
       })
