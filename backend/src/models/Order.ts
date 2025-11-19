@@ -3,10 +3,28 @@ import { IOrder, IOrderItem } from '@/types';
 
 export interface IOrderDocument extends Document {
   user: mongoose.Types.ObjectId;
+  orderNumber: string;
+  orderDate: Date;
   items: IOrderItem[];
+  subtotal: number;
+  tax: number;
+  shippingCharges: number;
   totalAmount: number;
   status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
   shippingAddress: {
+    fullName: string;
+    email: string;
+    phone: string;
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+  billingAddress: {
+    fullName: string;
+    email: string;
+    phone: string;
     street: string;
     city: string;
     state: string;
@@ -14,6 +32,9 @@ export interface IOrderDocument extends Document {
     country: string;
   };
   paymentMethod: string;
+  paymentStatus: 'pending' | 'completed' | 'failed';
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
   isPaid: boolean;
   paidAt?: Date;
 }
@@ -36,7 +57,22 @@ const orderItemSchema = new Schema<IOrderItem>({
   },
 }, { _id: false });
 
-const shippingAddressSchema = new Schema({
+const addressSchema = new Schema({
+  fullName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   street: {
     type: String,
     required: true,
@@ -70,7 +106,33 @@ const orderSchema = new Schema<IOrderDocument>({
     ref: 'User',
     required: true,
   },
+  orderNumber: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  orderDate: {
+    type: Date,
+    default: Date.now,
+  },
   items: [orderItemSchema],
+  subtotal: {
+    type: Number,
+    required: true,
+    min: [0, 'Subtotal cannot be negative'],
+  },
+  tax: {
+    type: Number,
+    required: true,
+    min: [0, 'Tax cannot be negative'],
+    default: 0,
+  },
+  shippingCharges: {
+    type: Number,
+    required: true,
+    min: [0, 'Shipping charges cannot be negative'],
+    default: 0,
+  },
   totalAmount: {
     type: Number,
     required: true,
@@ -81,10 +143,24 @@ const orderSchema = new Schema<IOrderDocument>({
     enum: ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'],
     default: 'pending',
   },
-  shippingAddress: shippingAddressSchema,
+  shippingAddress: addressSchema,
+  billingAddress: addressSchema,
   paymentMethod: {
     type: String,
     required: true,
+    trim: true,
+  },
+  paymentStatus: {
+    type: String,
+    enum: ['pending', 'completed', 'failed'],
+    default: 'pending',
+  },
+  razorpayOrderId: {
+    type: String,
+    trim: true,
+  },
+  razorpayPaymentId: {
+    type: String,
     trim: true,
   },
   isPaid: {
@@ -101,6 +177,8 @@ const orderSchema = new Schema<IOrderDocument>({
 // Indexes for better query performance
 orderSchema.index({ user: 1 });
 orderSchema.index({ status: 1 });
+orderSchema.index({ paymentStatus: 1 });
+orderSchema.index({ orderNumber: 1 }, { unique: true });
 orderSchema.index({ createdAt: -1 });
 orderSchema.index({ isPaid: 1 });
 

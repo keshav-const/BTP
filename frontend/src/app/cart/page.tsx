@@ -173,12 +173,12 @@ export default function CartPage() {
                     </div>
                   </div>
 
-                  <button
-                    type="button"
+                  <Link
+                    href="/checkout"
                     className={buttonVariants({ size: 'lg', className: 'w-full mb-4' })}
                   >
                     Proceed to Checkout
-                  </button>
+                  </Link>
 
                   <Link
                     href="/products"

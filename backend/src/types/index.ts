@@ -44,19 +44,33 @@ export interface IProduct {
   updatedAt?: Date;
 }
 
+export interface IOrderAddress {
+  fullName: string;
+  email: string;
+  phone: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
+
 export interface IOrder {
   user: Types.ObjectId | IUser;
+  orderNumber: string;
+  orderDate: Date;
   items: IOrderItem[];
+  subtotal: number;
+  tax: number;
+  shippingCharges: number;
   totalAmount: number;
   status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
-  shippingAddress: {
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    country: string;
-  };
+  shippingAddress: IOrderAddress;
+  billingAddress: IOrderAddress;
   paymentMethod: string;
+  paymentStatus: 'pending' | 'completed' | 'failed';
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
   isPaid: boolean;
   paidAt?: Date;
   createdAt?: Date;

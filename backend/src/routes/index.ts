@@ -9,6 +9,8 @@ import aiRoutes from './ai';
 import userRoutes from './users';
 import adminRoutes from './admin';
 import chatbotRoutes from './chatbot';
+import checkoutRoutes from './checkout';
+import paymentRoutes from './payment';
 
 const router = Router();
 
@@ -19,6 +21,8 @@ router.use('/products', productRoutes);
 router.use('/orders', orderRoutes);
 router.use('/cart', cartRoutes);
 router.use('/wishlist', wishlistRoutes);
+router.use('/checkout', checkoutRoutes);
+router.use('/payment', paymentRoutes);
 router.use('/ai', aiRoutes);
 router.use('/users', userRoutes);
 router.use('/admin', adminRoutes);

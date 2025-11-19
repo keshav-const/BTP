@@ -148,4 +148,50 @@ export const schemas = {
     lastName: Joi.string().trim().min(2).max(50).optional(),
     phoneNumber: Joi.string().allow('', null).optional(),
   }).min(1),
+
+  checkout: Joi.object({
+    items: Joi.array().items(
+      Joi.object({
+        productId: Joi.string().required(),
+        quantity: Joi.number().integer().min(1).required(),
+      })
+    ).min(1).required(),
+    shippingAddress: Joi.object({
+      fullName: Joi.string().required(),
+      email: Joi.string().email().required(),
+      phone: Joi.string().required(),
+      street: Joi.string().required(),
+      city: Joi.string().required(),
+      state: Joi.string().required(),
+      zipCode: Joi.string().required(),
+      country: Joi.string().required(),
+    }).required(),
+    billingAddress: Joi.object({
+      fullName: Joi.string().required(),
+      email: Joi.string().email().required(),
+      phone: Joi.string().required(),
+      street: Joi.string().required(),
+      city: Joi.string().required(),
+      state: Joi.string().required(),
+      zipCode: Joi.string().required(),
+      country: Joi.string().required(),
+    }).required(),
+    paymentMethod: Joi.string().valid('razorpay', 'card', 'cod').required(),
+    cardDetails: Joi.object({
+      cardholderName: Joi.string().optional(),
+      cardNumber: Joi.string().optional(),
+      expiryDate: Joi.string().optional(),
+      cvv: Joi.string().optional(),
+    }).optional(),
+  }),
+
+  payment: Joi.object({
+    orderId: Joi.string().required(),
+    cardDetails: Joi.object({
+      cardholderName: Joi.string().required(),
+      cardNumber: Joi.string().min(13).max(19).required(),
+      expiryDate: Joi.string().pattern(/^(0[1-9]|1[0-2])\/\d{2}$/).required(),
+      cvv: Joi.string().min(3).max(4).required(),
+    }).required(),
+  }),
 };
