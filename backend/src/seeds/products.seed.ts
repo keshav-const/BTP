@@ -2,7 +2,7 @@ export const productSeedData = [
   {
     name: 'Swiss Luxury Chronograph Watch',
     description: 'Exquisite Swiss-made automatic chronograph watch featuring sapphire crystal, genuine leather strap, and precise mechanical movement. Water-resistant to 100m with luminous hands and markers. A timeless piece of craftsmanship.',
-    price: 290499,
+    price: 3200,
     category: 'Watches',
     brand: 'Chronos Elite',
     stock: 15,
@@ -16,7 +16,7 @@ export const productSeedData = [
   {
     name: 'Designer Leather Handbag',
     description: 'Premium Italian leather handbag with signature hardware and elegant silhouette. Features multiple compartments, adjustable straps, and comes with dust bag. Perfect for everyday luxury or special occasions.',
-    price: 240617,
+    price: 2400,
     category: 'Fashion',
     brand: 'Maison Laurent',
     stock: 22,
@@ -30,7 +30,7 @@ export const productSeedData = [
   {
     name: 'Premium Wireless Noise-Cancelling Earbuds',
     description: 'State-of-the-art wireless earbuds with advanced noise cancellation technology, premium sound quality, and 30-hour battery life. Includes luxury charging case with wireless charging capability.',
-    price: 37349,
+    price: 3700,
     category: 'Electronics',
     brand: 'AudioLux',
     stock: 45,
@@ -44,7 +44,7 @@ export const productSeedData = [
   {
     name: 'Luxury Anti-Aging Skincare Collection',
     description: 'Complete luxury skincare set featuring advanced anti-aging serum, rich moisturizer, and gentle cleanser. Formulated with rare botanicals and cutting-edge peptides. Dermatologist-tested and cruelty-free.',
-    price: 56855,
+    price: 5680,
     category: 'Beauty',
     brand: 'Belle Radiance',
     stock: 35,
@@ -58,7 +58,7 @@ export const productSeedData = [
   {
     name: 'Designer Aviator Sunglasses',
     description: 'Iconic aviator sunglasses with polarized lenses and lightweight titanium frame. UV400 protection with anti-reflective coating. Includes premium case and cleaning cloth.',
-    price: 35275,
+    price: 3520,
     category: 'Accessories',
     brand: 'Visionaire',
     stock: 40,
@@ -72,7 +72,7 @@ export const productSeedData = [
   {
     name: 'Premium Leather Bifold Wallet',
     description: 'Handcrafted from finest full-grain leather with elegant stitching and RFID protection. Features multiple card slots, bill compartment, and ID window. Ages beautifully with use.',
-    price: 24485,
+    price: 2445,
     category: 'Accessories',
     brand: 'Artisan Leather Co.',
     stock: 50,
@@ -86,7 +86,7 @@ export const productSeedData = [
   {
     name: 'Haute Couture Eau de Parfum',
     description: 'Exclusive fragrance with top notes of bergamot and jasmine, heart notes of rose and amber, and base notes of sandalwood and vanilla. 100ml bottle with elegant atomizer. Long-lasting luxury scent.',
-    price: 23655,
+    price: 2365,
     category: 'Beauty',
     brand: 'Parfumerie Élégance',
     stock: 60,
@@ -100,7 +100,7 @@ export const productSeedData = [
   {
     name: 'Cashmere Blend Luxury Scarf',
     description: 'Ultra-soft cashmere and silk blend scarf with signature pattern. Lightweight yet warm, perfect for any season. Hand-finished edges and comes in elegant gift box.',
-    price: 32785,
+    price: 3270,
     category: 'Fashion',
     brand: 'Casa Dolce',
     stock: 30,
@@ -114,7 +114,7 @@ export const productSeedData = [
   {
     name: 'Elegant Diamond-Accented Watch',
     description: 'Sophisticated womens watch with mother-of-pearl dial, genuine diamond hour markers, and stainless steel bracelet. Swiss quartz movement with scratch-resistant sapphire crystal.',
-    price: 157285,
+    price: 15750,
     category: 'Watches',
     brand: 'Celestial Time',
     stock: 18,
@@ -128,7 +128,7 @@ export const productSeedData = [
   {
     name: 'Deluxe Spa & Wellness Gift Set',
     description: 'Indulgent spa collection featuring aromatherapy oils, luxury bath salts, silk eye mask, and premium body lotion. Presented in a beautiful keepsake box. Perfect for self-care or gifting.',
-    price: 20335,
+    price: 2035,
     category: 'Beauty',
     brand: 'Serenity Luxe',
     stock: 55,
@@ -142,7 +142,7 @@ export const productSeedData = [
   {
     name: 'Professional Espresso Machine',
     description: 'Premium semi-automatic espresso machine with dual boiler system, PID temperature control, and commercial-grade steam wand. Crafted from stainless steel with elegant design.',
-    price: 182517,
+    price: 18250,
     category: 'Home',
     brand: 'Barista Pro',
     stock: 12,
@@ -156,7 +156,7 @@ export const productSeedData = [
   {
     name: 'Designer Silk Tie Collection',
     description: 'Set of three handcrafted silk ties with sophisticated patterns. Made from 100% pure mulberry silk with precise hand-stitching. Includes luxury presentation box.',
-    price: 31955,
+    price: 3150,
     category: 'Fashion',
     brand: 'Gentleman\'s Choice',
     stock: 28,
