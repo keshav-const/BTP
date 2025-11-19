@@ -175,7 +175,7 @@ export const productSeedData = [
     brand: 'Silk Threads',
     stock: 20,
     images: [
-      'https://images.unsplash.com/photo-1551028719-00167b16ebc5?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1564584217132-2271feaeb3c5?w=800&h=800&fit=crop',
     ],
     tags: ['fashion', 'silk', 'blouse', 'premium', 'womens'],
     isActive: true,
@@ -188,7 +188,7 @@ export const productSeedData = [
     brand: 'Eternal Gems',
     stock: 5,
     images: [
-      'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&h=800&fit=crop',
     ],
     tags: ['jewelry', 'diamond', 'ring', 'luxury', 'engagement'],
     isActive: true,
@@ -201,7 +201,7 @@ export const productSeedData = [
     brand: 'Winter Warmth',
     stock: 12,
     images: [
-      'https://images.unsplash.com/photo-1539533057592-4d2c3be5f226?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=800&h=800&fit=crop',
     ],
     tags: ['fashion', 'coat', 'wool', 'winter', 'premium'],
     isActive: true,
@@ -214,7 +214,7 @@ export const productSeedData = [
     brand: 'Belt Masters',
     stock: 25,
     images: [
-      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&h=800&fit=crop',
     ],
     tags: ['accessories', 'leather', 'belt', 'luxury', 'mens'],
     isActive: true,
@@ -227,7 +227,7 @@ export const productSeedData = [
     brand: 'Golden Touch',
     stock: 15,
     images: [
-      'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&h=800&fit=crop',
     ],
     tags: ['jewelry', 'gold', 'bracelet', 'premium', 'luxury'],
     isActive: true,
@@ -240,7 +240,7 @@ export const productSeedData = [
     brand: 'Reflections',
     stock: 8,
     images: [
-      'https://images.unsplash.com/photo-1578500494198-246f612d03b3?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1600494603989-9650cf6ddd3d?w=800&h=800&fit=crop',
     ],
     tags: ['home', 'mirror', 'decorative', 'luxury', 'decor'],
     isActive: true,
@@ -253,7 +253,7 @@ export const productSeedData = [
     brand: 'Wallet World',
     stock: 30,
     images: [
-      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&h=800&fit=crop',
     ],
     tags: ['accessories', 'wallet', 'leather', 'designer', 'premium'],
     isActive: true,
@@ -266,7 +266,7 @@ export const productSeedData = [
     brand: 'Aromatic Bliss',
     stock: 50,
     images: [
-      'https://images.unsplash.com/photo-1590080876-55cd97bcaec0?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1550614000-4895a10e1bfd?w=800&h=800&fit=crop',
     ],
     tags: ['home', 'candle', 'scented', 'luxury', 'aromatic'],
     isActive: true,
@@ -279,7 +279,7 @@ export const productSeedData = [
     brand: 'Step Elite',
     stock: 14,
     images: [
-      'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=800&h=800&fit=crop',
     ],
     tags: ['fashion', 'shoes', 'leather', 'premium', 'mens'],
     isActive: true,
@@ -292,7 +292,7 @@ export const productSeedData = [
     brand: 'Silk Dreams',
     stock: 35,
     images: [
-      'https://images.unsplash.com/photo-1631049307038-da0ec89d4b0c?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&h=800&fit=crop',
     ],
     tags: ['home', 'bedding', 'silk', 'pillowcase', 'luxury'],
     isActive: true,
@@ -305,7 +305,7 @@ export const productSeedData = [
     brand: 'Hat House',
     stock: 18,
     images: [
-      'https://images.unsplash.com/photo-1529260503372-4798221bb6d5?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1521369909029-2afed882baee?w=800&h=800&fit=crop',
     ],
     tags: ['accessories', 'hat', 'fashion', 'designer', 'premium'],
     isActive: true,
@@ -318,7 +318,7 @@ export const productSeedData = [
     brand: 'Sleep Luxury',
     stock: 20,
     images: [
-      'https://images.unsplash.com/photo-1540932239986-310128078ceb?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1616047006789-b7af5afb8c20?w=800&h=800&fit=crop',
     ],
     tags: ['home', 'bedding', 'cotton', 'luxury', 'sheets'],
     isActive: true,
@@ -331,7 +331,7 @@ export const productSeedData = [
     brand: 'Jewel Crown',
     stock: 22,
     images: [
-      'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&h=800&fit=crop',
     ],
     tags: ['jewelry', 'earrings', 'gold', 'luxury', 'womens'],
     isActive: true,
@@ -344,7 +344,7 @@ export const productSeedData = [
     brand: 'Glove Masters',
     stock: 28,
     images: [
-      'https://images.unsplash.com/photo-1582033213332-6bde1d1b3c63?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=800&h=800&fit=crop',
     ],
     tags: ['accessories', 'gloves', 'leather', 'designer', 'premium'],
     isActive: true,
@@ -357,7 +357,7 @@ export const productSeedData = [
     brand: 'Cozy Comfort',
     stock: 12,
     images: [
-      'https://images.unsplash.com/photo-1578500494198-246f612d03b3?w=500&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&h=800&fit=crop',
     ],
     tags: ['home', 'throw', 'cashmere', 'blanket', 'luxury'],
     isActive: true,
