@@ -30,7 +30,7 @@ export default function LoginPage() {
     try {
       await login({ email: email.trim(), password })
       success('Welcome back!')
-      router.push('/account')
+      router.push('/')
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unable to sign in. Please try again.'
       error(message)
