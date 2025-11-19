@@ -8,6 +8,7 @@ import healthRoutes from './health';
 import aiRoutes from './ai';
 import userRoutes from './users';
 import adminRoutes from './admin';
+import chatbotRoutes from './chatbot';
 
 const router = Router();
 
@@ -21,5 +22,6 @@ router.use('/wishlist', wishlistRoutes);
 router.use('/ai', aiRoutes);
 router.use('/users', userRoutes);
 router.use('/admin', adminRoutes);
+router.use('/', chatbotRoutes);
 
 export default router;
