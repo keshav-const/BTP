@@ -100,7 +100,7 @@ All configuration is sourced from `.env`. Below is the full list with descriptio
 | `JWT_REFRESH_EXPIRE` | Refresh token lifespan | `7d` |
 | `FRONTEND_URL` | Allowed CORS origin | `http://localhost:3000` |
 | `GEMINI_API_KEY` | Google Generative AI key | _required for AI routes_ |
-| `GEMINI_MODEL` | Gemini model identifier | `gemini-1.5-flash` |
+| `GEMINI_MODEL` | Gemini model identifier | `gemini-pro` |
 | `GEMINI_MAX_TOKENS` | Max tokens returned in AI responses | `2048` |
 | `GEMINI_TEMPERATURE` | Creativity vs determinism (0–1) | `0.7` |
 | `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name | _required for uploads_ |
@@ -128,7 +128,7 @@ All configuration is sourced from `.env`. Below is the full list with descriptio
 
 ### Google Gemini
 1. Generate an API key via Google AI Studio.
-2. Enable the desired model (e.g., `gemini-1.5-flash`).
+2. Enable the desired model (e.g., `gemini-pro`).
 3. Store the key in `GEMINI_API_KEY` and configure model/token settings as needed.
 4. Monitor quota/usage in Google Cloud to avoid throttling.
 
@@ -381,7 +381,7 @@ Refer to [AI Feature Usage](#ai-feature-usage) for quotas and fallback notes.
 | Image enhancement | `POST /ai/enhance-image` | Admin | Receive metadata and improvement tips for product imagery. |
 
 ### Rate Limits & Quotas
-- Google Gemini enforces quotas based on your account tier (check Google AI Studio > Quotas). Typical starter quotas are **60 requests/minute** and **6,000 requests/day** for `gemini-1.5-flash`, but confirm with your plan.
+- Google Gemini enforces quotas based on your account tier (check Google AI Studio > Quotas). Typical starter quotas are **60 requests/minute** and **6,000 requests/day** for `gemini-pro`, but confirm with your plan.
 - Configure `GEMINI_MAX_TOKENS` and `GEMINI_TEMPERATURE` to balance cost and output size.
 - Implement client-side throttling or job queues if you expect bursts (e.g., mass product imports).
 

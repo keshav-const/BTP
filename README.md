@@ -37,7 +37,7 @@ Additional integration notes, request flows, and UX guidance are documented in [
 | npm            | v9 or higher |
 | MongoDB        | Local instance (e.g., Docker, MongoDB Community Server) or a hosted Atlas cluster |
 | Cloudinary     | Account with API key/secret for product media uploads |
-| Google Gemini  | API key with access to generative models (e.g., `gemini-1.5-flash`) |
+| Google Gemini  | API key with access to generative models (e.g., `gemini-pro`) |
 
 > Tip: When running both workspaces locally, set the backend `PORT` to **3001** (or any port other than 3000) to avoid a conflict with Next.js’ development server.
 
@@ -76,7 +76,7 @@ Additional integration notes, request flows, and UX guidance are documented in [
    FRONTEND_URL=http://localhost:3000
 
    GEMINI_API_KEY=your-gemini-api-key
-   GEMINI_MODEL=gemini-1.5-flash
+   GEMINI_MODEL=gemini-pro
    GEMINI_MAX_TOKENS=2048
    GEMINI_TEMPERATURE=0.7
 
