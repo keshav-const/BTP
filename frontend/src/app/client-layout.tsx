@@ -11,7 +11,11 @@ import { useCartStore } from '@/store/cart'
 import { useWishlistStore } from '@/store/wishlist'
 
 export function ClientLayout({ children }: { children: React.ReactNode }) {
-  const [isDark, setIsDark] = useState(false)
+  // Initialize isDark based on actual DOM state to prevent mismatch
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window === 'undefined') return true; // Default to dark on server
+    return document.documentElement.classList.contains('dark');
+  })
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -30,13 +34,13 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
 
     void hydrateStores()
 
-    // Initialize theme from localStorage or system preference
+    // Sync theme state with DOM on mount
     const savedTheme = localStorage.getItem('theme')
-    const isDarkMode = savedTheme === 'dark' || (!savedTheme && document.documentElement.classList.contains('dark'))
+    const isDarkMode = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
     setIsDark(isDarkMode)
     // Ensure the class is applied correctly
     document.documentElement.classList.toggle('dark', isDarkMode)
-    
+
     setMounted(true)
 
     const unsubscribe = useAuthStore.subscribe((state, previousState) => {

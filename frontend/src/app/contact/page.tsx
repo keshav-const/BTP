@@ -105,13 +105,13 @@ export default function ContactPage() {
                   {
                     icon: Phone,
                     label: 'Phone',
-                    value: '+1 (555) 123-4567',
-                    href: 'tel:+15551234567',
+                    value: '+91 9876543210',
+                    href: 'tel:+91 9876543210',
                   },
                   {
                     icon: MapPin,
                     label: 'Address',
-                    value: '123 Premium Street, San Francisco, CA 94102',
+                    value: '123 LNMIIT,Jaipur, Rajasthan',
                     href: null,
                   },
                 ].map((item) => (

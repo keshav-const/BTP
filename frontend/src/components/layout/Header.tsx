@@ -24,10 +24,8 @@ export function Header({ isDark, setIsDark }: HeaderProps) {
 
   const toggleDarkMode = () => {
     const newMode = !isDark
-    console.log('Before toggle:', document.documentElement.className, 'isDark:', isDark)
     setIsDark(newMode)
     document.documentElement.classList.toggle('dark', newMode)
-    console.log('After toggle:', document.documentElement.className, 'isDark:', newMode)
     localStorage.setItem('theme', newMode ? 'dark' : 'light')
   }
 
