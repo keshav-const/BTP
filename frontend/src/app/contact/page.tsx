@@ -7,7 +7,7 @@ import { Mail, Phone, MapPin } from 'lucide-react'
 
 export default function ContactPage() {
   return (
-    <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+    <div className="w-full">
       <section className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
         <div className="container py-20">
           <motion.div

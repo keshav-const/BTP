@@ -95,7 +95,7 @@ export default function ProductsPage() {
   const paginatedProducts = filteredAndSortedProducts.slice(startIndex, endIndex)
 
   return (
-    <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+    <div className="w-full">
       {/* Header */}
       <section className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
         <div className="container py-12">

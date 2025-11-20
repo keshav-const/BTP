@@ -199,7 +199,7 @@ export default function AccountPage() {
   const shouldShowSkeleton = !shouldShowSignIn && (isLoading || (token && !user))
 
   return (
-    <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+    <div className="w-full">
       <section className="section">
         <div className="container max-w-4xl">
           <motion.div

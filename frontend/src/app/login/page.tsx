@@ -40,7 +40,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="w-full bg-zinc-50 dark:bg-zinc-950 min-h-[calc(100vh-80px)] flex items-center justify-center">
+    <div className="w-full  min-h-[calc(100vh-80px)] flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

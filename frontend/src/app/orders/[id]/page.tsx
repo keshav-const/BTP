@@ -133,7 +133,7 @@ export default function OrderDetailPage() {
 
     if (loading) {
         return (
-            <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+            <div className="w-full">
                 <section className="section">
                     <div className="container max-w-6xl">
                         <OrderDetailSkeleton />
@@ -158,7 +158,7 @@ export default function OrderDetailPage() {
     const canCancel = order.status === 'pending' || order.status === 'confirmed'
 
     return (
-        <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+        <div className="w-full">
             <section className="section">
                 <div className="container max-w-6xl">
                     <motion.div
@@ -362,10 +362,10 @@ export default function OrderDetailPage() {
                                                 <span className="text-zinc-600 dark:text-zinc-400">Status</span>
                                                 <span
                                                     className={`font-medium capitalize ${order.paymentStatus === 'completed'
-                                                            ? 'text-emerald-700'
-                                                            : order.paymentStatus === 'pending'
-                                                                ? 'text-amber-700'
-                                                                : 'text-rose-700'
+                                                        ? 'text-emerald-700'
+                                                        : order.paymentStatus === 'pending'
+                                                            ? 'text-amber-700'
+                                                            : 'text-rose-700'
                                                         }`}
                                                 >
                                                     {order.paymentStatus}

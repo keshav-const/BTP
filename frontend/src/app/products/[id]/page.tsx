@@ -242,7 +242,7 @@ export default function ProductDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+      <div className="w-full">
         <section className="section">
           <div className="container">
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
@@ -267,7 +267,7 @@ export default function ProductDetailPage() {
 
   if (error) {
     return (
-      <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+      <div className="w-full">
         <section className="section">
           <div className="container max-w-3xl text-center space-y-6">
             <h1 className="font-serif text-4xl font-bold text-zinc-900 dark:text-zinc-50">
@@ -293,7 +293,7 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+    <div className="w-full">
       {/* Breadcrumb */}
       <section className="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
         <div className="container py-4">

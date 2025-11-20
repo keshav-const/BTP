@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 
 export default function AboutPage() {
   return (
-    <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+    <div className="w-full">
       <section className="bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-900 dark:to-zinc-950 py-20">
         <div className="container">
           <motion.div

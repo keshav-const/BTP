@@ -129,7 +129,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="section bg-zinc-50 dark:bg-zinc-950">
+      <section className="section ">
         <div className="container">
           <motion.div
             initial={mounted ? { opacity: 0, y: 20 } : false}

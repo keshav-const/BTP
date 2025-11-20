@@ -39,7 +39,7 @@ export default function OrderSuccessPage() {
 
   if (loading) {
     return (
-      <div className="w-full bg-zinc-50 dark:bg-zinc-950 min-h-screen flex items-center justify-center">
+      <div className="w-full min-h-screen flex items-center justify-center">
         <Loader2 className="animate-spin text-emerald-700" size={48} />
       </div>
     )
@@ -50,7 +50,7 @@ export default function OrderSuccessPage() {
   }
 
   return (
-    <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+    <div className="w-full">
       <section className="section">
         <div className="container max-w-4xl">
           <motion.div
@@ -115,7 +115,7 @@ export default function OrderSuccessPage() {
                       </div>
                     </div>
                   ))}
-                  
+
                   <div className="pt-4 space-y-2">
                     <div className="flex justify-between text-zinc-600 dark:text-zinc-400">
                       <span>Subtotal</span>

@@ -219,7 +219,7 @@ export default function OrdersPage() {
     }
 
     return (
-        <div className="w-full bg-zinc-50 dark:bg-zinc-950">
+        <div className="w-full">
             <section className="section">
                 <div className="container max-w-6xl">
                     <motion.div
