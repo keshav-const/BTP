@@ -667,4 +667,150 @@ import { ParallaxSection, FloatingElements } from '@/components/ui'
 
 ---
 
+## Testing & Performance Verification
+
+### Automated Testing
+
+The project includes a comprehensive test suite using Vitest and React Testing Library.
+
+#### Running Tests
+
+```bash
+# Run all tests once
+npm run test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage report
+npm run test:coverage
+```
+
+#### Test Structure
+
+- **Component Tests**: Located in `src/components/ui/__tests__/`
+  - `Button.test.tsx` - Tests all button variants, sizes, states, and accessibility
+  - `GlassCard.test.tsx` - Tests glass card variants, interactions, and reduced motion
+  - `AnimatedCounter.test.tsx` - Tests counter animations, formatting, and accessibility
+
+- **Page Tests**: Located in `src/app/__tests__/`
+  - `page.test.tsx` - Tests landing page sections, product fetching, and user interactions
+
+#### Test Coverage Goals
+
+- Component tests should cover all variants, states, and user interactions
+- All tests respect `prefers-reduced-motion` preferences
+- Accessibility attributes (ARIA labels, roles) are verified
+- Error states and edge cases are tested
+
+### Performance Testing
+
+#### Lighthouse Audits
+
+The project includes Lighthouse configuration with strict performance budgets.
+
+**Running Lighthouse:**
+
+```bash
+# 1. Build and start the production server
+npm run build
+npm start
+
+# 2. In a new terminal, run Lighthouse
+npm run lighthouse
+```
+
+This generates `lighthouse-report.html` with detailed metrics.
+
+**Performance Budgets:**
+
+- **FCP (First Contentful Paint)**: < 1.5s
+- **LCP (Largest Contentful Paint)**: < 2.5s
+- **CLS (Cumulative Layout Shift)**: < 0.1
+- **TBT (Total Blocking Time)**: < 300ms
+- **Speed Index**: < 3.4s
+- **Time to Interactive**: < 3.8s
+
+**Resource Budgets:**
+
+- JavaScript: < 300 KB
+- Images: < 500 KB
+- Stylesheets: < 100 KB
+- Total: < 1000 KB
+
+### Manual QA Checklist
+
+Before marking any feature complete, verify the following:
+
+#### Visual Quality
+- [ ] Dark mode works perfectly on all sections
+- [ ] Responsive layout on mobile (375px), tablet (768px), and desktop (1280px+)
+- [ ] All animations are smooth and GPU-accelerated (transform/opacity only)
+- [ ] Proper contrast ratios (WCAG AA minimum: 4.5:1 for text, 3:1 for large text)
+- [ ] Generous whitespace and breathing room
+- [ ] Soft, subtle shadows (no harsh blacks)
+- [ ] Serif headings, sans-serif body text throughout
+- [ ] Emerald accent used sparingly (CTAs, active states, prices only)
+
+#### Interactivity
+- [ ] All hover states work on desktop
+- [ ] All focus states are clearly visible (emerald ring)
+- [ ] Buttons have magnetic effect when enabled
+- [ ] GlassCards tilt on mouse movement when enabled
+- [ ] AnimatedCounters animate on scroll into view
+- [ ] Testimonials carousel auto-rotates and manual controls work
+- [ ] ParallaxSection creates depth effect on scroll
+
+#### Accessibility
+- [ ] All interactive elements reachable via keyboard (Tab)
+- [ ] Enter/Space activates buttons and links
+- [ ] Logical tab order (top to bottom, left to right)
+- [ ] All images have alt text
+- [ ] All form inputs have labels
+- [ ] Color is not the only means of conveying information
+- [ ] `prefers-reduced-motion: reduce` disables all animations
+- [ ] Screen reader friendly (proper ARIA labels, semantic HTML)
+
+#### Multi-Browser Testing
+- [ ] Chrome/Edge (latest)
+- [ ] Firefox (latest)
+- [ ] Safari (latest)
+- [ ] Mobile Safari (iOS)
+- [ ] Mobile Chrome (Android)
+
+#### Performance
+- [ ] Page loads in < 3 seconds on 3G connection
+- [ ] No layout shifts during load (CLS < 0.1)
+- [ ] Images lazy load below the fold
+- [ ] No console errors or warnings
+- [ ] Network requests are optimized (no unnecessary API calls)
+
+#### Functionality
+- [ ] Hero CTAs link to correct pages
+- [ ] Products load from API and display correctly
+- [ ] Newsletter form has proper validation
+- [ ] All links work and go to intended destinations
+- [ ] Error states handled gracefully (API failures, network issues)
+- [ ] Loading states provide feedback
+
+### Continuous Integration
+
+When tests are run in CI/CD:
+
+1. **Unit/Component Tests**: `npm run test` must pass
+2. **Linting**: `npm run lint` must pass
+3. **Build**: `npm run build` must complete without errors
+4. **Type Checking**: TypeScript must compile without errors
+
+### Performance Monitoring
+
+For production deployments:
+
+1. Run Lighthouse on staging before promoting to production
+2. Monitor Core Web Vitals using Google Search Console or similar tools
+3. Set up alerts for performance regressions
+4. Review Lighthouse reports monthly and address any degradation
+
+---
+
 **Remember**: Every detail matters. Premium design is about restraint, intention, and meticulous attention to the smallest details.

@@ -116,7 +116,7 @@ export function Header({ isDark, setIsDark }: HeaderProps) {
     visible: { 
       opacity: 1,
       y: 0,
-      transition: { duration: prefersReducedMotion ? 0 : 0.3, ease: 'easeOut' }
+      transition: { duration: prefersReducedMotion ? 0 : 0.3 }
     },
     exit: { 
       opacity: 0,

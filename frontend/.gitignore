@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+lighthouse-report.html
+.vitest
 
 # next.js
 /.next/
