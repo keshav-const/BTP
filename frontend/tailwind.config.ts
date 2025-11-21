@@ -67,6 +67,12 @@ const config: Config = {
         'slide-up': 'slideUp 0.5s ease-out',
         'scale-in': 'scaleIn 0.3s ease-out',
         'float': 'float 3s ease-in-out infinite',
+        'shimmer-gold': 'shimmerGold 3s linear infinite',
+        'glow-pulse': 'glowPulse 2s ease-in-out infinite',
+        'float-slow': 'floatSlow 8s ease-in-out infinite',
+        'slide-in-scale': 'slideInScale 0.6s ease-out',
+        'rotate-in': 'rotateIn 0.5s ease-out',
+        'gradient-shift': 'gradientShift 8s ease infinite',
       },
       keyframes: {
         fadeIn: {
@@ -89,11 +95,48 @@ const config: Config = {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-20px)' },
         },
+        shimmerGold: {
+          '0%': { backgroundPosition: '-1000px 0' },
+          '100%': { backgroundPosition: '1000px 0' },
+        },
+        glowPulse: {
+          '0%, 100%': { boxShadow: '0 0 20px rgba(4, 120, 87, 0.3)' },
+          '50%': { boxShadow: '0 0 40px rgba(4, 120, 87, 0.6)' },
+        },
+        floatSlow: {
+          '0%, 100%': { transform: 'translateY(0px) translateX(0px)' },
+          '33%': { transform: 'translateY(-30px) translateX(20px)' },
+          '66%': { transform: 'translateY(-15px) translateX(-20px)' },
+        },
+        slideInScale: {
+          '0%': { opacity: '0', transform: 'translateY(30px) scale(0.95)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+        rotateIn: {
+          '0%': { opacity: '0', transform: 'rotate(-10deg) scale(0.9)' },
+          '100%': { opacity: '1', transform: 'rotate(0deg) scale(1)' },
+        },
+        gradientShift: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-dark': 'linear-gradient(to bottom right, #18181b, #09090b)',
         'gradient-emerald-subtle': 'linear-gradient(135deg, rgba(4, 120, 87, 0.1) 0%, rgba(4, 120, 87, 0.05) 100%)',
+        'gradient-mesh-emerald': `radial-gradient(at 0% 0%, rgba(4, 120, 87, 0.15) 0px, transparent 50%),
+          radial-gradient(at 100% 0%, rgba(5, 150, 105, 0.1) 0px, transparent 50%),
+          radial-gradient(at 100% 100%, rgba(4, 120, 87, 0.15) 0px, transparent 50%),
+          radial-gradient(at 0% 100%, rgba(5, 150, 105, 0.1) 0px, transparent 50%)`,
+        'gradient-animated-emerald': 'linear-gradient(-45deg, rgba(4, 120, 87, 0.1), rgba(5, 150, 105, 0.15), rgba(16, 185, 129, 0.1), rgba(4, 120, 87, 0.15))',
+      },
+      backgroundSize: {
+        'gradient-animated': '400% 400%',
+      },
+      backdropBlur: {
+        'glass': '12px',
+        'glass-heavy': '24px',
       },
       transitionDuration: {
         '400': '400ms',
