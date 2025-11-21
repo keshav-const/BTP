@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+import tailwindcssAnimate from 'tailwindcss-animate'
 
 const config: Config = {
   darkMode: 'class',
@@ -60,6 +61,12 @@ const config: Config = {
         'premium-lg': '0 20px 25px -5px rgb(0 0 0 / 0.07), 0 8px 10px -6px rgb(0 0 0 / 0.05)',
         'premium-xl': '0 25px 50px -12px rgb(0 0 0 / 0.15)',
         'premium-emerald': '0 10px 30px -5px rgba(4, 120, 87, 0.15)',
+        'glass-sm': '0 2px 8px 0 rgba(4, 120, 87, 0.05), inset 0 1px 0 0 rgba(255, 255, 255, 0.1)',
+        'glass': '0 8px 32px 0 rgba(4, 120, 87, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.15)',
+        'glass-lg': '0 16px 48px 0 rgba(4, 120, 87, 0.1), inset 0 2px 0 0 rgba(255, 255, 255, 0.2)',
+        'glow-emerald': '0 0 30px rgba(4, 120, 87, 0.3), 0 0 60px rgba(4, 120, 87, 0.15)',
+        'glow-emerald-lg': '0 0 40px rgba(4, 120, 87, 0.4), 0 0 80px rgba(4, 120, 87, 0.2)',
+        'inner-glow': 'inset 0 0 20px rgba(4, 120, 87, 0.1)',
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',
@@ -73,6 +80,10 @@ const config: Config = {
         'slide-in-scale': 'slideInScale 0.6s ease-out',
         'rotate-in': 'rotateIn 0.5s ease-out',
         'gradient-shift': 'gradientShift 8s ease infinite',
+        'parallax-drift': 'parallaxDrift 20s ease-in-out infinite',
+        'float-orbit': 'floatOrbit 12s ease-in-out infinite',
+        'shimmer-sweep': 'shimmerSweep 3s ease-in-out infinite',
+        'magnetic-pulse': 'magneticPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
       keyframes: {
         fadeIn: {
@@ -120,6 +131,54 @@ const config: Config = {
           '0%, 100%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
         },
+        parallaxDrift: {
+          '0%, 100%': { 
+            transform: 'translate3d(0, 0, 0) rotate(0deg)',
+          },
+          '25%': { 
+            transform: 'translate3d(10px, -20px, 0) rotate(1deg)',
+          },
+          '50%': { 
+            transform: 'translate3d(-5px, -35px, 0) rotate(-0.5deg)',
+          },
+          '75%': { 
+            transform: 'translate3d(-15px, -15px, 0) rotate(0.5deg)',
+          },
+        },
+        floatOrbit: {
+          '0%, 100%': { 
+            transform: 'translate3d(0, 0, 0) scale(1)',
+          },
+          '33%': { 
+            transform: 'translate3d(30px, -30px, 0) scale(1.05)',
+          },
+          '66%': { 
+            transform: 'translate3d(-30px, -20px, 0) scale(0.95)',
+          },
+        },
+        shimmerSweep: {
+          '0%': { 
+            backgroundPosition: '-200% center',
+            opacity: '0.5',
+          },
+          '50%': {
+            opacity: '1',
+          },
+          '100%': { 
+            backgroundPosition: '200% center',
+            opacity: '0.5',
+          },
+        },
+        magneticPulse: {
+          '0%, 100%': { 
+            boxShadow: '0 0 20px rgba(4, 120, 87, 0.2)',
+            transform: 'scale(1)',
+          },
+          '50%': { 
+            boxShadow: '0 0 40px rgba(4, 120, 87, 0.4)',
+            transform: 'scale(1.02)',
+          },
+        },
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -130,20 +189,41 @@ const config: Config = {
           radial-gradient(at 100% 100%, rgba(4, 120, 87, 0.15) 0px, transparent 50%),
           radial-gradient(at 0% 100%, rgba(5, 150, 105, 0.1) 0px, transparent 50%)`,
         'gradient-animated-emerald': 'linear-gradient(-45deg, rgba(4, 120, 87, 0.1), rgba(5, 150, 105, 0.15), rgba(16, 185, 129, 0.1), rgba(4, 120, 87, 0.15))',
+        'gradient-emerald-spotlight': 'radial-gradient(circle at 50% 0%, rgba(4, 120, 87, 0.15), transparent 70%)',
+        'gradient-zinc-dusk': 'linear-gradient(135deg, rgba(244, 244, 245, 0.95), rgba(228, 228, 231, 0.98))',
+        'gradient-emerald-zinc-mesh': `radial-gradient(at 0% 0%, rgba(4, 120, 87, 0.1) 0px, transparent 50%),
+          radial-gradient(at 100% 0%, rgba(5, 150, 105, 0.08) 0px, transparent 50%),
+          radial-gradient(at 100% 100%, rgba(244, 244, 245, 0.9) 0px, transparent 50%),
+          radial-gradient(at 0% 100%, rgba(4, 120, 87, 0.12) 0px, transparent 50%)`,
+        'shimmer-sweep': 'linear-gradient(90deg, transparent 0%, rgba(4, 120, 87, 0.1) 50%, transparent 100%)',
       },
       backgroundSize: {
         'gradient-animated': '400% 400%',
+        'shimmer-sweep': '200% 100%',
       },
       backdropBlur: {
         'glass': '12px',
         'glass-heavy': '24px',
+        'glass-sm': '8px',
+        'glass-md': '16px',
+        'glass-xl': '32px',
       },
       transitionDuration: {
         '400': '400ms',
       },
+      transitionTimingFunction: {
+        'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+        'bounce-in': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        'magnetic': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+        'premium': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      },
+      scale: {
+        '102': '1.02',
+        '98': '0.98',
+      },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [tailwindcssAnimate],
 }
 
 export default config
