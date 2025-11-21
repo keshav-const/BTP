@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { cn } from '@/lib/utils'
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion'
 
 type GlassVariant = 'default' | 'accent' | 'bordered'
 type BlurIntensity = 'light' | 'medium' | 'heavy'
@@ -51,12 +52,7 @@ export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
     ref
   ) => {
     const cardRef = useRef<HTMLDivElement>(null)
-    const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
-      if (typeof window !== 'undefined') {
-        return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      }
-      return false
-    })
+    const prefersReducedMotion = usePrefersReducedMotion()
 
     const mouseX = useMotionValue(0)
     const mouseY = useMotionValue(0)
@@ -78,17 +74,6 @@ export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
       stiffness: 300,
       damping: 20,
     })
-
-    useEffect(() => {
-      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-
-      const handleChange = (e: MediaQueryListEvent) => {
-        setPrefersReducedMotion(e.matches)
-      }
-
-      mediaQuery.addEventListener('change', handleChange)
-      return () => mediaQuery.removeEventListener('change', handleChange)
-    }, [])
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
       if (prefersReducedMotion || !cardRef.current) return
