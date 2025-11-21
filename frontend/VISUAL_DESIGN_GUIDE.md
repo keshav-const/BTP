@@ -380,4 +380,291 @@ Before marking any page complete:
 
 ---
 
+## Premium Glass Components
+
+### GlassCard
+
+A glassmorphism card component with variants and interactive behaviors.
+
+**Variants:**
+- `default` - Standard glass card with medium blur
+- `accent` - Enhanced glass with frosted border and prominent shadow
+- `bordered` - Heavy glass with visible border
+
+**Props:**
+```tsx
+interface GlassCardProps {
+  variant?: 'default' | 'accent' | 'bordered'
+  blurIntensity?: 'light' | 'medium' | 'heavy'
+  enableTilt?: boolean        // 3D tilt on mouse move
+  enableMagnetic?: boolean     // Magnetic attraction effect
+  as?: keyof JSX.IntrinsicElements
+}
+```
+
+**Usage:**
+```tsx
+import { GlassCard } from '@/components/ui'
+
+// Basic usage
+<GlassCard className="p-6">
+  <h3>Premium Content</h3>
+</GlassCard>
+
+// With interactive tilt
+<GlassCard variant="accent" enableTilt className="p-8">
+  <h3>Interactive Card</h3>
+</GlassCard>
+
+// With magnetic effect
+<GlassCard enableMagnetic blurIntensity="heavy" className="p-6">
+  <h3>Magnetic Card</h3>
+</GlassCard>
+```
+
+**Accessibility:** Respects `prefers-reduced-motion` and falls back to static card.
+
+---
+
+### AnimatedCounter
+
+Animated number counter with spring physics and formatting support.
+
+**Props:**
+```tsx
+interface AnimatedCounterProps {
+  value: number
+  format?: 'number' | 'currency' | 'percent'
+  currency?: string    // Default: 'INR'
+  locale?: string      // Default: 'en-IN'
+  decimals?: number    // Default: 0
+  duration?: number    // Animation duration in seconds
+  delay?: number       // Delay before animation starts
+}
+```
+
+**Usage:**
+```tsx
+import { AnimatedCounter } from '@/components/ui'
+
+// Simple number counter
+<AnimatedCounter value={1234} />
+
+// Currency formatting
+<AnimatedCounter 
+  value={99999} 
+  format="currency" 
+  currency="INR" 
+  className="text-4xl font-bold text-emerald-700"
+/>
+
+// Percentage
+<AnimatedCounter 
+  value={95.5} 
+  format="percent" 
+  decimals={1}
+/>
+
+// With delay
+<AnimatedCounter 
+  value={5000} 
+  delay={0.5} 
+  className="text-2xl"
+/>
+```
+
+**Accessibility:** Respects `prefers-reduced-motion`, uses `aria-live="polite"` for screen readers.
+
+---
+
+### FloatingElements
+
+Decorative gradient orbs and lines with GPU-accelerated animations.
+
+**Props:**
+```tsx
+interface FloatingElementsProps {
+  count?: number              // Number of elements (default: 5)
+  colorScheme?: 'emerald' | 'zinc' | 'mixed'
+  speed?: 'slow' | 'medium' | 'fast'
+  size?: 'sm' | 'md' | 'lg'
+  blur?: 'sm' | 'md' | 'lg' | 'xl'
+  zIndex?: number             // Default: -1
+  opacity?: number            // Default: 0.6
+}
+```
+
+**Usage:**
+```tsx
+import { FloatingElements } from '@/components/ui'
+
+// Basic usage
+<section className="relative">
+  <FloatingElements />
+  <div className="relative z-10">
+    {/* Your content */}
+  </div>
+</section>
+
+// Custom configuration
+<FloatingElements 
+  count={8}
+  colorScheme="emerald"
+  speed="slow"
+  size="lg"
+  blur="xl"
+  opacity={0.4}
+/>
+
+// Behind hero section
+<section className="relative min-h-screen">
+  <FloatingElements 
+    count={10}
+    colorScheme="mixed"
+    speed="medium"
+    zIndex={0}
+  />
+  <div className="relative z-10">
+    {/* Hero content */}
+  </div>
+</section>
+```
+
+**Note:** Elements are `pointer-events-none` and `aria-hidden` - purely decorative.
+
+---
+
+### ParallaxSection
+
+Wrapper component for parallax scroll effects with slots for background and floating elements.
+
+**Props:**
+```tsx
+interface ParallaxSectionProps {
+  speed?: number              // Parallax speed multiplier (default: 0.5)
+  overlay?: boolean           // Add gradient overlay
+  overlayOpacity?: number     // Overlay opacity (default: 0.5)
+  background?: React.ReactNode
+  floatingElements?: React.ReactNode
+  as?: keyof JSX.IntrinsicElements  // Default: 'section'
+}
+```
+
+**Usage:**
+```tsx
+import { ParallaxSection, FloatingElements } from '@/components/ui'
+
+// Basic parallax
+<ParallaxSection speed={0.5}>
+  <div className="container py-24">
+    <h2>Content with parallax</h2>
+  </div>
+</ParallaxSection>
+
+// With background and floating elements
+<ParallaxSection
+  speed={0.8}
+  overlay
+  overlayOpacity={0.3}
+  background={
+    <div className="w-full h-full bg-gradient-emerald-spotlight" />
+  }
+  floatingElements={<FloatingElements count={6} />}
+  className="min-h-screen"
+>
+  <div className="container relative z-10 py-32">
+    <h1>Hero Section</h1>
+  </div>
+</ParallaxSection>
+
+// As different element
+<ParallaxSection as="div" speed={0.3}>
+  <div className="p-12">
+    {/* Content */}
+  </div>
+</ParallaxSection>
+```
+
+**Accessibility:** Respects `prefers-reduced-motion` and disables parallax effects when enabled.
+
+---
+
+## Component Composition Examples
+
+### Hero Section with Glass and Parallax
+```tsx
+<ParallaxSection
+  speed={0.6}
+  overlay
+  background={
+    <div className="w-full h-full bg-gradient-dark" />
+  }
+  floatingElements={
+    <FloatingElements 
+      count={8}
+      colorScheme="emerald"
+      speed="slow"
+      size="lg"
+    />
+  }
+  className="min-h-screen flex items-center"
+>
+  <div className="container">
+    <GlassCard 
+      variant="accent" 
+      enableTilt 
+      className="max-w-2xl mx-auto p-12"
+    >
+      <h1 className="text-display-1 mb-6">
+        Premium Experience
+      </h1>
+      <p className="text-xl text-zinc-600 dark:text-zinc-300 mb-8">
+        Elevated design meets sophisticated technology
+      </p>
+      <div className="flex gap-4">
+        <AnimatedCounter 
+          value={10000} 
+          format="currency"
+          className="text-3xl font-bold text-emerald-700"
+        />
+        <AnimatedCounter 
+          value={99.9} 
+          format="percent"
+          decimals={1}
+          className="text-3xl font-bold text-emerald-700"
+        />
+      </div>
+    </GlassCard>
+  </div>
+</ParallaxSection>
+```
+
+### Stats Section with Counters
+```tsx
+<section className="py-24 bg-zinc-50 dark:bg-zinc-900">
+  <div className="container">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {[
+        { value: 10000, label: 'Products', format: 'number' },
+        { value: 50000, label: 'Customers', format: 'number' },
+        { value: 99.9, label: 'Satisfaction', format: 'percent' },
+      ].map((stat, i) => (
+        <GlassCard key={i} className="p-8 text-center">
+          <AnimatedCounter
+            value={stat.value}
+            format={stat.format as any}
+            decimals={stat.format === 'percent' ? 1 : 0}
+            delay={i * 0.2}
+            className="text-5xl font-bold text-emerald-700 mb-2 block"
+          />
+          <p className="text-zinc-600 dark:text-zinc-400">{stat.label}</p>
+        </GlassCard>
+      ))}
+    </div>
+  </div>
+</section>
+```
+
+---
+
 **Remember**: Every detail matters. Premium design is about restraint, intention, and meticulous attention to the smallest details.
