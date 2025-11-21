@@ -154,7 +154,7 @@ export default function ProductDetailPage() {
 
   const isWishlisted = Boolean(wishlistItem)
   const maxQuantity = product?.stock && product.stock > 0 ? product.stock : 10
-  const isOutOfStock = product?.stock !== undefined && product.stock <= 0
+  const isOutOfStock = product?.stock !== undefined && product.stock !== null && product.stock <= 0
 
   useEffect(() => {
     setQuantity((previous) => {
@@ -236,7 +236,7 @@ export default function ProductDetailPage() {
     }
   }
 
-  const stockLabel = product?.stock !== undefined ? (
+  const stockLabel = product?.stock !== undefined && product.stock !== null ? (
     product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'
   ) : 'Available'
 
