@@ -211,11 +211,26 @@ Document outcomes in your QA checklist before promoting builds.
 ## Available Scripts
 
 ```bash
-npm run dev     # Start development server
-npm run build   # Build for production
-npm start       # Launch production build
-npm run lint    # Run ESLint (flat config)
+npm run dev            # Start development server
+npm run build          # Build for production
+npm start              # Launch production build
+npm run lint           # Run ESLint (flat config)
+npm run test           # Run test suite once
+npm run test:watch     # Run tests in watch mode
+npm run test:coverage  # Run tests with coverage report
+npm run lighthouse     # Run Lighthouse performance audit (requires production build running)
 ```
+
+### Testing & Performance
+
+The project includes comprehensive testing and performance verification:
+
+- **Component Tests**: Vitest + React Testing Library for all UI components
+- **Page Tests**: End-to-end tests for landing page with mocked API
+- **Performance Budgets**: Lighthouse configuration with strict metrics (FCP < 1.5s, LCP < 2.5s, CLS < 0.1)
+- **Manual QA Checklist**: Comprehensive checklist for visual quality, accessibility, and multi-browser testing
+
+For detailed testing and performance guidelines, see the **Testing & Performance Verification** section in [`VISUAL_DESIGN_GUIDE.md`](./VISUAL_DESIGN_GUIDE.md).
 
 ---
 
